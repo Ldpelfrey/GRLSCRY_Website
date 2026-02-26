@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GRLSCRY — Tech House / SCOTTSDALE, AZ</title>
+  <meta name="description" content="GRLSCRY — DJ / Producer. Dark. High Energy. Late Night. PHX, AZ. Tech House & Trance House.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────────────────── */
+    :root {
+      --black:    #0e0e0e;
+      --s1:       #1A1A1A;
+      --s2:       #1F1F1F;
+      --s3:       #3E3E58;
+      --border:   rgba(215,239,194,.08);
+      --bm:       rgba(215,239,194,.22);
+      --sage:     #D7EFC2;
+      --sage-dim: rgba(215,239,194,.55);
+      --sage-bg:  rgba(215,239,194,.04);
+      --gray:     #737373;
+      --gray-lt:  #B0B0B0;
+      --white:    #FFFFFF;
+      --pink:     #FF69B4;
+      --display:  'Oswald', sans-serif;
+      --bebas:    'Bebas Neue', sans-serif;
+      --mono:     'IBM Plex Mono', monospace;
+      --ease:     cubic-bezier(0.16,1,0.3,1);
+      --nav-h:    80px;
+      --ticker-h: 32px;
+      --side-w:   220px;
+      --gutter:   clamp(24px,5vw,64px);
+    }
+    *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 2.5;
+      overflow-x: hidden;
+      cursor: none;
+    }
+    img { display: block; max-width: 100%; }
+    a  { color: inherit; text-decoration: none; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+
+    /* ─── SCANLINE OVERLAY ──────────────────────────────────────── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px, transparent 3px,
+        rgba(0,0,0,.04) 3px, rgba(0,0,0,.04) 4px
+      );
+      pointer-events: none; z-index: 1000;
+    }
+
+    /* ─── CANVAS BG ─────────────────────────────────────────────── */
+    #bgc { position: fixed; inset: 0; z-index: 0; opacity: .055; pointer-events: none; }
+
+    /* ─── CURSOR ─────────────────────────────────────────────────── */
+    #cd {
+      position: fixed; width: 6px; height: 6px;
+      background: var(--sage); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: transform .1s, background .2s;
+    }
+    #cr {
+      position: fixed; width: 28px; height: 28px;
+      border: 1px solid rgba(215,239,194,.4); border-radius: 50%;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: width .3s var(--ease), height .3s var(--ease), border-color .3s;
+    }
+    body.hov #cd { transform: translate(-50%,-50%) scale(2.5); background: var(--pink); }
+    body.hov #cr { width: 48px; height: 48px; border-color: var(--pink); }
+    @media (pointer: coarse) { #cd, #cr { display: none; } body { cursor: auto; } }
+
+    /* ─── SCROLL REVEAL ─────────────────────────────────────────── */
+    .r { opacity: 0; transform: translateY(20px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+    .r.v { opacity: 1; transform: translateY(0); }
+    .r.d1 { transition-delay: .08s; } .r.d2 { transition-delay: .16s; }
+    .r.d3 { transition-delay: .24s; } .r.d4 { transition-delay: .32s; }
+    .r.d5 { transition-delay: .40s; }
+/*
+  .r {
+  height: 60px;                    /* or 70px for bolder presence 
+  background: var(--black);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.r.v{ 
+  width: 100%;
+  font-family: var(--bebas);
+  font-size: clamp(1.8rem, 4.2vw, 2.6rem);  /* bigger on desktop, scales down 
+  letter-spacing: 0.09em;
+  color: var(--sage);
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1;
+}
+*/
+
+/* Subtle hover interaction (optional) */
+.r:hover marquee {
+  color: var(--sage-dim);
+  text-shadow: 0 0 10px rgba(215,239,194,0.15);
+}
+
+    /* ─── TYPE SCALE ─────────────────────────────────────────────── */
+    .t-hero   { font-family: var(--bebas); font-size: clamp(90px,18vw,200px); line-height: .88; letter-spacing: .04em; }
+    .t-sec    { font-family: var(--display); font-size: clamp(36px,5.5vw,60px); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; line-height: 1; }
+    .t-label  { font-family: var(--mono); font-size: 9px; letter-spacing: .24em; text-transform: uppercase; color: var(--sage); }
+    .t-body   { font-family: var(--mono); font-size: clamp(12px,1.2vw,13.5px); font-weight: 300; line-height: 1.88; color: var(--gray-lt); }
+    .t-cap    { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--gray); }
+
+    /* ─── LAYOUT ─────────────────────────────────────────────────── */
+    .w  { max-width: 1000px; margin: 0 auto; padding: 0 var(--gutter); }
+    .sp { padding: clamp(80px,11vw,130px) var(--gutter); }
+    .ew { display: flex; align-items: center; gap: 12px; margin-bottom: 36px; }
+    .el { display: block; width: 28px; height: 1px; background: var(--sage); }
+    hr.rule { border: none; border-top: 1px solid var(--border); }
+
+    /* ─── NAV ────────────────────────────────────────────────────── */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
+      display: flex; align-items: center;
+      padding: 0 var(--gutter);
+      z-index: 500;
+      transition: background .4s, border-color .4s;
+    }
+    #nav.sc { background: rgba(14,14,14,.96); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+    .nl {
+      font-family: var(--bebas); font-size: 28px; letter-spacing: .12em;
+      color: var(--white); flex-shrink: 0;
+    }
+    .nv { display: flex; align-items: center; gap: 24px; margin-left: auto; list-style: none; }
+    .nv a {
+      font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--gray);
+      transition: color .2s;
+      position: relative;
+    }
+    .nv a::after {
+      content: '';
+      position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1px; background: var(--sage);
+      transition: width .3s var(--ease);
+    }
+    .nv a:hover { color: var(--white); }
+    .nv a:hover::after { width: 100%; }
+    .nb {
+      margin-left: 16px; padding: 8px 18px;
+      border: 1px solid var(--bm); color: var(--sage) !important;
+      font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
+      transition: background .2s, border-color .2s !important;
+    }
+    .nb::after { display: none !important; }
+    .nb:hover { background: var(--sage-bg); border-color: var(--sage) !important; }
+    #nt {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; margin-left: auto; background: none; border: none; padding: 4px;
+    }
+    #nt span { display: block; width: 20px; height: 1px; background: var(--white); transition: transform .3s, opacity .3s; }
+    #nt.open span:nth-child(1) { transform: rotate(45deg) translate(4px,4px); }
+    #nt.open span:nth-child(2) { opacity: 0; }
+    #nt.open span:nth-child(3) { transform: rotate(-45deg) translate(4px,-4px); }
+    #mm {
+      display: none; position: fixed;
+      inset: var(--nav-h) 0 0 0;
+      background: rgba(14,14,14,.98);
+      z-index: 490;
+      flex-direction: column; justify-content: center; align-items: center; gap: 40px;
+    }
+    #mm.open { display: flex; }
+    #mm a {
+      font-family: var(--bebas); font-size: 52px; letter-spacing: .08em;
+      color: var(--white); transition: color .2s;
+    }
+    #mm a:hover { color: var(--sage); }
+    @media (max-width: 768px) { .nv { display: none; } #nt { display: flex; } }
+
+    /* ─── THORN SVG DECORATION ──────────────────────────────────── */
+    .thorn-deco {
+      position: absolute; pointer-events: none;
+      opacity: .12; overflow: visible;
+    }
+    .thorn-deco path { fill: var(--sage); }
+
+    /* ─── HERO ───────────────────────────────────────────────────── */
+    #hero {
+      position: relative; z-index: 2;
+      min-height: 100svh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: calc(var(--nav-h) + var(--ticker-h)) var(--gutter) clamp(52px,8vw,90px);
+      overflow: hidden;
+    }
+
+    /* decorative thorn — top right */
+    .hero-thorn-tr {
+      top: calc(var(--nav-h) + 20px); right: -60px;
+      width: clamp(260px,30vw,440px);
+    }
+    /* decorative thorn — bottom left */
+    .hero-thorn-bl {
+      bottom: 0; left: -40px;
+      width: clamp(180px,22vw,320px);
+      opacity: .07;
+    }
+
+    .heb {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 14px;
+      opacity: 0; animation: su .8s var(--ease) .15s forwards;
+      position: relative; z-index: 2;
+    }
+    .ld {
+      width: 6px; height: 6px;
+      background: var(--sage); border-radius: 50%;
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    .hn {
+      position: relative; z-index: 2;
+      opacity: 0; animation: su 1s var(--ease) .3s forwards;
+      margin-bottom: 2px;
+    }
+
+    /* glitch on hero name */
+    .glitch { position: relative; display: inline-block; }
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position: absolute; top: 0; left: 0; width: 100%;
+      clip: rect(0,0,0,0);
+    }
+    .glitch::before { left: 3px; text-shadow: -3px 0 var(--pink); animation: g1 6s infinite linear; }
+    .glitch::after  { left: -3px; text-shadow: 3px 0 var(--s3);  animation: g2 6s infinite linear; }
+    @keyframes g1 {
+      0%,88%,100%{clip:rect(0,0,0,0)}
+      90%{clip:rect(20px,9999px,24px,0);transform:skew(.4deg)}
+      93%{clip:rect(58px,9999px,63px,0);transform:skew(-.3deg)}
+      96%{clip:rect(8px,9999px,12px,0);transform:skew(.7deg)}
+    }
+    @keyframes g2 {
+      0%,89%,100%{clip:rect(0,0,0,0)}
+      91%{clip:rect(34px,9999px,39px,0);transform:skew(-.5deg)}
+      94%{clip:rect(74px,9999px,80px,0);transform:skew(.3deg)}
+      97%{clip:rect(5px,9999px,10px,0);transform:skew(-.8deg)}
+    }
+
+    .ht {
+      font-family: var(--mono); font-size: clamp(12px,1.6vw,16px);
+      font-weight: 300; font-style: italic;
+      color: var(--pink); margin-bottom: 36px;
+      opacity: 0; animation: su .8s var(--ease) .75s forwards;
+      position: relative; z-index: 2;
+    }
+    .hc {
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+      opacity: 0; animation: su .8s var(--ease) 1s forwards;
+      position: relative; z-index: 2;
+    }
+    .hs {
+      position: absolute; bottom: clamp(28px,4vw,48px); right: var(--gutter);
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      opacity: 0; animation: fi 1.2s ease 1.5s forwards; z-index: 2;
+    }
+    .hs span { font-size: 8px; letter-spacing: .22em; text-transform: uppercase; color: var(--gray); writing-mode: vertical-rl; }
+    .sb { width: 1px; height: 52px; background: linear-gradient(to bottom, var(--gray), transparent); animation: sbob 2.4s ease-in-out infinite; }
+    @keyframes sbob { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(.4)} }
+    @keyframes su { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fi { from{opacity:0} to{opacity:1} }
+
+    /* hero pull-quote ribbon */
+    .h-ribbon {
+      position: absolute; top: 50%; left: 0; right: 0;
+      transform: translateY(-50%);
+      display: flex; justify-content: flex-end;
+      padding-right: clamp(24px,6vw,80px);
+      pointer-events: none; z-index: 1;
+    }
+    .h-ribbon-inner {
+      max-width: 340px;
+      font-family: var(--mono); font-size: 11px; font-style: italic;
+      color: rgba(215,239,194,.18);
+      line-height: 1.6; text-align: right;
+      letter-spacing: .04em;
+    }
+
+    /* ─── BUTTONS ────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 28px;
+      font-family: var(--mono); font-size: 10px; font-weight: 500;
+      letter-spacing: .18em; text-transform: uppercase;
+      cursor: pointer; border: none;
+      transition: all .25s var(--ease); text-decoration: none;
+    }
+    .bs { background: var(--sage); color: #1F1F1F; }
+    .bs:hover { background: var(--white); }
+    .bo { background: transparent; color: var(--white); border: 1px solid var(--border); }
+    .bo:hover { border-color: var(--white); }
+    .bg { background: transparent; color: var(--sage); border: 1px solid var(--bm); padding: 10px 22px; }
+    .bg:hover { background: var(--sage-bg); border-color: var(--sage); }
+
+    /* ─── DIVIDER ────────────────────────────────────────────────── */
+    .thorn-rule {
+      display: flex; align-items: center; gap: 24px;
+      margin: 0 var(--gutter) 0;
+      padding: 48px 0;
+      position: relative; z-index: 2;
+    }
+    .thorn-rule::before, .thorn-rule::after {
+      content: ''; flex: 1; height: 1px;
+      background: var(--border);
+    }
+    .thorn-rule-icon { flex-shrink: 0; opacity: .3; }
+
+    /* ─── ABOUT ──────────────────────────────────────────────────── */
+    #about {
+      position: relative; z-index: 2;
+      padding: clamp(80px,11vw,130px) var(--gutter);
+      background: var(--s2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .about-thorn-bg {
+      position: absolute; right: -80px; top: -40px;
+      width: clamp(300px,40vw,560px);
+      opacity: .04; pointer-events: none;
+    }
+    .about-thorn-bg path { fill: var(--sage); }
+
+    .ag { display: grid; grid-template-columns: 1.1fr 1fr; gap: 72px; align-items: start; }
+
+    /* stats grid */
+    .sg {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+    .sc { background: var(--s2); padding: 22px 18px; transition: background .2s; }
+    .sc:hover { background: #252525; }
+    .sv { font-family: var(--bebas); font-size: 34px; color: var(--sage); line-height: 1; margin-bottom: 4px; }
+    .sl { font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: var(--gray); }
+
+    /* pullquote */
+    .pq {
+      border-left: 2px solid var(--pink);
+      padding: 14px 0 14px 22px;
+      margin: 28px 0;
+      font-size: clamp(12px,1.4vw,14px);
+      font-weight: 300; font-style: italic;
+      color: var(--pink); line-height: 1.7;
+    }
+
+    /* philosophy block */
+    .ph {
+      padding: 18px 20px;
+      background: rgba(62,62,88,.18);
+      border: 1px solid rgba(62,62,88,.5);
+      margin-top: 28px;
+    }
+    .ph .t-cap { margin-bottom: 8px; }
+    .ph p { font-size: 12px; font-weight: 300; color: rgba(255,255,255,.5); line-height: 1.75; }
+
+    /* reference artists chips */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+    .chip {
+      padding: 5px 13px;
+      border: 1px solid var(--border);
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: .12em; color: var(--gray-lt);
+      text-transform: uppercase;
+      transition: border-color .2s, color .2s;
+    }
+    .chip:hover { border-color: var(--sage); color: var(--sage); }
+
+    @media (max-width: 768px) { .ag { grid-template-columns: 1fr; gap: 48px; } }
+
+    /* ─── MUSIC ──────────────────────────────────────────────────── */
+    #music {
+      position: relative; z-index: 2;
+      padding: clamp(80px,11vw,130px) var(--gutter);
+    }
+    .tc {
+      background: var(--s2);
+      border: 1px solid var(--border);
+      margin-bottom: 3px;
+      transition: border-color .3s;
+      overflow: hidden;
+    }
+    .tc:hover { border-color: var(--bm); }
+    .thd {
+      display: flex; align-items: center; gap: 16px;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tn { font-family: var(--bebas); font-size: 32px; color: rgba(215,239,194,.2); min-width: 38px; }
+    .ti { flex: 1; }
+    .tt { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--white); letter-spacing: .04em; }
+    .tm { font-size: 9px; letter-spacing: .14em; color: var(--gray); text-transform: uppercase; margin-top: 3px; }
+    .tbg { padding: 4px 10px; border: 1px solid var(--border); font-size: 8px; letter-spacing: .14em; text-transform: uppercase; color: var(--gray); }
+    .te iframe { display: block; }
+
+    /* donation section */
+    .don-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 36px; }
+    .don-card {
+      padding: 24px;
+      border: 1px solid var(--border);
+      background: var(--s2);
+      position: relative; overflow: hidden;
+      transition: border-color .3s;
+    }
+    .don-card:hover { border-color: var(--bm); }
+    .don-card::before {
+      content: '♥';
+      position: absolute; right: 20px; top: 16px;
+      font-size: 40px; color: rgba(215,239,194,.05);
+    }
+    .don-title { font-family: var(--display); font-size: 16px; font-weight: 600; color: var(--white); margin-bottom: 8px; letter-spacing: .04em; text-transform: uppercase; }
+    .don-desc  { font-size: 11px; font-weight: 300; color: var(--gray-lt); line-height: 1.7; margin-bottom: 18px; }
+    @media (max-width: 640px) { .don-grid { grid-template-columns: 1fr; } }
+
+    /* ─── EVENTS ─────────────────────────────────────────────────── */
+    #events {
+      position: relative; z-index: 2;
+      padding: clamp(80px,11vw,130px) var(--gutter);
+      background: var(--s2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .evt { width: 100%; border-collapse: collapse; }
+    .evt thead tr { border-bottom: 1px solid var(--border); }
+    .evt th { padding: 10px 16px; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--gray); text-align: left; font-weight: 400; }
+    .evt td { padding: 18px 16px; font-size: 12px; color: var(--gray-lt); border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .evt tbody tr { transition: background .2s; }
+    .evt tbody tr:hover td { background: #252525; color: var(--white); }
+    .ed { color: var(--white); font-weight: 500; white-space: nowrap; }
+    .en { color: var(--white); }
+    .da {
+      display: inline-flex; align-items: center; gap: 5px;
+      color: var(--sage); font-size: 9px; letter-spacing: .14em;
+      text-transform: uppercase; transition: color .2s;
+    }
+    .da:hover { color: var(--white); }
+    .tba { color: var(--gray); font-style: italic; font-size: 10px; letter-spacing: .1em; }
+    @media (max-width: 600px) {
+      .evt thead { display: none; }
+      .evt td { display: block; padding: 8px 16px; border: none; }
+      .evt tbody tr { display: block; border-bottom: 1px solid var(--border); padding: 12px 0; }
+    }
+
+    /* ─── CONTACT ────────────────────────────────────────────────── */
+    #contact {
+      position: relative; z-index: 2;
+      padding: clamp(80px,11vw,130px) var(--gutter);
+      background: var(--s1);
+      border-top: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .contact-thorn {
+      position: absolute; left: -60px; bottom: -40px;
+      width: clamp(240px,30vw,420px);
+      opacity: .06; pointer-events: none;
+    }
+    .contact-thorn path { fill: var(--sage); }
+
+    .cg { display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px; align-items: start; }
+    .cd { font-size: 13px; font-weight: 300; color: var(--gray-lt); line-height: 1.85; margin-bottom: 32px; }
+    .sl-nav { display: flex; flex-direction: column; gap: 8px; }
+    .si {
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 16px;
+      border: 1px solid var(--border);
+      color: var(--gray-lt); font-size: 11px; letter-spacing: .1em;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+    .si::before { content: '→'; color: rgba(215,239,194,.3); transition: transform .2s, color .2s; }
+    .si:hover { border-color: var(--sage); color: var(--white); background: var(--sage-bg); }
+    .si:hover::before { color: var(--sage); transform: translateX(4px); }
+    .fr { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .fg { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+    .fg label { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--gray); }
+    .fg input, .fg select, .fg textarea {
+      background: #252525;
+      border: 1px solid var(--border);
+      color: var(--white); font-family: var(--mono);
+      font-size: 13px; font-weight: 300;
+      padding: 12px 14px; outline: none;
+      transition: border-color .2s, background .2s;
+      width: 100%; appearance: none;
+    }
+    .fg input:focus, .fg select:focus, .fg textarea:focus {
+      border-color: var(--sage);
+      background: rgba(215,239,194,.03);
+    }
+    .fg textarea { min-height: 120px; resize: vertical; }
+    .fg select option { background: #252525; }
+    #fs { font-size: 10px; letter-spacing: .12em; min-height: 20px; margin-top: 8px; color: var(--sage); }
+    @media (max-width: 768px) { .cg { grid-template-columns: 1fr; } .fr { grid-template-columns: 1fr; } }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────── */
+    footer {
+      position: relative; z-index: 2;
+      padding: 36px var(--gutter);
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap; gap: 14px;
+    }
+    .fl { font-family: var(--bebas); font-size: 22px; letter-spacing: .12em; color: rgba(215,239,194,.2); }
+    .fc { font-size: 9px; letter-spacing: .12em; color: var(--gray); }
+    .fns { display: flex; gap: 18px; }
+    .fns a { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--gray); transition: color .2s; }
+    .fns a:hover { color: var(--sage); }
+
+    /* ─── NEOCITIES-INSPIRED WIDGET STRIP ──────────────────────── */
+    /* Small decorative "now playing" / status bar, indie web vibes */
+    /* ticker sits fixed, flush below the nav */
+    .status-bar {
+      position: fixed;
+      top: var(--nav-h);
+      left: 0; right: 0;
+      height: var(--ticker-h);
+      z-index: 499;
+      background: var(--black);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      overflow: hidden;
+    }
+    .status-bar-inner {
+      display: flex; gap: 48px; align-items: center;
+      animation: marquee 60s linear infinite;
+      white-space: nowrap;
+      will-change: transform;
+    }
+    .status-bar-inner:hover { animation-play-state: paused; }
+    .status-bar-inner span {
+      font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--gray);
+      flex-shrink: 0;
+    }
+    .status-bar-inner span b { color: var(--sage); font-weight: 400; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── NEOCITIES SECTION DIVIDER ORNAMENT ────────────────────── */
+    .ornament-row {
+      display: flex; align-items: center; justify-content: center;
+      padding: 32px var(--gutter);
+      gap: 20px; position: relative; z-index: 2;
+    }
+    .ornament-line { flex: 1; height: 1px; background: var(--border); }
+    .ornament-text { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: rgba(215,239,194,.25); }
+
+  </style>
+</head>
+<body>
+  <!-- CURSOR -->
+  <div id="cd"></div>
+  <div id="cr"></div>
+
+  <!-- BG CANVAS -->
+  <canvas id="bgc" aria-hidden="true"></canvas>
+
+  <!-- STATUS MARQUEE (neocities-inspired) — DO NOT ADD padding-top here; bar is position:fixed -->
+  <div class="status-bar" aria-hidden="true">
+    <div class="status-bar-inner" id="marquee">
+      <!-- set 1 -->
+      <span>◆ <b>GRLSCRY</b></span>
+      <span>SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · TECH HOUSE · TRANCE HOUSE · DARK HIGH ENERGY · LATE NIGHT · KARAMBA NIGHTCLUB · BAR SMITH · MAYA DAY+NIGHTCLUB · WASTED GRAIN · VALLEY BAR · RIOT HOUSE · LUXX · LOS ANGELES · EXCHANGE LA · SOUND NIGHTCLUB · AVALON HOLLYWOOD · MIAMI · CLUB SPACE · E11EVEN · LIV · NYC · BROOKLYN MIRAGE · PUBLIC RECORDS · NOWADAYS · ELSEWHERE · LONDON · FABRIC · MINISTRY OF SOUND · EGG LONDON · CORSICA STUDIOS · MANCHESTER · THE WHITE HOTEL · SOUP KITCHEN · BERLIN · BERGHAIN · TRESOR · WATERGATE · SISYPHOS · DOCUMENT DON'T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ</span>
+      <span>◆</span>
+      <!-- set 2 (exact copy — required for seamless -50% loop) -->
+      <span>◆ <b>GRLSCRY</b></span>
+      <span>SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · TECH HOUSE · TRANCE HOUSE · DARK HIGH ENERGY · LATE NIGHT · KARAMBA NIGHTCLUB · BAR SMITH · MAYA DAY+NIGHTCLUB · WASTED GRAIN · VALLEY BAR · RIOT HOUSE · LUXX · LOS ANGELES · EXCHANGE LA · SOUND NIGHTCLUB · AVALON HOLLYWOOD · MIAMI · CLUB SPACE · E11EVEN · LIV · NYC · BROOKLYN MIRAGE · PUBLIC RECORDS · NOWADAYS · ELSEWHERE · LONDON · FABRIC · MINISTRY OF SOUND · EGG LONDON · CORSICA STUDIOS · MANCHESTER · THE WHITE HOTEL · SOUP KITCHEN · BERLIN · BERGHAIN · TRESOR · WATERGATE · SISYPHOS · DOCUMENT DON'T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ</span>
+      <span>◆</span>
+    </div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <nav id="nav" role="navigation" aria-label="Main Navigation">
+    <a href="#hero" class="nl">GRLSCRY</a>
+    <ul class="nv" role="list">
+      <li><a href="#about">About</a></li>
+      <li><a href="#music">Sound</a></li>
+      <li><a href="#events">Shows</a></li>
+      <li><a href="#contact" class="nb">Book</a></li>
+    </ul>
+    <button id="nt" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div id="mm" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+    <a href="#about"   onclick="cm()">About</a>
+    <a href="#music"   onclick="cm()">Sound</a>
+    <a href="#events"  onclick="cm()">Shows</a>
+    <a href="#contact" onclick="cm()">Book</a>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- HERO -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section id="hero" aria-label="Hero">
+
+    <!-- thorn decorations -->
+    <svg class="thorn-deco hero-thorn-tr" viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <image height="750" width="500" href="CybersygilsimAsset.jpg"/>
+    </svg>
+
+    <svg class="thorn-deco hero-thorn-bl" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <image height="750" width="500" href="CybersygilsimAsset.jpg"/>
+    </svg>
+
+    <!-- floating pull-quote (neocities aesthetic) -->
+    <div class="h-ribbon" aria-hidden="true">
+      <p class="h-ribbon-inner">"he's got that raw bad boy attitude...<br> just need to tame it"</p>
+    </div>
+
+    <div class="heb">
+      <div class="ld" aria-hidden="true"></div>
+      <span class="t-label">DJ / Producer — SCOTTSDALE, AZ</span>
+    </div>
+
+    <h1 class="t-hero hn">
+      <span class="glitch" data-text="GRLSCRY">GRLSCRY</span>
+    </h1>
+
+    <p class="ht">Dark · High Energy · Late Night</p>
+
+    <div class="hc">
+      <a href="#music"   class="btn bs">Stream Now</a>
+      <a href="#contact" class="btn bo">Book a Set</a>
+    </div>
+
+  </section>
+
+  <!-- ornament -->
+  <div class="ornament-row" aria-hidden="true">
+    <div class="ornament-line"></div>
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:.25">
+      <image height="750" width="500" href="CybersygilsimAsset.jpg"/>
+    </svg>
+    <div class="ornament-line"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- ABOUT -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section id="about" aria-labelledby="about-h">
+
+    <!-- bg thorn -->
+    <svg class="thorn-deco about-thorn-bg" viewBox="0 0 560 700" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <image height="750" width="500" href="CybersygilsimAsset.jpg"/>
+    </svg>
+
+    <div class="w">
+      <div class="ew r">
+        <span class="el"></span>
+        <span class="t-label">Origin Story</span>
+      </div>
+
+      <div class="ag">
+        <!-- LEFT: bio text -->
+        <div>
+          <h2 class="t-sec r" id="about-h" style="margin-bottom:28px;">About</h2>
+
+          <div class="pq r d1">
+            Phoenix heat, late nights, dark rooms. 
+          </div>
+
+          <p class="t-body r d2" style="margin-bottom:18px;">
+            That’s where GRLSCRY comes from.          
+          </p>
+          <p class="t-body r d3" style="margin-bottom:18px;">
+            DJ and producer building trance house that doesn’t ask for permission—it just takes the room. Dark, high-energy, made for 3 a.m. when the filters are off and people actually move.
+          </p>
+          <p class="t-body r d3">
+            No chasing trends, no forced hype. Just clean, heavy sound that hits your chest and stays there. Raw emotion wrapped in tight rhythm. Tracks that don’t fade, sets that don’t apologize, a brand that shows up the same way every time: intentional, untouchable, a little dangerous.
+          </p>
+           <p class="t-body r d4">
+            Step in. Feel it. Get on the ride.          
+          </p>
+          <div class="ph r d4">
+            <span class="t-cap">// Philosophy</span>
+            <p>
+              GRLSCRY: Dark House That Hits Different. High Energy, Late Nights, No Compromises.
+              Ready to Feel the Pulse? Explore Releases, Gigs, and the Raw Behind the Beats.
+            </p>
+          </div>
+
+          <div class="chips r d5">
+            <span class="chip">Chris Lake</span>
+            <span class="chip">Odd Mob</span>
+            <span class="chip">Fisher</span>
+            <span class="chip">Cloonee</span>
+            <span class="chip">Tech House</span>
+            <span class="chip">House</span>
+          </div>
+        </div>
+
+        <!-- RIGHT: stats + tools -->
+        <div>
+          <div class="sg r d1">
+            <div class="sc">
+              <div class="sv">10+</div>
+              <div class="sl">Years DJ</div>
+            </div>
+            <div class="sc">
+              <div class="sv">SCOTTSDALE</div>
+              <div class="sl">Based</div>
+            </div>
+            <div class="sc">
+              <div class="sv">No</div>
+              <div class="sl">Rushed Drops.</div>
+            </div>
+            <div class="sc">
+              <div class="sv">Tracks Built </div>
+              <div class="sl">From the Ground Up</div>
+            </div>
+          </div>
+
+          <div class="ph r d2" style="margin-bottom:20px;">
+            <span class="t-cap">// Tools</span>
+            <p style="margin-top:8px;">Ableton Live 12 · Serum 2 · Pioneer DDJ-400 · Pioneer DDJ-GRV6 · CDJ 30000 · CDJ 20000 · DJM · A-Series</p>
+          </div>
+
+          <div class="ph r d3">
+            <span class="t-cap">// Inspiration</span>
+            <p style="margin-top:8px;">GRLSCRY pulls from the real late-night underbelly: 
+              blacked-out warehouses, bass that hits your chest, feral crowds moving like tomorrow’s cancelled.
+              Sweat, smoke, glances that stick under dim strobes.
+              Built by people who already own the room. 
+              Beats land with quiet empathy, natural charisma, subtle edge.
+              Slowed techno that shifts your head, indie dance built for 2026.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ornament -->
+  <div class="ornament-row" aria-hidden="true">
+    <div class="ornament-line"></div>
+    <span class="ornament-text">∴ Sound ∴</span>
+    <div class="ornament-line"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- MUSIC -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section id="music" aria-labelledby="music-h">
+    <div class="w">
+      <div class="ew r">
+        <span class="el"></span>
+        <span class="t-label">Streaming Now</span>
+      </div>
+      <h2 class="t-sec r" id="music-h" style="margin-bottom:44px;">Sound</h2>
+
+      <!-- Track 01 -->
+      <div class="tc r d1">
+        <div class="thd">
+          <span class="tn">01</span>
+          <div class="ti">
+            <div class="tt">Spaceship Flip</div>
+            <div class="tm">Tech House Mix · 2025</div>
+          </div>
+          <span class="tbg">SoundCloud</span>
+        </div>
+        <div class="te">
+      <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" 
+      src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2241684236&color=070609&hide_related=true&show_comments=false&show_teaser=false"></iframe>
+      <div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;">
+        <a href="https://soundcloud.com/grlscry" title="GRLS CRY" target="_blank" style="color: #cccccc; text-decoration: none;">GRLS CRY</a> · <a href="https://soundcloud.com/grlscry/marsolo-spaceship-grls-cry-flip" 
+        title="Marsolo - Spaceship (GRLS CRY FLIP)" target="_blank" style="color: #cccccc; text-decoration: none;">Marsolo - Spaceship (GRLS CRY FLIP)</a></div>
+          </iframe>
+        </div>
+      </div>
+
+      <!-- Track 02 -->
+      <div class="tc r d2">
+        <div class="thd">
+          <span class="tn">02</span>
+          <div class="ti">
+            <div class="tt">Tech House Mix Vol. 1</div>
+            <div class="tm">Live Mix · 2025</div>
+          </div>
+          <span class="tbg">SoundCloud</span>
+        </div>
+        <div class="te">
+           <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" 
+           src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2262546275&color=646c74&hide_related=true&show_comments=false&show_teaser=false"></iframe>
+           <div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;">
+            <a href="https://soundcloud.com/grlscry" title="GRLS CRY" target="_blank" style="color: #cccccc; text-decoration: none;">GRLS CRY</a> · <a href="https://soundcloud.com/grlscry/grlscry-techhousemixvol1-djpromo" 
+            title="GRLS CRY - Tech House Mix Vol. 1 | DJ PROMO" target="_blank" s
+            tyle="color: #cccccc; text-decoration: none;">GRLS CRY - Tech House Mix Vol. 1 | DJ PROMO</a></div>
+          </iframe>
+        </div>
+      </div>
+
+      <!-- Spotify placeholder -->
+      <div class="tc r d3" style="padding:24px 28px; display:flex; align-items:center; gap:20px; border-style:dashed; opacity:.5;">
+        <span class="tn" style="font-size:20px;">SP</span>
+        <div class="ti">
+          <div class="tt" style="color:var(--gray-lt);">Spotify — Coming Soon</div>
+          <div class="tm">Track IDs will be added when music goes live</div>
+        </div>
+      </div>
+
+      <!-- Give Back strip -->
+      <div style="margin-top:56px;" class="r d4">
+        <div class="ew">
+          <span class="el"></span>
+          <span class="t-label">Give Back</span>
+        </div>
+        <p class="t-body" style="margin-bottom:28px; max-width:580px;">
+          Music builds communities. These causes matter. If you want to support something real alongside the music:
+        </p>
+        <div class="don-grid">
+          <div class="don-card r d4">
+            <div class="don-title">Men's Mental Health</div>
+            <div class="don-desc">Because the grind is real and asking for help isn't weakness.</div>
+            <a href="https://www.gofundme.com/f/mens-mental-health-fundraiser" target="_blank" rel="noopener" class="btn bg" style="font-size:9px;">Donate ↗</a>
+          </div>
+          <div class="don-card r d5">
+            <div class="don-title">Save the Music</div>
+            <div class="don-desc">Keeping music education alive for kids who can't afford to pay for it.</div>
+            <a href="https://www.savethemusic.org/donate/" target="_blank" rel="noopener" class="btn bg" style="font-size:9px;">Donate ↗</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ornament -->
+  <div class="ornament-row" aria-hidden="true">
+    <div class="ornament-line"></div>
+    <span class="ornament-text">∴ Shows ∴</span>
+    <div class="ornament-line"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- EVENTS -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section id="events" aria-labelledby="events-h">
+    <div class="w">
+      <div class="ew r">
+        <span class="el"></span>
+        <span class="t-label">Live Dates</span>
+      </div>
+      <h2 class="t-sec r" id="events-h" style="margin-bottom:44px;">Shows</h2>
+
+      <table class="evt r d1" aria-label="Upcoming shows">
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Venue</th>
+            <th scope="col">Location</th>
+            <th scope="col">Type</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="ed">Mar 7, 2026</td>
+            <td class="en">Half Marathon Run</td>
+            <td>Phoenix, AZ</td>
+            <td>Community / Fundraiser</td>
+            <td><a href="#contact" class="da">Info ↗</a></td>
+          </tr>
+          <tr>
+            <td class="ed">TBA</td>
+            <td class="en">Phoenix Venue</td>
+            <td>Phoenix, AZ</td>
+            <td>DJ Set — Tech House</td>
+            <td><span class="tba">Booking Open</span></td>
+          </tr>
+          <tr>
+            <td class="ed">TBA</td>
+            <td class="en">Scottsdale Venue</td>
+            <td>Scottsdale, AZ</td>
+            <td>DJ Set — Late Night</td>
+            <td><span class="tba">Booking Open</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="t-body r d2" style="margin-top:32px; color:var(--gray);">
+        Confirmed dates and ticket links posted here as bookings are finalized.<br>
+        Corporate event packages available — reach out with date, venue, and budget.
+      </p>
+    </div>
+  </section>
+
+  <!-- ornament -->
+  <div class="ornament-row" aria-hidden="true">
+    <div class="ornament-line"></div>
+    <span class="ornament-text">∴ Book ∴</span>
+    <div class="ornament-line"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- CONTACT -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section id="contact" aria-labelledby="contact-h">
+
+    <!-- bg thorn -->
+    <svg class="thorn-deco contact-thorn" viewBox="0 0 420 500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <image height="750" width="500" href="CybersygilsimAsset.jpg"/> 
+    </svg>
+
+    <div class="w">
+      <div class="ew r">
+        <span class="el"></span>
+        <span class="t-label">Get in Touch</span>
+      </div>
+      <h2 class="t-sec r" id="contact-h" style="margin-bottom:48px;">Book</h2>
+
+      <div class="cg">
+        <div class="r">
+          <p class="cd">
+            Available for bookings across Phoenix, Scottsdale, and beyond. Corporate packages available under a separate EPK. Reach out with your date, venue, and budget.
+          </p>
+
+          <nav class="sl-nav" aria-label="Social and contact links">
+            <a href="https://instagram.com/grlscryofficial" class="si" target="_blank" rel="noopener">
+              Instagram — @grlscryofficial
+            </a>
+            <a href="https://x.com/grlscryofficial" class="si" target="_blank" rel="noopener">
+              X — @grlscryofficial
+            </a>
+            <a href="https://soundcloud.com/grlscry" class="si" target="_blank" rel="noopener">
+              SoundCloud — grlscry
+            </a>
+            <a href="/cdn-cgi/l/email-protection#266d544f55524f4847084b4d5241085549534842664953524a49494d0845494b" class="si">
+              Management — <span class="__cf_email__" data-cfemail="78330a110b0c1116195615130c1f560b170d161c38170d0c14171713561b1715">[email&#160;protected]</span>
+            </a>
+          </nav>
+        </div>
+
+        <div class="r d2">
+          <!--
+            ══ PHASE 3: EMAIL SETUP (30 min) ══════════════════════════════
+            Step 1 — Go to emailjs.com, sign up free
+            Step 2 — Click "Add New Service", connect your email (Gmail or Outlook)
+            Step 3 — Go to "Email Templates", create a template, note the template ID
+            Step 4 — Go to "Account" → copy your Public Key
+            Step 5 — In the <head>, add:
+                     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+                     <script>emailjs.init("YOUR_PUBLIC_KEY")</script>
+            Step 6 — Replace the setTimeout block below with:
+                     emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', this)
+                       .then(() => { fs.textContent = '✓ Message sent.'; btn.disabled = false; btn.textContent = 'Send Inquiry'; })
+                       .catch(e => { fs.textContent = '✗ Error: ' + e.text; btn.disabled = false; });
+
+            COMMON ERRORS:
+            ✗ "Invalid public key" → Double-check Account > Public Key (not Secret Key)
+            ✗ Form submits but no email → Check spam folder + verify service is connected
+            ✗ Template vars not working → Make sure template uses {{name}}, {{email}}, {{message}}
+            ══════════════════════════════════════════════════════════════ -->
+          <form id="cf" name="booking" netlify novalidate>
+            <div class="fr">
+              <div class="fg">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required aria-required="true" placeholder="Your name or venue">
+              </div>
+              <div class="fg">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required aria-required="true" placeholder="your@email.com">
+              </div>
+            </div>
+            <div class="fg">
+              <label for="iq">Inquiry Type</label>
+              <select id="iq" name="inquiry_type">
+                <option value="booking">DJ Booking</option>
+                <option value="corporate">Corporate Event</option>
+                <option value="press">Press / Media</option>
+                <option value="collab">Collaboration</option>
+                <option value="general">General</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label for="msg">Message</label>
+              <textarea id="msg" name="message" required aria-required="true" placeholder="Date, venue, event type, budget..."></textarea>
+            </div>
+            <button type="submit" class="btn bs" style="width:100%;justify-content:center;">
+              Send Inquiry
+            </button>
+            <p id="fs" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="fl">GRLSCRY</span>
+    <span class="fc">© 2026 — SCOTTSDALE, AZ — Tech House / House</span>
+    <nav class="fns" aria-label="Footer navigation">
+      <a href="#about">About</a>
+      <a href="#music">Sound</a>
+      <a href="#contact">Book</a>
+    </nav>
+  </footer>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- JAVASCRIPT -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    /* ── CURSOR ─────────────────────────────────────────────────── */
+    const cd = document.getElementById('cd'), cr = document.getElementById('cr');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cd.style.left = mx + 'px'; cd.style.top = my + 'px';
+    });
+    (function loop() {
+      rx += (mx - rx) * .12; ry += (my - ry) * .12;
+      cr.style.left = rx + 'px'; cr.style.top = ry + 'px';
+      requestAnimationFrame(loop);
+    })();
+    document.querySelectorAll('a, button, .chip, .sc, .tc, .don-card').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('hov'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('hov'));
+    });
+
+    /* ── NAV SCROLL ─────────────────────────────────────────────── */
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('sc', window.scrollY > 60), { passive: true });
+
+    /* ── MOBILE NAV ─────────────────────────────────────────────── */
+    const nt = document.getElementById('nt'), mm = document.getElementById('mm');
+    nt.addEventListener('click', () => {
+      const o = mm.classList.toggle('open');
+      nt.classList.toggle('open', o);
+      nt.setAttribute('aria-expanded', o);
+      document.body.style.overflow = o ? 'hidden' : '';
+    });
+    function cm() {
+      mm.classList.remove('open'); nt.classList.remove('open');
+      nt.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    /* ── SCROLL REVEAL ──────────────────────────────────────────── */
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
+    }, { threshold: .1, rootMargin: '0px 0px -10px 0px' });
+    document.querySelectorAll('.r').forEach(el => io.observe(el));
+
+    /* ── STATUS BAR: duplicate content for seamless loop ─────────── */
+    (function() {
+      const m = document.getElementById('marquee');
+      // Width-based duplicate is already done in HTML (content repeated twice)
+      // Pause on hover
+      m.addEventListener('mouseenter', () => m.style.animationPlayState = 'paused');
+      m.addEventListener('mouseleave', () => m.style.animationPlayState = 'running');
+    })();
+
+    /* ── BG CANVAS — industrial noise drops ─────────────────────── */
+    window.addEventListener('load', () => {
+      const cv = document.getElementById('bgc'), ctx = cv.getContext('2d');
+      const chars = ['·', '—', '○', '×', '∴', '░', '▪', '0', '1', '◦', '/', '\\', '|'];
+      function resize() { cv.width = window.innerWidth; cv.height = window.innerHeight; }
+      resize();
+      window.addEventListener('resize', resize, { passive: true });
+      const COL = 24;
+      let drops = [];
+      function init() { drops = Array.from({ length: Math.floor(cv.width / COL) }, () => Math.random() * -(cv.height / 16)); }
+      init();
+      window.addEventListener('resize', init, { passive: true });
+      function draw() {
+        ctx.fillStyle = 'rgba(14,14,14,.06)';
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        ctx.fillStyle = '#D7EFC2';
+        ctx.font = '12px "IBM Plex Mono",monospace';
+        drops.forEach((y, i) => {
+          ctx.globalAlpha = Math.random() * .6 + .2;
+          ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * COL, y * 16);
+          ctx.globalAlpha = 1;
+          if (y * 16 > cv.height && Math.random() > .975) drops[i] = 0;
+          drops[i] += .4;
+        });
+      }
+      setTimeout(() => setInterval(draw, 110), 1800);
+    });
+
+    /* ── FORM SUBMISSION ────────────────────────────────────────── */
+    document.getElementById('cf').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn = this.querySelector('button[type="submit"]');
+      const fs  = document.getElementById('fs');
+
+      // basic validation
+      const name  = this.querySelector('#name').value.trim();
+      const email = this.querySelector('#email').value.trim();
+      const msg   = this.querySelector('#msg').value.trim();
+
+      if (!name || !email || !msg) {
+        fs.textContent = '✗ Please fill in all required fields.';
+        fs.style.color = 'var(--pink)';
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        fs.textContent = '✗ Please enter a valid email address.';
+        fs.style.color = 'var(--pink)';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      fs.textContent = '';
+      fs.style.color = 'var(--sage)';
+
+      const data = new FormData(this);
+fetch('/', { method: 'POST', body: data })
+  .then(() => {
+    fs.textContent = '✓ Message received. We\'ll be in touch.';
+    btn.disabled = false;
+    btn.textContent = 'Send Inquiry';
+    this.reset();
+  })
+  .catch(() => {
+    fs.textContent = '✗ Something went wrong — email us directly.';
+    fs.style.color = 'var(--pink)';
+    btn.disabled = false;
+    btn.textContent = 'Send Inquiry';
+  });
+      // ─────────────────────────────────────────────────────────────
+    });
+  </script>
+</body>
+</html>
