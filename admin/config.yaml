@@ -4,12 +4,4 @@ backend:
 
 media_folder: "images"
 
-collections:
-  - name: "pages"
-    label: "Pages"
-    files:
-      - label: "Home Page"
-        name: "home"
-        file: "index.html"
-        fields:
-          - { label: "Page Title", name: "title", widget: "string" }
+collections: []
