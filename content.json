@@ -18,12 +18,31 @@
       "Step in. Feel it. Get on the ride."
     ],
     "philosophy": "GRLSCRY: Dark House That Hits Different. High Energy, Late Nights, No Compromises. Ready to Feel the Pulse? Explore Releases, Gigs, and the Raw Behind the Beats.",
-    "influences": ["Chris Lake", "Odd Mob", "Fisher", "Cloonee", "Tech House", "House"],
+    "influences": [
+      "Chris Lake",
+      "Odd Mob",
+      "Fisher",
+      "Cloonee",
+      "Tech House",
+      "House"
+    ],
     "stats": [
-      { "value": "10+",          "label": "Years DJ" },
-      { "value": "SCOTTSDALE",   "label": "Based" },
-      { "value": "No",           "label": "Rushed Drops." },
-      { "value": "Tracks Built", "label": "From the Ground Up" }
+      {
+        "value": "10+",
+        "label": "Years DJ"
+      },
+      {
+        "value": "SCOTTSDALE",
+        "label": "Based"
+      },
+      {
+        "value": "No",
+        "label": "Rushed Drops."
+      },
+      {
+        "value": "Tracks Built",
+        "label": "From the Ground Up"
+      }
     ],
     "tools": "Ableton Live 12 · Serum 2 · Pioneer DDJ-400 · Pioneer DDJ-GRV6 · CDJ 30000 · CDJ 20000 · DJM · A-Series",
     "inspiration": "GRLSCRY pulls from the real late-night underbelly: blacked-out warehouses, bass that hits your chest, feral crowds moving like tomorrow's cancelled. Sweat, smoke, glances that stick under dim strobes. Built by people who already own the room. Beats land with quiet empathy, natural charisma, subtle edge. Slowed techno that shifts your head, indie dance built for 2026."
@@ -84,6 +103,6 @@
     "booking_email": "kristina.mktg.sound@outlook.com"
   },
   "footer": {
-    "copyright": "© 2026 — SCOTTSDALE, AZ — Tech House / House"
+    "copyright": "© 2026 — SCOTTSDALE, AZ — Tech House / House - GRLS CRY Approved"
   }
 }
