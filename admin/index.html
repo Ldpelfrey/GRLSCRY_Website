@@ -1,11 +1,607 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Content Manager</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GRLSCRY — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #0e0e0e;
+      --s1:       #1A1A1A;
+      --s2:       #242424;
+      --border:   rgba(215,239,194,.12);
+      --bm:       rgba(215,239,194,.28);
+      --sage:     #D7EFC2;
+      --sage-dim: rgba(215,239,194,.5);
+      --gray:     #737373;
+      --gray-lt:  #B0B0B0;
+      --white:    #FFFFFF;
+      --pink:     #FF69B4;
+      --mono:     'IBM Plex Mono', monospace;
+      --bebas:    'Bebas Neue', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--white); font-family: var(--mono); font-size: 13px; line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── GATE ──────────────────────────────────────────────── */
+    #gate {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 100vh;
+    }
+    .login-box {
+      background: var(--s1);
+      border: 1px solid var(--border);
+      padding: 48px 40px;
+      width: 100%; max-width: 400px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .login-box h1 {
+      font-family: var(--bebas); font-size: 42px;
+      color: var(--sage); letter-spacing: .12em;
+    }
+    .login-box .sub {
+      font-size: 9px; letter-spacing: .22em;
+      text-transform: uppercase; color: var(--gray);
+      margin-top: -8px;
+    }
+    #pw-error {
+      color: var(--pink); font-size: 10px;
+      letter-spacing: .1em; min-height: 16px;
+    }
+
+    /* ── PANEL ─────────────────────────────────────────────── */
+    #panel { display: none; }
+
+    /* ── NAV ───────────────────────────────────────────────── */
+    .admin-nav {
+      background: var(--s1);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .admin-logo { font-family: var(--bebas); font-size: 20px; color: var(--sage); letter-spacing: .12em; }
+    .admin-logo span { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; color: var(--gray); margin-left: 10px; text-transform: uppercase; }
+
+    /* ── BODY ──────────────────────────────────────────────── */
+    .admin-body { max-width: 920px; margin: 0 auto; padding: 40px 32px 0; }
+
+    /* ── SECTIONS ──────────────────────────────────────────── */
+    .admin-section { margin-bottom: 52px; }
+    .section-title {
+      font-size: 9px; letter-spacing: .26em; text-transform: uppercase;
+      color: var(--sage); border-bottom: 1px solid var(--border);
+      padding-bottom: 10px; margin-bottom: 22px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: '//'; color: rgba(215,239,194,.3); }
+
+    /* ── FORM ELEMENTS ─────────────────────────────────────── */
+    .fg { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .fg label {
+      font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--gray);
+    }
+    .fg input, .fg textarea {
+      background: var(--s2); border: 1px solid var(--border);
+      color: var(--white); font-family: var(--mono); font-size: 12px; font-weight: 300;
+      padding: 10px 12px; outline: none; width: 100%;
+      transition: border-color .2s;
+    }
+    .fg input:focus, .fg textarea:focus { border-color: var(--sage); }
+    .fg textarea { min-height: 78px; resize: vertical; }
+    .fg textarea.tall { min-height: 120px; }
+    .hint { font-size: 9px; letter-spacing: .08em; color: var(--gray); margin-top: 3px; }
+
+    .fr  { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .fr3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+    /* ── CARDS ─────────────────────────────────────────────── */
+    .card {
+      background: var(--s1); border: 1px solid var(--border);
+      padding: 20px; margin-bottom: 12px; position: relative;
+    }
+    .card-num {
+      font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--sage-dim); margin-bottom: 16px;
+    }
+    .btn-remove {
+      position: absolute; top: 14px; right: 14px;
+      background: none; border: 1px solid rgba(255,105,180,.3);
+      color: var(--pink); font-family: var(--mono);
+      font-size: 9px; letter-spacing: .12em; text-transform: uppercase;
+      padding: 5px 10px; cursor: pointer; transition: all .2s;
+    }
+    .btn-remove:hover { background: rgba(255,105,180,.1); border-color: var(--pink); }
+
+    /* ── STATS GRID ────────────────────────────────────────── */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-card { background: var(--s1); border: 1px solid var(--border); padding: 14px; }
+
+    /* ── BUTTONS ───────────────────────────────────────────── */
+    .btn-add {
+      background: none; border: 1px dashed rgba(215,239,194,.15);
+      color: var(--gray-lt); font-family: var(--mono);
+      font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
+      padding: 10px 20px; cursor: pointer; width: 100%;
+      transition: all .2s; margin-top: 4px;
+    }
+    .btn-add:hover { border-color: var(--sage); color: var(--sage); }
+
+    .btn-login, .btn-save {
+      background: var(--sage); color: #1A1A1A; border: none;
+      font-family: var(--mono); font-size: 10px; font-weight: 500;
+      letter-spacing: .18em; text-transform: uppercase;
+      padding: 13px 28px; cursor: pointer; width: 100%;
+      transition: background .2s;
+    }
+    .btn-login:hover, .btn-save:hover { background: #fff; }
+    .btn-save:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-save { width: auto; padding: 13px 36px; }
+
+    .btn-logout {
+      background: none; border: 1px solid var(--border); color: var(--gray);
+      font-family: var(--mono); font-size: 9px; letter-spacing: .16em;
+      text-transform: uppercase; padding: 7px 14px; cursor: pointer; transition: all .2s;
+    }
+    .btn-logout:hover { border-color: var(--pink); color: var(--pink); }
+
+    /* ── SAVE BAR ──────────────────────────────────────────── */
+    .save-bar {
+      position: sticky; bottom: 0;
+      background: rgba(14,14,14,.97); backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      padding: 20px 32px;
+      display: flex; align-items: center; gap: 20px;
+    }
+    #status-msg { font-size: 11px; letter-spacing: .08em; flex: 1; min-height: 18px; }
+
+    /* ── LOAD OVERLAY ──────────────────────────────────────── */
+    #load-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(14,14,14,.8); backdrop-filter: blur(6px);
+      z-index: 9999; align-items: center; justify-content: center;
+      font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--sage);
+    }
+    #load-overlay.show { display: flex; }
+
+    @media (max-width: 640px) {
+      .fr, .fr3, .stats-grid { grid-template-columns: 1fr; }
+      .admin-body { padding: 24px 16px 0; }
+      .save-bar { padding: 16px; flex-direction: column; align-items: stretch; }
+      .btn-save { width: 100%; }
+    }
+  </style>
 </head>
 <body>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+<!-- ── LOADING OVERLAY ──────────────────────────────────── -->
+<div id="load-overlay">Loading content…</div>
+
+<!-- ────────────────────────────────────────────────────────
+     PASSWORD GATE
+─────────────────────────────────────────────────────────── -->
+<div id="gate">
+  <div class="login-box">
+    <h1>GRLSCRY</h1>
+    <p class="sub">Admin Panel</p>
+    <div class="fg">
+      <label for="pw-input">Password</label>
+      <input type="password" id="pw-input" placeholder="Enter password" autocomplete="current-password">
+    </div>
+    <button class="btn-login" id="btn-login">Enter</button>
+    <p id="pw-error"></p>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────────────────
+     ADMIN PANEL
+─────────────────────────────────────────────────────────── -->
+<div id="panel">
+
+  <nav class="admin-nav">
+    <div>
+      <span class="admin-logo">GRLSCRY <span>Admin</span></span>
+    </div>
+    <button class="btn-logout" id="btn-logout">Logout</button>
+  </nav>
+
+  <div class="admin-body">
+
+    <!-- META ─────────────────────────────────────────────── -->
+    <div class="admin-section">
+      <div class="section-title">Page Meta</div>
+      <div class="fg"><label>Page Title</label><input type="text" id="f-meta-title"></div>
+      <div class="fg"><label>Meta Description</label><textarea id="f-meta-desc"></textarea></div>
+    </div>
+
+    <!-- TICKER ───────────────────────────────────────────── -->
+    <div class="admin-section">
+      <div class="section-title">Status Ticker</div>
+      <div class="fg">
+        <label>Ticker Text</label>
+        <textarea id="f-ticker" class="tall"></textarea>
+        <span class="hint">Separate items with  ·  — the ticker duplicates automatically for a seamless loop.</span>
+      </div>
+    </div>
+
+    <!-- HERO ─────────────────────────────────────────────── -->
+    <div class="admin-section">
+      <div class="section-title">Hero Section</div>
+      <div class="fr">
+        <div class="fg"><label>Label (below name)</label><input type="text" id="f-hero-label"></div>
+        <div class="fg"><label>Tagline</label><input type="text" id="f-hero-tagline"></div>
+      </div>
+      <div class="fg">
+        <label>Pull Quote (decorative right-side ribbon)</label>
+        <textarea id="f-hero-pullquote" rows="3"></textarea>
+      </div>
+    </div>
+
+    <!-- ABOUT ────────────────────────────────────────────── -->
+    <div class="admin-section">
+      <div class="section-title">About</div>
+      <div class="fg"><label>Pull Quote (pink left-border)</label><input type="text" id="f-about-pq"></div>
+      <div class="fg"><label>Bio — Paragraph 1</label><textarea id="f-bio-1"></textarea></div>
+      <div class="fg"><label>Bio — Paragraph 2</label><textarea id="f-bio-2"></textarea></div>
+      <div class="fg"><label>Bio — Paragraph 3</label><textarea id="f-bio-3"></textarea></div>
+      <div class="fg"><label>Bio — Paragraph 4 (sign-off line)</label><textarea id="f-bio-4"></textarea></div>
+      <div class="fg"><label>Philosophy Block</label><textarea id="f-philosophy"></textarea></div>
+      <div class="fg">
+        <label>Influences / Chips (comma-separated)</label>
+        <input type="text" id="f-influences" placeholder="Chris Lake, Odd Mob, Fisher, Cloonee, Tech House">
+        <span class="hint">Each item becomes a tag chip. Separate with commas.</span>
+      </div>
+
+      <div class="section-title" style="margin-top:24px;">Stats Grid (4 cells)</div>
+      <div class="stats-grid" id="f-stats-container"></div>
+
+      <div class="fg" style="margin-top:16px;"><label>Equipment / Tools</label><textarea id="f-tools"></textarea></div>
+      <div class="fg"><label>Inspiration Block</label><textarea id="f-inspiration" class="tall"></textarea></div>
+    </div>
+
+    <!-- MUSIC ────────────────────────────────────────────── -->
+    <div class="admin-section">
+      <div class="section-title">Music / Tracks</div>
+      <div id="f-tracks-container"></div>
+      <button class="btn-add" id="btn-add-track">+ Add Track</button>
+    </div>
+
+    <!-- EVENTS ───────────────────────────────────────────── -->
+    <div class="admin-section">
+      <div class="section-title">Shows / Events</div>
+      <div id="f-events-container"></div>
+      <button class="btn-add" id="btn-add-event">+ Add Show</button>
+    </div>
+
+    <!-- CONTACT ──────────────────────────────────────────── -->
+    <div class="admin-section">
+      <div class="section-title">Contact / Booking</div>
+      <div class="fg"><label>Booking Blurb</label><textarea id="f-contact-blurb"></textarea></div>
+      <div class="fr">
+        <div class="fg"><label>Instagram URL</label><input type="text" id="f-ig-url"></div>
+        <div class="fg"><label>Instagram Handle</label><input type="text" id="f-ig-handle" placeholder="@handle"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>X (Twitter) URL</label><input type="text" id="f-x-url"></div>
+        <div class="fg"><label>X Handle</label><input type="text" id="f-x-handle" placeholder="@handle"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>SoundCloud URL</label><input type="text" id="f-sc-url"></div>
+        <div class="fg"><label>SoundCloud Handle / Display Name</label><input type="text" id="f-sc-handle"></div>
+      </div>
+      <div class="fg"><label>Booking / Management Email</label><input type="email" id="f-email"></div>
+    </div>
+
+    <!-- FOOTER ───────────────────────────────────────────── -->
+    <div class="admin-section">
+      <div class="section-title">Footer</div>
+      <div class="fg"><label>Copyright Line</label><input type="text" id="f-footer-copyright"></div>
+    </div>
+
+    <!-- spacer for sticky bar -->
+    <div style="height:100px;"></div>
+
+  </div><!-- /.admin-body -->
+
+  <!-- SAVE BAR ─────────────────────────────────────────── -->
+  <div class="save-bar">
+    <p id="status-msg"></p>
+    <button class="btn-save" id="btn-save">Save Changes → Publish</button>
+  </div>
+
+</div><!-- /#panel -->
+
+<script>
+  /* ══════════════════════════════════════════════════════════
+     CONFIG — only the admin password lives here.
+     The GitHub token lives in Netlify → Site settings →
+     Environment variables as GITHUB_TOKEN. Never in this file.
+     ══════════════════════════════════════════════════════════ */
+  const ADMIN_PASSWORD = 'grlscry2024'; // change this to your desired password
+  /* ══════════════════════════════════════════════════════════ */
+
+  let trackSeq = 0;
+  let eventSeq = 0;
+
+  /* ── UTIL ──────────────────────────────────────────────── */
+  const $   = id  => document.getElementById(id);
+  const val = id  => ($( id)?.value ?? '').trim();
+  const esc = str => String(str ?? '')
+    .replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  function setStatus(msg, ok = true) {
+    const el = $('status-msg');
+    el.style.color = ok ? 'var(--sage)' : 'var(--pink)';
+    el.textContent = msg;
+  }
+
+  /* ── AUTH ──────────────────────────────────────────────── */
+  $('pw-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') $('btn-login').click();
+  });
+
+  $('btn-login').addEventListener('click', () => {
+    if ($('pw-input').value === ADMIN_PASSWORD) {
+      $('gate').style.display  = 'none';
+      $('panel').style.display = 'block';
+      loadContent();
+    } else {
+      $('pw-error').textContent = '✗ Incorrect password.';
+      setTimeout(() => { $('pw-error').textContent = ''; }, 3000);
+    }
+  });
+
+  $('btn-logout').addEventListener('click', () => {
+    $('panel').style.display = 'none';
+    $('gate').style.display  = 'flex';
+    $('pw-input').value = '';
+    setStatus('');
+  });
+
+  /* ── LOAD CONTENT ──────────────────────────────────────────
+     Reads content.json directly from the site root.
+     Netlify serves it as a static file — no token needed.
+  ─────────────────────────────────────────────────────────── */
+  function loadContent() {
+    $('load-overlay').classList.add('show');
+    setStatus('Loading current content…');
+
+    fetch('/content.json?v=' + Date.now())
+      .then(r => {
+        if (!r.ok) throw new Error(`content.json not found (${r.status})`);
+        return r.json();
+      })
+      .then(data => {
+        populateForm(data);
+        setStatus('✓ Content loaded.');
+        setTimeout(() => setStatus(''), 3000);
+      })
+      .catch(err => {
+        setStatus(`✗ ${err.message}`, false);
+        console.error(err);
+      })
+      .finally(() => $('load-overlay').classList.remove('show'));
+  }
+
+  /* ── POPULATE FORM ─────────────────────────────────────── */
+  function populateForm(c) {
+    const set = (id, v) => { const el = $(id); if (el && v != null) el.value = v; };
+
+    set('f-meta-title',     c.meta?.title);
+    set('f-meta-desc',      c.meta?.description);
+    set('f-ticker',         c.ticker);
+    set('f-hero-label',     c.hero?.label);
+    set('f-hero-tagline',   c.hero?.tagline);
+    set('f-hero-pullquote', c.hero?.pullquote);
+    set('f-about-pq',       c.about?.pullquote);
+    (c.about?.bio || []).forEach((t, i) => set(`f-bio-${i+1}`, t));
+    set('f-philosophy',     c.about?.philosophy);
+    set('f-influences',     (c.about?.influences || []).join(', '));
+    set('f-tools',          c.about?.tools);
+    set('f-inspiration',    c.about?.inspiration);
+
+    buildStats(c.about?.stats || [{},{},{},{}]);
+
+    trackSeq = 0;
+    $('f-tracks-container').innerHTML = '';
+    (c.tracks || []).forEach(t => addTrack(t));
+
+    eventSeq = 0;
+    $('f-events-container').innerHTML = '';
+    (c.events || []).forEach(e => addEvent(e));
+
+    set('f-contact-blurb', c.contact?.blurb);
+    set('f-ig-url',        c.contact?.instagram_url);
+    set('f-ig-handle',     c.contact?.instagram_handle);
+    set('f-x-url',         c.contact?.x_url);
+    set('f-x-handle',      c.contact?.x_handle);
+    set('f-sc-url',        c.contact?.soundcloud_url);
+    set('f-sc-handle',     c.contact?.soundcloud_handle);
+    set('f-email',         c.contact?.booking_email);
+    set('f-footer-copyright', c.footer?.copyright);
+  }
+
+  /* ── STATS ─────────────────────────────────────────────── */
+  function buildStats(stats) {
+    const wrap = $('f-stats-container');
+    wrap.innerHTML = '';
+    stats.forEach((s, i) => {
+      const card = document.createElement('div');
+      card.className = 'stat-card';
+      card.innerHTML = `
+        <div class="fg" style="margin-bottom:10px;">
+          <label>Stat ${i+1} — Value</label>
+          <input type="text" id="f-stat-${i}-value" value="${esc(s.value||'')}">
+        </div>
+        <div class="fg" style="margin-bottom:0;">
+          <label>Stat ${i+1} — Label</label>
+          <input type="text" id="f-stat-${i}-label" value="${esc(s.label||'')}">
+        </div>`;
+      wrap.appendChild(card);
+    });
+  }
+
+  /* ── TRACKS ────────────────────────────────────────────── */
+  function addTrack(d = {}) {
+    const n = ++trackSeq;
+    const wrap = $('f-tracks-container');
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-num">Track ${String(n).padStart(2,'0')}</div>
+      ${n > 1 ? `<button class="btn-remove" onclick="rmCard(this)">× Remove</button>` : ''}
+      <div class="fr">
+        <div class="fg"><label>Title</label>
+          <input type="text" class="t-title" value="${esc(d.title||'')}"></div>
+        <div class="fg"><label>Meta (year / type)</label>
+          <input type="text" class="t-meta" value="${esc(d.meta||'')}"></div>
+      </div>
+      <div class="fg"><label>Platform Label</label>
+        <input type="text" class="t-platform" value="${esc(d.platform||'SoundCloud')}"></div>
+      <div class="fg">
+        <label>SoundCloud Embed URL</label>
+        <textarea class="t-embed" rows="3">${esc(d.soundcloud_embed||'')}</textarea>
+        <span class="hint">Full URL from the SoundCloud embed code — starts with https://w.soundcloud.com/player/?url=…</span>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>SoundCloud Profile URL</label>
+          <input type="text" class="t-sc-profile" value="${esc(d.soundcloud_profile_url||'')}"></div>
+        <div class="fg"><label>SoundCloud Track URL</label>
+          <input type="text" class="t-sc-track" value="${esc(d.soundcloud_track_url||'')}"></div>
+      </div>
+      <div class="fg"><label>Track Link Display Title</label>
+        <input type="text" class="t-sc-title" value="${esc(d.soundcloud_track_title||'')}"></div>`;
+    wrap.appendChild(card);
+  }
+
+  /* ── EVENTS ────────────────────────────────────────────── */
+  function addEvent(d = {}) {
+    const n = ++eventSeq;
+    const wrap = $('f-events-container');
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-num">Show ${n}</div>
+      ${n > 1 ? `<button class="btn-remove" onclick="rmCard(this)">× Remove</button>` : ''}
+      <div class="fr">
+        <div class="fg"><label>Date</label>
+          <input type="text" class="e-date" placeholder="Mar 7, 2026 or TBA" value="${esc(d.date||'')}"></div>
+        <div class="fg"><label>Venue</label>
+          <input type="text" class="e-venue" value="${esc(d.venue||'')}"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Location</label>
+          <input type="text" class="e-location" value="${esc(d.location||'')}"></div>
+        <div class="fg"><label>Type</label>
+          <input type="text" class="e-type" placeholder="DJ Set — Tech House" value="${esc(d.type||'')}"></div>
+      </div>
+      <div class="fg"><label>Link (use #contact for inquiry, or leave blank for "Booking Open")</label>
+        <input type="text" class="e-link" value="${esc(d.link||'')}"></div>`;
+    wrap.appendChild(card);
+  }
+
+  function rmCard(btn) { btn.closest('.card').remove(); }
+
+  $('btn-add-track').addEventListener('click', () => addTrack());
+  $('btn-add-event').addEventListener('click', () => addEvent());
+
+  /* ── COLLECT FORM DATA ─────────────────────────────────── */
+  function collectData() {
+    const statEls = $('f-stats-container').querySelectorAll('.stat-card');
+    const stats = Array.from(statEls).map((_, i) => ({
+      value: ($(`f-stat-${i}-value`)?.value || '').trim(),
+      label: ($(`f-stat-${i}-label`)?.value || '').trim()
+    }));
+
+    const trackCards = document.querySelectorAll('#f-tracks-container .card');
+    const tracks = Array.from(trackCards).map((c, i) => ({
+      number:                 String(i+1).padStart(2,'0'),
+      title:                  (c.querySelector('.t-title')?.value    || '').trim(),
+      meta:                   (c.querySelector('.t-meta')?.value     || '').trim(),
+      platform:               (c.querySelector('.t-platform')?.value || '').trim(),
+      soundcloud_embed:       (c.querySelector('.t-embed')?.value    || '').trim(),
+      soundcloud_profile_url: (c.querySelector('.t-sc-profile')?.value || '').trim(),
+      soundcloud_track_url:   (c.querySelector('.t-sc-track')?.value   || '').trim(),
+      soundcloud_track_title: (c.querySelector('.t-sc-title')?.value   || '').trim()
+    }));
+
+    const events = Array.from(document.querySelectorAll('#f-events-container .card')).map(c => ({
+      date:     (c.querySelector('.e-date')?.value     || '').trim(),
+      venue:    (c.querySelector('.e-venue')?.value    || '').trim(),
+      location: (c.querySelector('.e-location')?.value || '').trim(),
+      type:     (c.querySelector('.e-type')?.value     || '').trim(),
+      link:     (c.querySelector('.e-link')?.value     || '').trim()
+    }));
+
+    const influences = val('f-influences').split(',').map(s => s.trim()).filter(Boolean);
+
+    return {
+      meta:    { title: val('f-meta-title'), description: val('f-meta-desc') },
+      ticker:  val('f-ticker'),
+      hero:    { pullquote: val('f-hero-pullquote'), label: val('f-hero-label'), tagline: val('f-hero-tagline') },
+      about: {
+        pullquote:   val('f-about-pq'),
+        bio:         [1,2,3,4].map(n => val(`f-bio-${n}`)).filter(Boolean),
+        philosophy:  val('f-philosophy'),
+        influences,
+        stats,
+        tools:       val('f-tools'),
+        inspiration: val('f-inspiration')
+      },
+      tracks,
+      events,
+      contact: {
+        blurb:             val('f-contact-blurb'),
+        instagram_url:     val('f-ig-url'),
+        instagram_handle:  val('f-ig-handle'),
+        x_url:             val('f-x-url'),
+        x_handle:          val('f-x-handle'),
+        soundcloud_url:    val('f-sc-url'),
+        soundcloud_handle: val('f-sc-handle'),
+        booking_email:     val('f-email')
+      },
+      footer: { copyright: val('f-footer-copyright') }
+    };
+  }
+
+  /* ── SAVE → Netlify function → GitHub ─────────────────────
+     POSTs the content object to /.netlify/functions/save-content.
+     The function reads GITHUB_TOKEN from process.env server-side.
+     No token ever touches this file or the browser.
+  ─────────────────────────────────────────────────────────── */
+  $('btn-save').addEventListener('click', async () => {
+    const btn = $('btn-save');
+    btn.disabled    = true;
+    btn.textContent = 'Saving…';
+    setStatus('Publishing…');
+
+    try {
+      const res = await fetch('/.netlify/functions/save-content', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ content: collectData() })
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.error || `Server error ${res.status}`);
+      }
+
+      setStatus(`✓ Published! Netlify deploying now (~30s). Commit: ${result.commit}`);
+
+    } catch (err) {
+      setStatus(`✗ ${err.message}`, false);
+      console.error(err);
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = 'Save Changes → Publish';
+    }
+  });
+</script>
 </body>
 </html>
