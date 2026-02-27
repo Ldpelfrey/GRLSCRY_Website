@@ -19,11 +19,11 @@ backend:
     openAuthoring: Message {{message}} - {{author-name}} <{{author-login}}> via DecapBridge
 
 # Enable PKCE fields (optional, recommended)
-auth:
-  email_claim: email
-  first_name_claim: first_name
-  last_name_claim: last_name
-  avatar_url_claim: avatar_url
+# auth:
+# email_claim: email
+# first_name_claim: first_name
+# last_name_claim: last_name
+# avatar_url_claim: avatar_url
 
 # Better Decap + Bridge logo (optional)
 logo_url: https://decapbridge.com/decapcms-with-bridge.svg
