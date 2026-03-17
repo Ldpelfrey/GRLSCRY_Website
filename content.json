@@ -3,7 +3,7 @@
     "title": "GRLSCRY — Tech House / SCOTTSDALE, AZ",
     "description": "GRLSCRY — DJ / Producer. Dark. High Energy. Late Night. PHX, AZ. Tech House & Trance House."
   },
-  "ticker": "SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · TECH HOUSE · TRANCE HOUSE · DARK HIGH ENERGY · LATE NIGHT · KARAMBA NIGHTCLUB · BAR SMITH · MAYA DAY+NIGHTCLUB · WASTED GRAIN · VALLEY BAR · RIOT HOUSE · LUXX · LOS ANGELES · EXCHANGE LA · SOUND NIGHTCLUB · AVALON HOLLYWOOD · MIAMI · CLUB SPACE · E11EVEN · LIV · NYC · BROOKLYN MIRAGE · PUBLIC RECORDS · NOWADAYS · ELSEWHERE · LONDON · FABRIC · MINISTRY OF SOUND · EGG LONDON · CORSICA STUDIOS · MANCHESTER · THE WHITE HOTEL · SOUP KITCHEN · BERLIN · BERGHAIN · TRESOR · WATERGATE · SISYPHOS · DOCUMENT DON'T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ",
+  "ticker": "SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · TECH HOUSE · TRANCE HOUSE · DARK HIGH ENERGY · LATE NIGHT · KARAMBA NIGHTCLUB · BAR SMITH · MAYA DAY+NIGHTCLUB · WASTED GRAIN · VALLEY BAR · AFTER12 · RIOT HOUSE · LUXX · LOS ANGELES · EXCHANGE LA · SOUND NIGHTCLUB · AVALON HOLLYWOOD · MIAMI · CLUB SPACE · E11EVEN · LIV · NYC · BROOKLYN MIRAGE · PUBLIC RECORDS · NOWADAYS · ELSEWHERE · LONDON · FABRIC · MINISTRY OF SOUND · EGG LONDON · CORSICA STUDIOS · MANCHESTER · THE WHITE HOTEL · SOUP KITCHEN · BERLIN · BERGHAIN · TRESOR · WATERGATE · SISYPHOS · DOCUMENT DON'T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ",
   "hero": {
     "pullquote": "\"he's got that raw bad boy attitude... just need to tame it\"",
     "label": "DJ / Producer — SCOTTSDALE, AZ",
@@ -71,10 +71,10 @@
   ],
   "events": [
     {
-      "date": "Mar 7, 2026",
-      "venue": "Half Marathon Run",
+      "date": "TBA",
+      "venue": "Phoenix Venue",
       "location": "Phoenix, AZ",
-      "type": "Community / Fundraiser",
+      "type": "DJ Set — Tech House",
       "link": "#contact"
     },
     {
@@ -82,13 +82,6 @@
       "venue": "Phoenix Venue",
       "location": "Phoenix, AZ",
       "type": "DJ Set — Tech House",
-      "link": ""
-    },
-    {
-      "date": "TBA",
-      "venue": "Scottsdale Venue",
-      "location": "Scottsdale, AZ",
-      "type": "DJ Set — Late Night",
       "link": ""
     }
   ],
