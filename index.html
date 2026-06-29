@@ -17,6 +17,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <!-- GSAP + ScrollTrigger + Lenis -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
   <style>
     /* ─── TOKENS ─────────────────────────────────────────────────── */
     :root {
@@ -41,8 +45,14 @@
       --ticker-h: 32px;
       --gutter:   clamp(24px,5vw,64px);
     }
+    /* ─── LENIS RESETS ──────────────────────────────────────────── */
+    html.lenis { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto; }
+    .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+    .lenis.lenis-stopped { overflow: hidden; }
+    .lenis.lenis-scrolling iframe { pointer-events: none; }
+
     *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
     body {
       background: var(--black);
       color: var(--white);
@@ -92,12 +102,8 @@
     body.hov #cr { width: 48px; height: 48px; border-color: var(--pink); }
     @media (pointer: coarse) { #cd, #cr { display: none; } body { cursor: auto; } }
 
-    /* ─── SCROLL REVEAL ─────────────────────────────────────────── */
-    .r { opacity: 0; transform: translateY(20px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
-    .r.v { opacity: 1; transform: translateY(0); }
-    .r.d1 { transition-delay: .08s; } .r.d2 { transition-delay: .16s; }
-    .r.d3 { transition-delay: .24s; } .r.d4 { transition-delay: .32s; }
-    .r.d5 { transition-delay: .40s; }
+    /* ─── SCROLL REVEAL (initial state — GSAP animates) ────────── */
+    .r { opacity: 0; transform: translateY(24px); }
 
     /* ─── TYPE SCALE ─────────────────────────────────────────────── */
     .t-hero   { font-family: var(--bebas); font-size: clamp(90px,18vw,200px); line-height: .88; letter-spacing: .04em; }
@@ -119,7 +125,7 @@
       display: flex; align-items: center;
       padding: 0 var(--gutter);
       z-index: 500;
-      transition: background .4s, border-color .4s;
+      transition: background .4s, border-color .4s, transform .35s cubic-bezier(0.86,0,0.07,1);
     }
     #nav.sc { background: rgba(14,14,14,.96); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
     .nl { font-family: var(--bebas); font-size: 28px; letter-spacing: .12em; color: var(--white); flex-shrink: 0; }
@@ -130,11 +136,12 @@
     }
     .nv a::after {
       content: ''; position: absolute; bottom: -4px; left: 0;
-      width: 0; height: 1px; background: var(--sage);
-      transition: width .3s var(--ease);
+      width: 100%; height: 1px; background: var(--sage);
+      transform: scaleX(0); transform-origin: right;
+      transition: transform .4s cubic-bezier(0.86,0,0.07,1);
     }
     .nv a:hover { color: var(--white); }
-    .nv a:hover::after { width: 100%; }
+    .nv a:hover::after { transform: scaleX(1); transform-origin: left; }
     .nb {
       margin-left: 16px; padding: 8px 18px;
       border: 1px solid var(--bm); color: var(--sage) !important;
@@ -152,15 +159,27 @@
     #nt.open span:nth-child(2) { opacity: 0; }
     #nt.open span:nth-child(3) { transform: rotate(-45deg) translate(4px,-4px); }
     #mm {
-      display: none; position: fixed;
-      inset: var(--nav-h) 0 0 0;
-      background: rgba(14,14,14,.98);
+      position: fixed; inset: 0;
+      background: rgba(14,14,14,.98); backdrop-filter: blur(12px);
       z-index: 490;
-      flex-direction: column; justify-content: center; align-items: center; gap: 40px;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-start;
+      padding: 0 var(--gutter);
+      opacity: 0; pointer-events: none;
+      transition: opacity .45s ease;
     }
-    #mm.open { display: flex; }
-    #mm a { font-family: var(--bebas); font-size: 52px; letter-spacing: .08em; color: var(--white); transition: color .2s; }
-    #mm a:hover { color: var(--sage); }
+    #mm.open { opacity: 1; pointer-events: auto; }
+    #mm a {
+      font-family: var(--bebas);
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      letter-spacing: .06em;
+      color: var(--white);
+      line-height: 1.08;
+      display: block;
+      transition: color .2s, padding-left .3s var(--ease);
+      opacity: 0; /* GSAP controls */
+    }
+    #mm a:hover { color: var(--sage); padding-left: 12px; }
     @media (max-width: 768px) { .nv { display: none; } #nt { display: flex; } }
 
     /* ─── THORN SVG DECORATION ──────────────────────────────────── */
@@ -445,7 +464,108 @@
 
     /* ─── ACTIVE NAV LINK ───────────────────────────────────────── */
     .nv a.act { color: var(--sage) !important; }
-    .nv a.act::after { width: 100% !important; }
+    .nv a.act::after { transform: scaleX(1) !important; }
+
+    /* ─── BACK TO TOP ───────────────────────────────────────────── */
+    .btt {
+      position: fixed; bottom: 32px; right: var(--gutter);
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 1px solid var(--bm);
+      background: transparent; color: var(--sage);
+      font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s, background .2s, border-color .2s, transform .2s;
+      z-index: 600;
+    }
+    .btt.visible { opacity: 1; pointer-events: auto; }
+    .btt:hover { background: var(--sage); color: var(--black); border-color: var(--sage); transform: translateY(-3px); }
+
+    /* ─── FOOTER UPGRADE ────────────────────────────────────────── */
+    footer {
+      background: #0a0a0a;
+      border-radius: 32px 32px 0 0;
+      margin-top: 10px;
+      padding: 64px var(--gutter) 0;
+    }
+    .foot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 48px;
+      padding-bottom: 64px;
+      border-bottom: 1px solid var(--border);
+    }
+    @media (max-width: 768px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .foot-grid { grid-template-columns: 1fr; } }
+    .foot-section-label {
+      font-size: 9px; letter-spacing: .2em; text-transform: uppercase;
+      color: rgba(215,239,194,.3); margin-bottom: 20px;
+    }
+    .foot-email {
+      font-family: var(--display); font-size: clamp(14px,1.8vw,20px);
+      font-weight: 400; color: var(--white); line-height: 1.3;
+      position: relative; display: inline-block;
+    }
+    .foot-email::after {
+      content: ''; position: absolute; bottom: -2px; left: 0;
+      width: 100%; height: 1px; background: var(--sage);
+      transform: scaleX(0); transform-origin: right;
+      transition: transform .4s cubic-bezier(0.86,0,0.07,1);
+    }
+    .foot-email:hover::after { transform: scaleX(1); transform-origin: left; }
+    .foot-socials { display: flex; flex-direction: column; gap: 10px; }
+    .foot-socials a {
+      font-size: 13px; color: rgba(215,239,194,.6);
+      position: relative; display: inline-block; width: fit-content;
+      transition: color .2s;
+    }
+    .foot-socials a::after {
+      content: ''; position: absolute; bottom: -1px; left: 0;
+      width: 100%; height: 1px; background: var(--sage);
+      transform: scaleX(0); transform-origin: right;
+      transition: transform .4s cubic-bezier(0.86,0,0.07,1);
+    }
+    .foot-socials a:hover { color: var(--white); }
+    .foot-socials a:hover::after { transform: scaleX(1); transform-origin: left; }
+    .foot-nav-col { display: flex; flex-direction: column; gap: 10px; }
+    .foot-nav-col a {
+      font-size: 13px; color: rgba(215,239,194,.6);
+      position: relative; display: inline-block; width: fit-content;
+      transition: color .2s;
+    }
+    .foot-nav-col a::after {
+      content: ''; position: absolute; bottom: -1px; left: 0;
+      width: 100%; height: 1px; background: var(--sage);
+      transform: scaleX(0); transform-origin: right;
+      transition: transform .4s cubic-bezier(0.86,0,0.07,1);
+    }
+    .foot-nav-col a:hover { color: var(--white); }
+    .foot-nav-col a:hover::after { transform: scaleX(1); transform-origin: left; }
+    .foot-btt-col { display: flex; align-items: flex-end; justify-content: flex-end; }
+    .btt-inline {
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 1px solid var(--bm);
+      background: transparent; color: var(--sage);
+      font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s, border-color .2s, transform .2s;
+    }
+    .btt-inline:hover { background: var(--sage); color: var(--black); border-color: var(--sage); transform: translateY(-3px); }
+    .foot-bottom {
+      display: flex; flex-direction: column; align-items: flex-end;
+      overflow: hidden; position: relative;
+    }
+    .foot-bottom .fc { align-self: flex-start; padding: 20px 0 0; }
+    .foot-giant {
+      font-family: var(--bebas);
+      font-size: clamp(5rem, 20vw, 22rem);
+      color: rgba(215,239,194,.06);
+      line-height: .88;
+      letter-spacing: .04em;
+      margin-bottom: -0.12em;
+      user-select: none;
+      pointer-events: none;
+    }
 
     /* ─── ENHANCED PRIMARY BUTTON ───────────────────────────────── */
     .bs:hover {
@@ -619,14 +739,7 @@
     .evt tbody tr:hover td { background: #252525; color: var(--white); padding-left: 20px; }
     .evt tbody tr:hover .e-dot { padding-left: 16px !important; }
 
-    /* ─── MOBILE NAV STAGGER ─────────────────────────────────────── */
-    #mm a { opacity: 0; }
-    #mm.open a { animation: mm-in .5s var(--ease) both; }
-    #mm.open a:nth-child(1) { animation-delay:.05s; }
-    #mm.open a:nth-child(2) { animation-delay:.13s; }
-    #mm.open a:nth-child(3) { animation-delay:.21s; }
-    #mm.open a:nth-child(4) { animation-delay:.29s; }
-    @keyframes mm-in { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    /* mobile nav stagger handled by GSAP */
 
     /* ─── PHILOSOPHY PINK / TOOLS INDIGO DIFFERENTIATION ────────── */
     .ph-philosophy { border-left: 2px solid rgba(255,105,180,.4) !important; border-color: rgba(255,105,180,.15) !important; }
@@ -1108,19 +1221,44 @@
 
   <!-- FOOTER -->
   <footer>
-    <div class="foot-wm" aria-hidden="true">GRLSCRY</div>
-    <span class="fl">GRLSCRY</span>
-    <span class="fc" id="c-footer-copyright">© 2026 — SCOTTSDALE, AZ — Tech House / House</span>
-    <nav class="fns" aria-label="Footer navigation">
-      <a href="#about">About</a>
-      <a href="#music">Sound</a>
-      <a href="#contact">Book</a>
-    </nav>
+    <div class="foot-grid">
+      <div>
+        <p class="foot-section-label">Booking</p>
+        <a href="mailto:kristina.mktg.sound@outlook.com" class="foot-email">kristina.mktg.sound<br>@outlook.com</a>
+      </div>
+      <div>
+        <p class="foot-section-label">Socials</p>
+        <nav class="foot-socials">
+          <a href="https://instagram.com/grlscryofficial" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://x.com/grlscryofficial" target="_blank" rel="noopener">X / Twitter</a>
+          <a href="https://soundcloud.com/grlscry" target="_blank" rel="noopener">SoundCloud</a>
+        </nav>
+      </div>
+      <div>
+        <p class="foot-section-label">Navigate</p>
+        <nav class="foot-nav-col">
+          <a href="#about">About</a>
+          <a href="#music">Sound</a>
+          <a href="#events">Shows</a>
+          <a href="#contact">Book</a>
+        </nav>
+      </div>
+      <div class="foot-btt-col">
+        <button class="btt-inline" id="btt-inline" aria-label="Back to top">↑</button>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span class="fc" id="c-footer-copyright">© 2026 — SCOTTSDALE, AZ — Tech House / House - GRLS CRY Approved</span>
+      <h2 class="foot-giant" aria-hidden="true">GRLSCRY</h2>
+    </div>
   </footer>
 
   <!-- ══════════════════════════════════════════════════════════════ -->
   <!-- JAVASCRIPT -->
   <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- FLOATING BACK TO TOP -->
+  <button class="btt" id="btt" aria-label="Back to top">↑</button>
+
   <noscript><style>.r { opacity: 1 !important; transform: none !important; }</style></noscript>
 
   <script>
@@ -1141,22 +1279,32 @@
       el.addEventListener('mouseleave', () => document.body.classList.remove('hov'));
     });
 
-    /* ── NAV SCROLL ─────────────────────────────────────────────── */
-    const nav = document.getElementById('nav');
-    window.addEventListener('scroll', () => nav.classList.toggle('sc', window.scrollY > 60), { passive: true });
-
     /* ── MOBILE NAV ─────────────────────────────────────────────── */
     const nt = document.getElementById('nt'), mm = document.getElementById('mm');
+    const mmLinks = mm.querySelectorAll('a');
     nt.addEventListener('click', () => {
       const o = mm.classList.toggle('open');
       nt.classList.toggle('open', o);
       nt.setAttribute('aria-expanded', o);
-      document.body.style.overflow = o ? 'hidden' : '';
+      if (o) {
+        lenis.stop();
+        document.body.style.overflow = 'hidden';
+        gsap.fromTo(mmLinks,
+          { y: 40, opacity: 0 },
+          { y: 0, opacity: 1, duration: .65, stagger: .08, ease: 'power3.out', delay: .15 }
+        );
+      } else {
+        lenis.start();
+        document.body.style.overflow = '';
+        gsap.to(mmLinks, { y: 32, opacity: 0, duration: .25, ease: 'power2.in' });
+      }
     });
     function cm() {
       mm.classList.remove('open'); nt.classList.remove('open');
       nt.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
+      lenis.start();
+      gsap.to(mmLinks, { y: 32, opacity: 0, duration: .2, ease: 'power2.in' });
     }
 
     /* ── SCROLL REVEAL ──────────────────────────────────────────── */
@@ -1248,26 +1396,68 @@
         });
     });
 
-    /* ── SCROLL PROGRESS BAR ─────────────────────────────────── */
+    /* ── LENIS + GSAP SETUP ──────────────────────────────────── */
+    gsap.registerPlugin(ScrollTrigger);
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smooth: true, mouseMultiplier: 1,
+      smoothTouch: false, touchMultiplier: 2,
+    });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(time => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+
+    /* ── SCROLL: progress + nav hide/show + back-to-top ─────── */
     const prog = document.getElementById('progress');
-    window.addEventListener('scroll', () => {
-      const h = document.documentElement;
-      const pct = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
-      if (prog) prog.style.width = Math.min(pct, 100) + '%';
-    }, { passive: true });
+    const btt  = document.getElementById('btt');
+    const nav  = document.getElementById('nav');
+    let lastY  = 0;
+    lenis.on('scroll', e => {
+      if (prog) prog.style.width = Math.min(e.progress * 100, 100) + '%';
+      btt.classList.toggle('visible', e.scroll > 300);
+      nav.classList.toggle('sc', e.scroll > 60);
+      if (e.scroll > 120 && e.scroll > lastY) nav.style.transform = 'translateY(-100%)';
+      else nav.style.transform = '';
+      lastY = e.scroll;
+    });
+
+    /* ── BACK TO TOP ─────────────────────────────────────────── */
+    const easing = t => Math.min(1, 1.001 - Math.pow(2, -10 * t));
+    btt.addEventListener('click', () => lenis.scrollTo(0, { duration: 1.5, easing }));
+    document.getElementById('btt-inline').addEventListener('click', () => lenis.scrollTo(0, { duration: 1.5, easing }));
 
     /* ── ACTIVE NAV SECTION ──────────────────────────────────── */
     const navLinks = document.querySelectorAll('.nv a');
-    const ioNav = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          navLinks.forEach(a => a.classList.remove('act'));
-          const link = document.querySelector('.nv a[href="#' + e.target.id + '"]');
-          if (link) link.classList.add('act');
-        }
+    function setActiveLink(id) {
+      navLinks.forEach(a => a.classList.remove('act'));
+      const link = document.querySelector('.nv a[href="#' + id + '"]');
+      if (link) link.classList.add('act');
+    }
+    document.querySelectorAll('section[id]').forEach(section => {
+      ScrollTrigger.create({
+        trigger: section, start: 'top 42%', end: 'bottom 42%',
+        onEnter: () => setActiveLink(section.id),
+        onEnterBack: () => setActiveLink(section.id),
       });
-    }, { threshold: .3, rootMargin: '-80px 0px -35% 0px' });
-    document.querySelectorAll('section[id]').forEach(s => ioNav.observe(s));
+    });
+
+    /* ── SCROLL REVEAL ───────────────────────────────────────── */
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion) {
+      document.querySelectorAll('.r').forEach(el => {
+        const delay = el.classList.contains('d5') ? .4 :
+                      el.classList.contains('d4') ? .32 :
+                      el.classList.contains('d3') ? .24 :
+                      el.classList.contains('d2') ? .16 :
+                      el.classList.contains('d1') ? .08 : 0;
+        gsap.to(el, {
+          opacity: 1, y: 0, duration: .9, delay,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+        });
+      });
+    }
 
     /* ── MAGNETIC BUTTONS ────────────────────────────────────── */
     document.querySelectorAll('.btn').forEach(btn => {
