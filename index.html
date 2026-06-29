@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GRLSCRY — Tech House / SCOTTSDALE, AZ</title>
   <meta name="description" content="GRLSCRY — DJ / Producer. Dark. High Energy. Late Night. PHX, AZ. Tech House & Trance House.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://grlscry.com">
+  <meta property="og:title"       content="GRLSCRY — Tech House / Scottsdale, AZ">
+  <meta property="og:description" content="DJ / Producer. Dark. High Energy. Late Night. PHX, AZ.">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@grlscryofficial">
+  <meta name="twitter:title"       content="GRLSCRY — Tech House / Scottsdale, AZ">
+  <meta name="twitter:description" content="DJ / Producer. Dark. High Energy. Late Night. PHX, AZ.">
+  <meta name="theme-color"         content="#0e0e0e">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -39,7 +48,7 @@
       color: var(--white);
       font-family: var(--mono);
       font-size: 13px;
-      line-height: 2.5;
+      line-height: 1.65;
       overflow-x: hidden;
       cursor: none;
     }
@@ -345,9 +354,354 @@
     .fns { display: flex; gap: 18px; }
     .fns a { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--gray); transition: color .2s; }
     .fns a:hover { color: var(--sage); }
+
+    /* ─── NEOCITIES-INSPIRED WIDGET STRIP ──────────────────────── */
+    /* Small decorative "now playing" / status bar, indie web vibes */
+    /* ticker sits fixed, flush below the nav */
+    .status-bar {
+      position: fixed;
+      top: var(--nav-h);
+      left: 0; right: 0;
+      height: var(--ticker-h);
+      z-index: 499;
+      background: var(--black);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      overflow: hidden;
+    }
+    .status-bar-inner {
+      display: flex; gap: 48px; align-items: center;
+      animation: marquee 60s linear infinite;
+      white-space: nowrap;
+      will-change: transform;
+    }
+    .status-bar-inner:hover { animation-play-state: paused; }
+    .status-bar-inner span {
+      font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--gray);
+      flex-shrink: 0;
+    }
+    .status-bar-inner span b { color: var(--sage); font-weight: 400; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── NEOCITIES SECTION DIVIDER ORNAMENT ────────────────────── */
+    .ornament-row {
+      display: flex; align-items: center; justify-content: center;
+      padding: 32px var(--gutter);
+      gap: 20px; position: relative; z-index: 2;
+    }
+    .ornament-line { flex: 1; height: 1px; background: var(--border); }
+    .ornament-text { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: rgba(215,239,194,.25); }
+
+    /* ─── GRAIN FILM TEXTURE ────────────────────────────────────── */
+    #grain {
+      position: fixed; inset: 0; z-index: 9000;
+      pointer-events: none; opacity: .055;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 200px;
+      animation: grain-shift 0.5s steps(1) infinite;
+    }
+    @keyframes grain-shift {
+      0%  { background-position: 0 0; }
+      10% { background-position: -5% -10%; }
+      20% { background-position: -15% 5%; }
+      30% { background-position: 7% -25%; }
+      40% { background-position: 20% 10%; }
+      50% { background-position: -8% 20%; }
+      60% { background-position: 15% -8%; }
+      70% { background-position: -20% 5%; }
+      80% { background-position: 5% -20%; }
+      90% { background-position: -25% 8%; }
+    }
+
+    /* ─── SCROLL PROGRESS BAR ───────────────────────────────────── */
+    #progress {
+      position: fixed; top: 0; left: 0;
+      height: 2px; width: 0%;
+      background: var(--sage);
+      box-shadow: 0 0 12px rgba(215,239,194,.45), 0 0 24px rgba(215,239,194,.18);
+      z-index: 10001;
+      pointer-events: none;
+      will-change: width;
+    }
+
+    /* ─── SECTION NUMBER DECO ───────────────────────────────────── */
+    .sec-n {
+      position: absolute;
+      bottom: clamp(16px, 4vw, 48px);
+      right: calc(var(--gutter) * .8);
+      font-family: var(--bebas);
+      font-size: clamp(64px, 9vw, 120px);
+      color: rgba(255,255,255,.022);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: .04em;
+      z-index: 1;
+    }
+
+    /* ─── ACTIVE NAV LINK ───────────────────────────────────────── */
+    .nv a.act { color: var(--sage) !important; }
+    .nv a.act::after { width: 100% !important; }
+
+    /* ─── ENHANCED PRIMARY BUTTON ───────────────────────────────── */
+    .bs:hover {
+      background: var(--white);
+      box-shadow: 0 0 28px rgba(215,239,194,.22), 0 0 56px rgba(215,239,194,.07);
+    }
+
+    /* ─── TRACK CARD LEFT ACCENT ────────────────────────────────── */
+    .tc { position: relative; }
+    .tc::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 2px; background: var(--sage);
+      transform: scaleY(0); transform-origin: bottom;
+      transition: transform .4s var(--ease);
+      z-index: 1;
+    }
+    .tc:hover::before { transform: scaleY(1); }
+
+    /* ─── HERO RADIAL GLOW ──────────────────────────────────────── */
+    .hn { position: relative; }
+    .hn::after {
+      content: '';
+      position: absolute; inset: -60% -20%;
+      background: radial-gradient(ellipse at 50% 70%, rgba(215,239,194,.055) 0%, transparent 65%);
+      pointer-events: none; z-index: -1;
+    }
+
+    /* ─── TYPOGRAPHY POLISH ─────────────────────────────────────── */
+    .t-sec  { text-wrap: balance; }
+    .t-body { text-wrap: pretty; line-height: 1.85; }
+
+    /* ─── FOCUS VISIBLE ─────────────────────────────────────────── */
+    :focus-visible { outline: 2px solid var(--sage); outline-offset: 3px; }
+    :focus:not(:focus-visible) { outline: none; }
+
+    /* ─── NOSCRIPT FALLBACK ─────────────────────────────────────── */
+    /* If JS fails, reveal all .r elements */
+
+    /* ─── HERO AMBIENT PULSE ────────────────────────────────────── */
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 28% 82%, rgba(215,239,194,.05) 0%, transparent 68%);
+      animation: hero-pulse 11s ease-in-out infinite;
+      pointer-events: none; z-index: 1;
+    }
+    @keyframes hero-pulse { 0%,100%{opacity:1} 50%{opacity:.28} }
+
+    /* ─── DECORATIVE IMAGE ──────────────────────────────────────── */
+    .deco-img {
+      position: absolute; pointer-events: none; user-select: none;
+      display: block; object-fit: cover;
+    }
+    .hero-deco-tr {
+      top: calc(var(--nav-h) + var(--ticker-h) + 10px); right: -40px;
+      width: clamp(240px,28vw,400px); opacity: .09;
+      mix-blend-mode: luminosity; z-index: 1;
+    }
+    .hero-deco-bl {
+      bottom: -20px; left: -30px;
+      width: clamp(160px,18vw,280px); opacity: .05;
+      mix-blend-mode: luminosity; z-index: 1;
+    }
+    .about-deco-bg {
+      right: -60px; top: -30px;
+      width: clamp(280px,36vw,500px); opacity: .04;
+      mix-blend-mode: luminosity; z-index: 0;
+    }
+    .contact-deco {
+      left: -50px; bottom: -30px;
+      width: clamp(220px,28vw,380px); opacity: .05;
+      mix-blend-mode: luminosity; z-index: 0;
+    }
+
+    /* ─── HERO SCROLL INDICATOR ─────────────────────────────────── */
+    .hs {
+      position: absolute; bottom: clamp(28px,4vw,48px); right: var(--gutter);
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      opacity: 0; animation: fi 1.2s ease 1.5s forwards; z-index: 2;
+    }
+    .hs span { font-size: 8px; letter-spacing: .22em; text-transform: uppercase; color: var(--gray); writing-mode: vertical-rl; }
+    .sb { width: 1px; height: 52px; background: linear-gradient(to bottom, var(--gray), transparent); animation: sbob 2.4s ease-in-out infinite; }
+    @keyframes sbob { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(.4)} }
+
+    /* ─── HERO CONTEXT LINE ──────────────────────────────────────── */
+    .h-ctx {
+      font-family: var(--mono); font-size: 9px; letter-spacing: .28em;
+      text-transform: uppercase; color: rgba(215,239,194,.32);
+      margin-bottom: 32px; margin-top: -4px;
+      opacity: 0; animation: su .8s var(--ease) .9s forwards;
+      position: relative; z-index: 2;
+    }
+
+    /* ─── ABOUT PULL-QUOTE LEDE ─────────────────────────────────── */
+    .pq-lede {
+      font-family: var(--display); font-size: clamp(20px,3.2vw,36px);
+      font-weight: 300; font-style: italic;
+      color: rgba(255,255,255,.7); line-height: 1.3;
+      border-left: 2px solid var(--pink);
+      padding: 18px 0 18px 28px;
+      margin-bottom: 52px;
+      text-wrap: balance;
+    }
+
+    /* ─── WAVEFORM BARS ──────────────────────────────────────────── */
+    .wv { display: flex; align-items: flex-end; gap: 2px; height: 22px; flex-shrink: 0; }
+    .wv b {
+      display: block; width: 3px; border-radius: 1px;
+      background: rgba(215,239,194,.22);
+      animation: wvb 1.2s ease-in-out infinite;
+      animation-play-state: paused;
+      transition: background .25s;
+    }
+    .tc:hover .wv b { background: var(--sage); animation-play-state: running; }
+    .wv b:nth-child(1)  { height:38%; animation-duration:1.1s; }
+    .wv b:nth-child(2)  { height:68%; animation-duration:1.4s; animation-delay:.10s; }
+    .wv b:nth-child(3)  { height:52%; animation-duration:1.0s; animation-delay:.20s; }
+    .wv b:nth-child(4)  { height:88%; animation-duration:1.3s; animation-delay:.05s; }
+    .wv b:nth-child(5)  { height:60%; animation-duration:1.2s; animation-delay:.15s; }
+    .wv b:nth-child(6)  { height:44%; animation-duration:1.5s; animation-delay:.25s; }
+    .wv b:nth-child(7)  { height:78%; animation-duration:0.9s; }
+    .wv b:nth-child(8)  { height:50%; animation-duration:1.3s; animation-delay:.30s; }
+    .wv b:nth-child(9)  { height:64%; animation-duration:1.1s; animation-delay:.10s; }
+    .wv b:nth-child(10) { height:34%; animation-duration:1.4s; animation-delay:.20s; }
+    .wv b:nth-child(11) { height:72%; animation-duration:1.0s; animation-delay:.05s; }
+    .wv b:nth-child(12) { height:54%; animation-duration:1.2s; animation-delay:.15s; }
+    @keyframes wvb { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(.35)} }
+
+    /* ─── CHIP CLIP-PATH FILL REVEAL ─────────────────────────────── */
+    .chip { position: relative; overflow: hidden; }
+    .chip::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--sage-bg);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .35s var(--ease);
+    }
+    .chip:hover::before { transform: scaleX(1); }
+    .chip span { position: relative; z-index: 1; }
+
+    /* ─── STAT CELL BOTTOM BORDER + SCALE ───────────────────────── */
+    .sc { position: relative; }
+    .sc::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 1px; background: var(--sage);
+      transform: scaleX(0);
+      transition: transform .3s var(--ease);
+    }
+    .sc:hover::after { transform: scaleX(1); }
+    .sv { display: inline-block; letter-spacing: .02em; transition: transform .25s var(--ease), color .2s; }
+    .sc:hover .sv { transform: scale(1.04); color: var(--white); }
+
+    /* ─── TBA BOOKING BADGE ──────────────────────────────────────── */
+    .tba {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 9px;
+      border: 1px solid rgba(215,239,194,.12);
+      font-size: 8px; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--gray); font-style: normal;
+    }
+    .tba::before { content: '○'; font-size: 7px; }
+
+    /* ─── EVENTS TABLE: STATUS DOT + ROW SLIDE ───────────────────── */
+    .e-dot { width: 28px; padding-right: 4px !important; }
+    .e-status {
+      display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+      vertical-align: middle;
+    }
+    .e-status.live { background: var(--sage); box-shadow: 0 0 6px rgba(215,239,194,.45); }
+    .e-status.tbd  { background: var(--gray); opacity: .5; }
+    .evt tbody tr:hover td { background: #252525; color: var(--white); padding-left: 20px; }
+    .evt tbody tr:hover .e-dot { padding-left: 16px !important; }
+
+    /* ─── MOBILE NAV STAGGER ─────────────────────────────────────── */
+    #mm a { opacity: 0; }
+    #mm.open a { animation: mm-in .5s var(--ease) both; }
+    #mm.open a:nth-child(1) { animation-delay:.05s; }
+    #mm.open a:nth-child(2) { animation-delay:.13s; }
+    #mm.open a:nth-child(3) { animation-delay:.21s; }
+    #mm.open a:nth-child(4) { animation-delay:.29s; }
+    @keyframes mm-in { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ─── PHILOSOPHY PINK / TOOLS INDIGO DIFFERENTIATION ────────── */
+    .ph-philosophy { border-left: 2px solid rgba(255,105,180,.4) !important; border-color: rgba(255,105,180,.15) !important; }
+    .ph-tools { border-color: rgba(62,62,88,.7); }
+
+    /* ─── DONATION CARD PINK HOVER ───────────────────────────────── */
+    .don-card:hover { border-color: rgba(255,105,180,.32); }
+    .don-card:hover .don-title { color: var(--pink); transition: color .2s; }
+    .don-card::before { content: '♥'; position: absolute; right: 20px; top: 16px; font-size: 40px; color: rgba(255,105,180,.05); }
+
+    /* ─── FORM FLOATING LABELS ───────────────────────────────────── */
+    .fl-wrap { position: relative; display: block; margin-bottom: 16px; }
+    .fl-wrap label {
+      position: absolute; left: 14px; top: 14px;
+      font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--gray); pointer-events: none; z-index: 1;
+      transition: top .2s var(--ease), font-size .2s, letter-spacing .2s, color .2s;
+    }
+    .fl-wrap input, .fl-wrap textarea { padding-top: 22px; padding-bottom: 6px; }
+    .fl-wrap input:focus + label,
+    .fl-wrap input:not(:placeholder-shown) + label,
+    .fl-wrap textarea:focus + label,
+    .fl-wrap textarea:not(:placeholder-shown) + label {
+      top: 5px; font-size: 8px; letter-spacing: .2em; color: var(--sage);
+    }
+
+    /* ─── FORM SPINNER ───────────────────────────────────────────── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn-loading { pointer-events: none; opacity: .8; }
+    .btn-loading::after {
+      content: '';
+      display: inline-block; width: 10px; height: 10px;
+      border: 1.5px solid rgba(30,30,30,.3);
+      border-top-color: #1f1f1f; border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin-left: 10px; vertical-align: middle;
+    }
+
+    /* ─── CONTACT SOCIAL ICON ────────────────────────────────────── */
+    .si::before { display: none; }
+    .si-icon { flex-shrink: 0; opacity: .5; transition: opacity .2s; margin-right: 4px; }
+    .si:hover .si-icon { opacity: 1; }
+
+    /* ─── FOOTER WATERMARK ───────────────────────────────────────── */
+    footer { overflow: hidden; position: relative; }
+    .foot-wm {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-family: var(--bebas); font-size: clamp(48px,12vw,130px);
+      color: rgba(255,255,255,.016); letter-spacing: .1em; line-height: 1;
+      pointer-events: none; user-select: none; white-space: nowrap; overflow: hidden;
+      z-index: 0;
+    }
+    footer > *:not(.foot-wm) { position: relative; z-index: 1; }
+
+    /* ─── EVENTS SECTION OVERFLOW FIX ───────────────────────────── */
+    #events { overflow: hidden; }
+
+    /* ─── SPOTIFY PLACEHOLDER UPGRADE ───────────────────────────── */
+    .sp-soon {
+      padding: 28px; display: flex; align-items: center; gap: 20px;
+      border: 1px solid rgba(215,239,194,.06); border-left: 2px solid rgba(215,239,194,.12);
+      background: rgba(215,239,194,.015); margin-bottom: 3px;
+    }
+    .sp-soon-num { font-family: var(--bebas); font-size: 28px; color: rgba(215,239,194,.15); min-width: 38px; }
+    .sp-soon-label { font-size: 11px; color: var(--gray); letter-spacing: .12em; text-transform: uppercase; }
+    .sp-soon-tag { font-size: 8px; letter-spacing: .18em; text-transform: uppercase; color: rgba(215,239,194,.25); padding: 3px 8px; border: 1px solid rgba(215,239,194,.1); }
+
   </style>
 </head>
 <body>
+  <!-- SCROLL PROGRESS -->
+  <div id="progress" aria-hidden="true"></div>
+
+  <!-- FILM GRAIN -->
+  <div id="grain" aria-hidden="true"></div>
 
   <!-- CURSOR -->
   <div id="cd"></div>
@@ -394,12 +748,13 @@
   <!-- HERO -->
   <!-- ══════════════════════════════════════════════════════════════ -->
   <section id="hero" aria-label="Hero">
-    <svg class="thorn-deco hero-thorn-tr" viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <image height="750" width="500" href="CybersygilsimAsset.jpg"/>
-    </svg>
-    <svg class="thorn-deco hero-thorn-bl" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <image height="750" width="500" href="CybersygilsimAsset.jpg"/>
-    </svg>
+
+    <!-- decorative asset — top right -->
+    <img src="CybersygilsimAsset.jpg" class="deco-img hero-deco-tr" alt="" aria-hidden="true">
+    <!-- decorative asset — bottom left -->
+    <img src="CybersygilsimAsset.jpg" class="deco-img hero-deco-bl" alt="" aria-hidden="true">
+
+    <!-- floating pull-quote (neocities aesthetic) -->
     <div class="h-ribbon" aria-hidden="true">
       <p class="h-ribbon-inner" id="c-pullquote">"he's got that raw bad boy attitude...<br> just need to tame it"</p>
     </div>
@@ -411,17 +766,26 @@
       <span class="glitch" data-text="GRLSCRY">GRLSCRY</span>
     </h1>
     <p class="ht" id="c-hero-tagline">Dark · High Energy · Late Night</p>
+
+    <p class="h-ctx">Scottsdale, AZ · Tech House · Trance House · 2026</p>
+
     <div class="hc">
       <a href="#music"   class="btn bs">Stream Now</a>
       <a href="#contact" class="btn bo">Book a Set</a>
     </div>
+
+    <div class="hs" aria-hidden="true">
+      <span>Scroll</span>
+      <div class="sb"></div>
+    </div>
+
+    <span class="sec-n" aria-hidden="true">01</span>
+
   </section>
 
   <div class="ornament-row" aria-hidden="true">
     <div class="ornament-line"></div>
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:.25">
-      <image height="32" width="32" href="CybersygilsimAsset.jpg"/>
-    </svg>
+    <span class="ornament-text">◆</span>
     <div class="ornament-line"></div>
   </div>
 
@@ -429,24 +793,30 @@
   <!-- ABOUT -->
   <!-- ══════════════════════════════════════════════════════════════ -->
   <section id="about" aria-labelledby="about-h">
-    <svg class="thorn-deco about-thorn-bg" viewBox="0 0 560 700" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <image height="750" width="500" href="CybersygilsimAsset.jpg"/>
-    </svg>
+
+    <!-- decorative asset -->
+    <img src="CybersygilsimAsset.jpg" class="deco-img about-deco-bg" alt="" aria-hidden="true">
+
     <div class="w">
       <div class="ew r">
         <span class="el"></span>
         <span class="t-label">Origin Story</span>
       </div>
+
+      <blockquote class="pq-lede r" id="c-about-pq">
+        Phoenix heat, late nights, dark rooms.
+      </blockquote>
+
       <div class="ag">
         <!-- LEFT: bio -->
         <div>
           <h2 class="t-sec r" id="about-h" style="margin-bottom:28px;">About</h2>
-          <div class="pq r d1" id="c-about-pq">Phoenix heat, late nights, dark rooms.</div>
-          <p class="t-body r d2" id="c-bio-1" style="margin-bottom:18px;">That's where GRLSCRY comes from.</p>
-          <p class="t-body r d3" id="c-bio-2" style="margin-bottom:18px;">DJ and producer building trance house that doesn't ask for permission—it just takes the room. Dark, high-energy, made for 3 a.m. when the filters are off and people actually move.</p>
-          <p class="t-body r d3" id="c-bio-3">No chasing trends, no forced hype. Just clean, heavy sound that hits your chest and stays there. Raw emotion wrapped in tight rhythm. Tracks that don't fade, sets that don't apologize, a brand that shows up the same way every time: intentional, untouchable, a little dangerous.</p>
+
+          <p class="t-body r d2" id="c-bio-1" style="margin-bottom:18px;">That’s where GRLSCRY comes from.</p>
+          <p class="t-body r d3" id="c-bio-2" style="margin-bottom:18px;">DJ and producer building trance house that doesn’t ask for permission—it just takes the room. Dark, high-energy, made for 3 a.m. when the filters are off and people actually move.</p>
+          <p class="t-body r d3" id="c-bio-3">No chasing trends, no forced hype. Just clean, heavy sound that hits your chest and stays there. Raw emotion wrapped in tight rhythm. Tracks that don’t fade, sets that don’t apologize, a brand that shows up the same way every time: intentional, untouchable, a little dangerous.</p>
           <p class="t-body r d4" id="c-bio-4">Step in. Feel it. Get on the ride.</p>
-          <div class="ph r d4">
+          <div class="ph ph-philosophy r d4">
             <span class="t-cap">// Philosophy</span>
             <p id="c-philosophy">GRLSCRY: Dark House That Hits Different. High Energy, Late Nights, No Compromises. Ready to Feel the Pulse? Explore Releases, Gigs, and the Raw Behind the Beats.</p>
           </div>
@@ -462,12 +832,13 @@
         <!-- RIGHT: stats -->
         <div>
           <div class="sg r d1" id="c-stats">
-            <div class="sc"><div class="sv">10+</div><div class="sl">Years DJ</div></div>
-            <div class="sc"><div class="sv">SCOTTSDALE</div><div class="sl">Based</div></div>
-            <div class="sc"><div class="sv">No</div><div class="sl">Rushed Drops.</div></div>
-            <div class="sc"><div class="sv">Tracks Built</div><div class="sl">From the Ground Up</div></div>
+            <div class="sc"><div class="sv">10+</div><div class="sl">Years DJing</div></div>
+            <div class="sc"><div class="sv">PHX</div><div class="sl">Desert Built</div></div>
+            <div class="sc"><div class="sv">ZERO</div><div class="sl">Compromises</div></div>
+            <div class="sc"><div class="sv">3AM</div><div class="sl">Peak Hour</div></div>
           </div>
-          <div class="ph r d2" style="margin-bottom:20px;">
+
+          <div class="ph ph-tools r d2" style="margin-bottom:20px;">
             <span class="t-cap">// Tools</span>
             <p id="c-tools" style="margin-top:8px;">Ableton Live 12 · Serum 2 · Pioneer DDJ-400 · Pioneer DDJ-GRV6 · CDJ 30000 · CDJ 20000 · DJM · A-Series</p>
           </div>
@@ -478,6 +849,7 @@
         </div>
       </div>
     </div>
+    <span class="sec-n" aria-hidden="true">02</span>
   </section>
 
   <div class="ornament-row" aria-hidden="true">
@@ -505,6 +877,7 @@
             <div class="tt" id="c-track-1-title">Spaceship Flip</div>
             <div class="tm" id="c-track-1-meta">Tech House Mix · 2025</div>
           </div>
+          <div class="wv" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
           <span class="tbg" id="c-track-1-platform">SoundCloud</span>
         </div>
         <div class="te">
@@ -525,11 +898,12 @@
             <div class="tt" id="c-track-2-title">Tech House Mix Vol. 1</div>
             <div class="tm" id="c-track-2-meta">Live Mix · 2025</div>
           </div>
+          <div class="wv" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
           <span class="tbg" id="c-track-2-platform">SoundCloud</span>
         </div>
         <div class="te">
           <iframe id="c-track-2-iframe" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
-            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2262546275&color=646c74&hide_related=true&show_comments=false&show_teaser=false"></iframe>
+            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2262546275&color=070609&hide_related=true&show_comments=false&show_teaser=false"></iframe>
           <div class="sc-attr">
             <a id="c-track-2-sc-profile" href="https://soundcloud.com/grlscry" title="GRLS CRY" target="_blank">GRLS CRY</a>
             · <a id="c-track-2-sc-track" href="https://soundcloud.com/grlscry/grlscry-techhousemixvol1-djpromo" title="GRLS CRY - Tech House Mix Vol. 1 | DJ PROMO" target="_blank">GRLS CRY - Tech House Mix Vol. 1 | DJ PROMO</a>
@@ -545,6 +919,7 @@
             <div class="tt" id="c-track-3-title">Room Shake vs Space Jam (GRLS CRY Edit)</div>
             <div class="tm" id="c-track-3-meta">Mashup · 2026</div>
           </div>
+          <div class="wv" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
           <span class="tbg" id="c-track-3-platform">SoundCloud</span>
         </div>
         <div class="te">
@@ -557,13 +932,14 @@
         </div>
       </div>
 
-      <!-- ── Spotify placeholder ── -->
-      <div class="tc r d4" style="padding:24px 28px; display:flex; align-items:center; gap:20px; border-style:dashed; opacity:.5;">
-        <span class="tn" style="font-size:20px;">SP</span>
+      <!-- Spotify placeholder -->
+      <div class="sp-soon r d4">
+        <span class="sp-soon-num">SP</span>
         <div class="ti">
-          <div class="tt" style="color:var(--gray-lt);">Spotify — Coming Soon</div>
-          <div class="tm">Track IDs will be added when music goes live</div>
+          <div class="tt" style="color:var(--gray);">Spotify</div>
+          <div class="tm">Releasing when music goes live</div>
         </div>
+        <span class="sp-soon-tag">Coming Soon</span>
       </div>
 
       <!-- ── Give Back ── -->
@@ -588,6 +964,7 @@
       </div>
 
     </div>
+    <span class="sec-n" aria-hidden="true">03</span>
   </section>
 
   <div class="ornament-row" aria-hidden="true">
@@ -609,6 +986,7 @@
       <table class="evt r d1" aria-label="Upcoming shows">
         <thead>
           <tr>
+            <th scope="col" style="width:28px;"></th>
             <th scope="col">Date</th>
             <th scope="col">Venue</th>
             <th scope="col">Location</th>
@@ -618,6 +996,7 @@
         </thead>
         <tbody id="c-events-tbody">
           <tr>
+            <td class="e-dot"><span class="e-status live" title="Confirmed"></span></td>
             <td class="ed">Mar 7, 2026</td>
             <td class="en">Half Marathon Run</td>
             <td>Phoenix, AZ</td>
@@ -625,6 +1004,7 @@
             <td><a href="#contact" class="da">Info ↗</a></td>
           </tr>
           <tr>
+            <td class="e-dot"><span class="e-status tbd" title="TBA"></span></td>
             <td class="ed">TBA</td>
             <td class="en">Phoenix Venue</td>
             <td>Phoenix, AZ</td>
@@ -632,6 +1012,7 @@
             <td><span class="tba">Booking Open</span></td>
           </tr>
           <tr>
+            <td class="e-dot"><span class="e-status tbd" title="TBA"></span></td>
             <td class="ed">TBA</td>
             <td class="en">Scottsdale Venue</td>
             <td>Scottsdale, AZ</td>
@@ -645,6 +1026,7 @@
         Corporate event packages available — reach out with date, venue, and budget.
       </p>
     </div>
+    <span class="sec-n" aria-hidden="true">04</span>
   </section>
 
   <div class="ornament-row" aria-hidden="true">
@@ -657,9 +1039,10 @@
   <!-- CONTACT -->
   <!-- ══════════════════════════════════════════════════════════════ -->
   <section id="contact" aria-labelledby="contact-h">
-    <svg class="thorn-deco contact-thorn" viewBox="0 0 420 500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <image height="750" width="500" href="CybersygilsimAsset.jpg"/>
-    </svg>
+
+    <!-- decorative asset -->
+    <img src="CybersygilsimAsset.jpg" class="deco-img contact-deco" alt="" aria-hidden="true">
+
     <div class="w">
       <div class="ew r">
         <span class="el"></span>
@@ -670,22 +1053,34 @@
         <div class="r">
           <p class="cd" id="c-contact-blurb">Available for bookings across Phoenix, Scottsdale, and beyond. Corporate packages available under a separate EPK. Reach out with your date, venue, and budget.</p>
           <nav class="sl-nav" aria-label="Social and contact links">
-            <a id="c-contact-ig" href="https://instagram.com/grlscryofficial" class="si" target="_blank" rel="noopener">Instagram — @grlscryofficial</a>
-            <a id="c-contact-x"  href="https://x.com/grlscryofficial"         class="si" target="_blank" rel="noopener">X — @grlscryofficial</a>
-            <a id="c-contact-sc" href="https://soundcloud.com/grlscry"         class="si" target="_blank" rel="noopener">SoundCloud — grlscry</a>
-            <a id="c-contact-email" href="mailto:kristina.mktg.sound@outlook.com" class="si">Management — kristina.mktg.sound@outlook.com</a>
+            <a id="c-contact-ig" href="https://instagram.com/grlscryofficial" class="si" target="_blank" rel="noopener">
+              <svg class="si-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><rect x="1" y="1" width="13" height="13" rx="3.5" stroke="currentColor" stroke-width="1.3"/><circle cx="7.5" cy="7.5" r="2.8" stroke="currentColor" stroke-width="1.3"/><circle cx="11.2" cy="3.8" r=".9" fill="currentColor"/></svg>
+              Instagram — @grlscryofficial
+            </a>
+            <a id="c-contact-x" href="https://x.com/grlscryofficial" class="si" target="_blank" rel="noopener">
+              <svg class="si-icon" width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M1.5 1.5L11.5 11.5M11.5 1.5L1.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              X — @grlscryofficial
+            </a>
+            <a id="c-contact-sc" href="https://soundcloud.com/grlscry" class="si" target="_blank" rel="noopener">
+              <svg class="si-icon" width="16" height="11" viewBox="0 0 16 11" fill="currentColor" aria-hidden="true"><rect x="0" y="4.5" width="2" height="6.5" rx="1"/><rect x="3" y="2.5" width="2" height="8.5" rx="1"/><rect x="6" y="0" width="2" height="11" rx="1"/><rect x="9" y="3" width="2" height="8" rx="1"/><rect x="12" y="5" width="2" height="6" rx="1"/></svg>
+              SoundCloud — grlscry
+            </a>
+            <a id="c-contact-email" href="mailto:kristina.mktg.sound@outlook.com" class="si">
+              <svg class="si-icon" width="15" height="12" viewBox="0 0 15 12" fill="none" aria-hidden="true"><rect x="1" y="1" width="13" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M1 3.5L7.5 7.5L14 3.5" stroke="currentColor" stroke-width="1.3"/></svg>
+              Management — kristina.mktg.sound@outlook.com
+            </a>
           </nav>
         </div>
         <div class="r d2">
           <form id="cf" name="booking" netlify novalidate>
             <div class="fr">
-              <div class="fg">
+              <div class="fg fl-wrap">
+                <input type="text" id="name" name="name" required aria-required="true" placeholder=" ">
                 <label for="name">Name</label>
-                <input type="text" id="name" name="name" required aria-required="true" placeholder="Your name or venue">
               </div>
-              <div class="fg">
+              <div class="fg fl-wrap">
+                <input type="email" id="email" name="email" required aria-required="true" placeholder=" ">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" required aria-required="true" placeholder="your@email.com">
               </div>
             </div>
             <div class="fg">
@@ -698,9 +1093,9 @@
                 <option value="general">General</option>
               </select>
             </div>
-            <div class="fg">
-              <label for="msg">Message</label>
-              <textarea id="msg" name="message" required aria-required="true" placeholder="Date, venue, event type, budget..."></textarea>
+            <div class="fg fl-wrap">
+              <textarea id="msg" name="message" required aria-required="true" placeholder=" "></textarea>
+              <label for="msg">Message — date, venue, type, budget</label>
             </div>
             <button type="submit" class="btn bs" style="width:100%;justify-content:center;">Send Inquiry</button>
             <p id="fs" aria-live="polite"></p>
@@ -708,10 +1103,12 @@
         </div>
       </div>
     </div>
+    <span class="sec-n" aria-hidden="true">05</span>
   </section>
 
   <!-- FOOTER -->
   <footer>
+    <div class="foot-wm" aria-hidden="true">GRLSCRY</div>
     <span class="fl">GRLSCRY</span>
     <span class="fc" id="c-footer-copyright">© 2026 — SCOTTSDALE, AZ — Tech House / House</span>
     <nav class="fns" aria-label="Footer navigation">
@@ -724,6 +1121,8 @@
   <!-- ══════════════════════════════════════════════════════════════ -->
   <!-- JAVASCRIPT -->
   <!-- ══════════════════════════════════════════════════════════════ -->
+  <noscript><style>.r { opacity: 1 !important; transform: none !important; }</style></noscript>
+
   <script>
     /* ── CURSOR ─────────────────────────────────────────────────── */
     const cd = document.getElementById('cd'), cr = document.getElementById('cr');
@@ -798,7 +1197,14 @@
           drops[i] += .4;
         });
       }
-      setTimeout(() => setInterval(draw, 110), 1800);
+      setTimeout(() => {
+        let last = 0;
+        function loop(ts) {
+          if (ts - last > 110) { draw(); last = ts; }
+          requestAnimationFrame(loop);
+        }
+        requestAnimationFrame(loop);
+      }, 1800);
     });
 
     /* ── FORM SUBMISSION ────────────────────────────────────────── */
@@ -817,19 +1223,65 @@
         fs.textContent = '✗ Please enter a valid email address.';
         fs.style.color = 'var(--pink)'; return;
       }
-      btn.disabled = true; btn.textContent = 'Sending...';
-      fs.textContent = ''; fs.style.color = 'var(--sage)';
-      fetch('/', { method: 'POST', body: new FormData(this) })
+
+      btn.disabled = true;
+      btn.textContent = 'Sending';
+      btn.classList.add('btn-loading');
+      fs.textContent = '';
+      fs.style.color = 'var(--sage)';
+
+      const data = new FormData(this);
+      fetch('/', { method: 'POST', body: data })
         .then(() => {
           fs.textContent = '✓ Message received. We\'ll be in touch.';
-          btn.disabled = false; btn.textContent = 'Send Inquiry';
+          btn.disabled = false;
+          btn.textContent = 'Send Inquiry';
+          btn.classList.remove('btn-loading');
           this.reset();
         })
         .catch(() => {
           fs.textContent = '✗ Something went wrong — email us directly.';
           fs.style.color = 'var(--pink)';
-          btn.disabled = false; btn.textContent = 'Send Inquiry';
+          btn.disabled = false;
+          btn.textContent = 'Send Inquiry';
+          btn.classList.remove('btn-loading');
         });
+    });
+
+    /* ── SCROLL PROGRESS BAR ─────────────────────────────────── */
+    const prog = document.getElementById('progress');
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const pct = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+      if (prog) prog.style.width = Math.min(pct, 100) + '%';
+    }, { passive: true });
+
+    /* ── ACTIVE NAV SECTION ──────────────────────────────────── */
+    const navLinks = document.querySelectorAll('.nv a');
+    const ioNav = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          navLinks.forEach(a => a.classList.remove('act'));
+          const link = document.querySelector('.nv a[href="#' + e.target.id + '"]');
+          if (link) link.classList.add('act');
+        }
+      });
+    }, { threshold: .3, rootMargin: '-80px 0px -35% 0px' });
+    document.querySelectorAll('section[id]').forEach(s => ioNav.observe(s));
+
+    /* ── MAGNETIC BUTTONS ────────────────────────────────────── */
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('mousemove', e => {
+        const r = btn.getBoundingClientRect();
+        const x = ((e.clientX - r.left) / r.width  - .5) * 10;
+        const y = ((e.clientY - r.top)  / r.height - .5) * 10;
+        btn.style.transform = `translate(${x}px,${y}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transition = 'transform .5s var(--ease), all .25s var(--ease)';
+        btn.style.transform = '';
+        setTimeout(() => btn.style.transition = '', 500);
+      });
     });
   </script>
 

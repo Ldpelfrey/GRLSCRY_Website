@@ -27,22 +27,10 @@
       "House"
     ],
     "stats": [
-      {
-        "value": "10+",
-        "label": "Years DJ"
-      },
-      {
-        "value": "SCOTTSDALE",
-        "label": "Based"
-      },
-      {
-        "value": "No",
-        "label": "Rushed Drops."
-      },
-      {
-        "value": "Tracks Built",
-        "label": "From the Ground Up"
-      }
+      { "value": "10+",   "label": "Years DJing" },
+      { "value": "PHX",   "label": "Desert Built" },
+      { "value": "ZERO",  "label": "Compromises" },
+      { "value": "3AM",   "label": "Peak Hour" }
     ],
     "tools": "Ableton Live 12 · Serum 2 · Pioneer DDJ-400 · Pioneer DDJ-GRV6 · CDJ 30000 · CDJ 20000 · DJM · A-Series",
     "inspiration": "GRLSCRY pulls from the real late-night underbelly: blacked-out warehouses, bass that hits your chest, feral crowds moving like tomorrow's cancelled. Sweat, smoke, glances that stick under dim strobes. Built by people who already own the room. Beats land with quiet empathy, natural charisma, subtle edge. Slowed techno that shifts your head, indie dance built for 2026."
@@ -63,7 +51,7 @@
       "title": "Tech House Mix Vol. 1",
       "meta": "Live Mix · 2026",
       "platform": "SoundCloud",
-      "soundcloud_embed": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2262546275&color=646c74&hide_related=true&show_comments=false&show_teaser=false",
+      "soundcloud_embed": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2262546275&color=070609&hide_related=true&show_comments=false&show_teaser=false",
       "soundcloud_profile_url": "https://soundcloud.com/grlscry",
       "soundcloud_track_url": "https://soundcloud.com/grlscry/grlscry-techhousemixvol1-djpromo",
       "soundcloud_track_title": "GRLS CRY - Tech House Mix Vol. 1 | DJ PROMO"
