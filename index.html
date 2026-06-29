@@ -661,12 +661,16 @@
     }
     .hero-deco-tr {
       top: calc(var(--nav-h) + var(--ticker-h) + 10px); right: -40px;
-      width: clamp(240px,28vw,400px); opacity: .09;
+      width: clamp(200px,24vw,360px);
+      height: clamp(280px,44vh,520px);
+      opacity: .09;
       mix-blend-mode: luminosity; z-index: 1;
     }
     .hero-deco-bl {
       bottom: -20px; left: -30px;
-      width: clamp(160px,18vw,280px); opacity: .05;
+      width: clamp(130px,16vw,240px);
+      height: clamp(180px,30vh,360px);
+      opacity: .05;
       mix-blend-mode: luminosity; z-index: 1;
     }
     .about-deco-bg {
@@ -908,8 +912,9 @@
       align-items: end;
     }
     .art-bg {
-      position: absolute; inset: 0;
-      background: url('images/artist-bg.jpg') center 25% / cover no-repeat;
+      position: absolute;
+      top: -30%; left: 0; right: 0; height: 160%;
+      background: url('images/artist-bg.jpg') center 35% / cover no-repeat;
       will-change: transform;
     }
     .art-veil {
@@ -946,11 +951,11 @@
     /* photo strip */
     .art-strip {
       display: grid; grid-template-columns: repeat(3, 1fr);
-      height: clamp(200px, 26vw, 320px); gap: 2px;
+      height: clamp(260px, 32vw, 420px); gap: 2px;
       position: relative; z-index: 2;
     }
     .art-strip-img {
-      background-size: cover; background-position: center;
+      background-size: cover; background-position: center 20%;
       overflow: hidden; position: relative;
       filter: grayscale(30%) brightness(.85);
       transition: filter .6s var(--ease), transform .6s var(--ease);
@@ -977,7 +982,7 @@
           rgba(14,14,14,1) 100%
         );
       }
-      .art-strip { grid-template-columns: 1fr 1fr; height: 180px; }
+      .art-strip { grid-template-columns: 1fr 1fr; height: 220px; }
       .art-strip-img:last-child { display: none; }
     }
     @media (max-width: 640px) {
@@ -1299,9 +1304,9 @@
       </div>
     </div>
     <div class="art-strip">
-      <div class="art-strip-img" style="background-image:url('images/artist-decks.jpg')"></div>
-      <div class="art-strip-img" style="background-image:url('images/artist-night.jpg');background-position:center 20%"></div>
-      <div class="art-strip-img" style="background-image:url('images/artist-live.jpg')"></div>
+      <div class="art-strip-img" style="background-image:url('images/artist-decks.jpg');background-position:center 10%"></div>
+      <div class="art-strip-img" style="background-image:url('images/artist-night.jpg');background-position:center 15%"></div>
+      <div class="art-strip-img" style="background-image:url('images/artist-live.jpg');background-position:center 30%"></div>
     </div>
   </section>
 
