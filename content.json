@@ -79,17 +79,40 @@
   ],
   "events": [
     {
-      "date": "03/20",
-      "venue": "After12",
-      "location": "Phoenix, AZ",
-      "type": "DJ Set — House",
-      "link": "https://www.flite.city/e/after12-friday-3-20-26?p=GRLSCRY"
+      "date": "Jun 18",
+      "venue": "thirds.",
+      "full_venue": "YZ's Karaoke Bar",
+      "location": "Mesa, AZ",
+      "type": "DJ Set — All Genres",
+      "status": "live",
+      "note": "Set Recording Coming Soon",
+      "link": ""
     },
     {
-      "date": "TBA",
-      "venue": "Ascension: Mogfest - Omega Strong Gym",
+      "date": "Jul 25",
+      "venue": "MogFest",
+      "full_venue": "VIP Event Center",
       "location": "Phoenix, AZ",
-      "type": "DJ Set — Multi-Genre",
+      "type": "DJ Set — All Genres",
+      "status": "live",
+      "link": ""
+    },
+    {
+      "date": "July",
+      "venue": "Almost Famous / Old Town Clubs",
+      "full_venue": "Old Town Scottsdale",
+      "location": "Scottsdale, AZ",
+      "type": "DJ Set — House",
+      "status": "tbd",
+      "link": ""
+    },
+    {
+      "date": "August",
+      "venue": "Electric Sanctuary Live Recording",
+      "full_venue": "Electric Sanctuary",
+      "location": "Scottsdale, AZ",
+      "type": "DJ Set — ???",
+      "status": "tbd",
       "link": ""
     }
   ],

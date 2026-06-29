@@ -1340,26 +1340,34 @@
         <tbody id="c-events-tbody">
           <tr>
             <td class="e-dot"><span class="e-status live" title="Confirmed"></span></td>
-            <td class="ed">Mar 7, 2026</td>
-            <td class="en">Half Marathon Run</td>
+            <td class="ed">Jun 18</td>
+            <td class="en">thirds.</td>
+            <td>Mesa, AZ</td>
+            <td>DJ Set — All Genres</td>
+            <td><span class="tba">Set Recording Coming Soon</span></td>
+          </tr>
+          <tr>
+            <td class="e-dot"><span class="e-status live" title="Confirmed"></span></td>
+            <td class="ed">Jul 25</td>
+            <td class="en">MogFest</td>
             <td>Phoenix, AZ</td>
-            <td>Community / Fundraiser</td>
-            <td><a href="#contact" class="da">Info ↗</a></td>
+            <td>DJ Set — All Genres</td>
+            <td><span class="tba">Booking Open</span></td>
           </tr>
           <tr>
             <td class="e-dot"><span class="e-status tbd" title="TBA"></span></td>
-            <td class="ed">TBA</td>
-            <td class="en">Phoenix Venue</td>
-            <td>Phoenix, AZ</td>
+            <td class="ed">July</td>
+            <td class="en">Almost Famous / Old Town Clubs</td>
+            <td>Scottsdale, AZ</td>
             <td>DJ Set — House</td>
             <td><span class="tba">Booking Open</span></td>
           </tr>
           <tr>
             <td class="e-dot"><span class="e-status tbd" title="TBA"></span></td>
-            <td class="ed">TBA</td>
-            <td class="en">Scottsdale Venue</td>
+            <td class="ed">August</td>
+            <td class="en">Electric Sanctuary Live Recording</td>
             <td>Scottsdale, AZ</td>
-            <td>DJ Set — Late Night</td>
+            <td>DJ Set — ???</td>
             <td><span class="tba">Booking Open</span></td>
           </tr>
         </tbody>
@@ -2088,10 +2096,15 @@
           var tbody = el('c-events-tbody');
           if (tbody) {
             tbody.innerHTML = c.events.map(function(ev) {
+              var status = ev.status || 'tbd';
+              var dotTitle = status === 'live' ? 'Confirmed' : 'TBA';
+              var dot = '<td class="e-dot"><span class="e-status ' + status + '" title="' + dotTitle + '"></span></td>';
               var linkCell = ev.link
                 ? '<a href="' + ev.link + '" class="da">Info ↗</a>'
-                : '<span class="tba">Booking Open</span>';
-              return '<tr><td class="ed">' + ev.date + '</td><td class="en">' + ev.venue +
+                : ev.note
+                  ? '<span class="tba">' + ev.note + '</span>'
+                  : '<span class="tba">Booking Open</span>';
+              return '<tr>' + dot + '<td class="ed">' + ev.date + '</td><td class="en">' + ev.venue +
                 '</td><td>' + ev.location + '</td><td>' + ev.type + '</td><td>' + linkCell + '</td></tr>';
             }).join('');
           }
