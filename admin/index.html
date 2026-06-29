@@ -116,6 +116,35 @@
     }
     .btn-remove:hover { background: rgba(255,105,180,.1); border-color: var(--pink); }
 
+    /* ── SELECT ─────────────────────────────────────────────── */
+    .fg select {
+      background: var(--s2); border: 1px solid var(--border);
+      color: var(--white); font-family: var(--mono); font-size: 12px;
+      padding: 10px 12px; outline: none; width: 100%;
+      cursor: pointer; transition: border-color .2s; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23737373'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+    }
+    .fg select:focus { border-color: var(--sage); }
+
+    /* ── ARTWORK PREVIEW ────────────────────────────────────── */
+    .art-preview {
+      width: 54px; height: 54px; object-fit: cover;
+      border: 1px solid var(--border); display: block;
+      background: var(--s2); flex-shrink: 0;
+    }
+    .art-row { display: flex; gap: 12px; align-items: flex-start; }
+    .art-row .fg { flex: 1; margin-bottom: 0; }
+
+    /* ── STATUS BADGE ───────────────────────────────────────── */
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 9px; letter-spacing: .16em; text-transform: uppercase;
+      padding: 4px 10px; border: 1px solid;
+    }
+    .status-pill.live { color: var(--sage); border-color: rgba(215,239,194,.35); }
+    .status-pill.tbd  { color: var(--gray); border-color: rgba(115,115,115,.35); }
+
     /* ── STATS GRID ────────────────────────────────────────── */
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .stat-card { background: var(--s1); border: 1px solid var(--border); padding: 14px; }
@@ -448,59 +477,76 @@
   /* ── TRACKS ────────────────────────────────────────────── */
   function addTrack(d = {}) {
     const n = ++trackSeq;
+    const id = 'trk-' + n;
     const wrap = $('f-tracks-container');
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
       <div class="card-num">Track ${String(n).padStart(2,'0')}</div>
-      ${n > 1 ? `<button class="btn-remove" onclick="rmCard(this)">× Remove</button>` : ''}
+      <button class="btn-remove" onclick="rmCard(this)">× Remove</button>
       <div class="fr">
         <div class="fg"><label>Title</label>
           <input type="text" class="t-title" value="${esc(d.title||'')}"></div>
-        <div class="fg"><label>Meta (year / type)</label>
+        <div class="fg"><label>Meta (e.g. "Live Mix · 2026")</label>
           <input type="text" class="t-meta" value="${esc(d.meta||'')}"></div>
       </div>
-      <div class="fg"><label>Platform Label</label>
-        <input type="text" class="t-platform" value="${esc(d.platform||'SoundCloud')}"></div>
-      <div class="fg">
-        <label>SoundCloud Embed URL</label>
-        <textarea class="t-embed" rows="3">${esc(d.soundcloud_embed||'')}</textarea>
-        <span class="hint">Full URL from the SoundCloud embed code — starts with https://w.soundcloud.com/player/?url=…</span>
-      </div>
       <div class="fr">
-        <div class="fg"><label>SoundCloud Profile URL</label>
-          <input type="text" class="t-sc-profile" value="${esc(d.soundcloud_profile_url||'')}"></div>
+        <div class="fg"><label>Duration (e.g. "1:00:11")</label>
+          <input type="text" class="t-dur" placeholder="0:00" value="${esc(d.dur||'')}"></div>
         <div class="fg"><label>SoundCloud Track URL</label>
-          <input type="text" class="t-sc-track" value="${esc(d.soundcloud_track_url||'')}"></div>
+          <input type="text" class="t-url" placeholder="https://soundcloud.com/grlscry/track-slug" value="${esc(d.soundcloud_url||'')}"></div>
       </div>
-      <div class="fg"><label>Track Link Display Title</label>
-        <input type="text" class="t-sc-title" value="${esc(d.soundcloud_track_title||'')}"></div>`;
+      <div class="art-row">
+        <img class="art-preview" id="${id}-art" src="${esc(d.artwork||'')}" onerror="this.src=''" alt="">
+        <div class="fg">
+          <label>Artwork URL (SoundCloud CDN)</label>
+          <input type="text" class="t-art" placeholder="https://i1.sndcdn.com/artworks-…-t500x500.jpg"
+            value="${esc(d.artwork||'')}"
+            oninput="var p=this.closest('.art-row').querySelector('.art-preview');p.src=this.value">
+          <span class="hint">Copy from SoundCloud CDN — t500x500 format. Preview updates live.</span>
+        </div>
+      </div>`;
     wrap.appendChild(card);
   }
 
   /* ── EVENTS ────────────────────────────────────────────── */
   function addEvent(d = {}) {
     const n = ++eventSeq;
+    const status = d.status || 'tbd';
     const wrap = $('f-events-container');
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
       <div class="card-num">Show ${n}</div>
-      ${n > 1 ? `<button class="btn-remove" onclick="rmCard(this)">× Remove</button>` : ''}
+      <button class="btn-remove" onclick="rmCard(this)">× Remove</button>
       <div class="fr">
+        <div class="fg"><label>Status</label>
+          <select class="e-status">
+            <option value="live"${status==='live'?' selected':''}>● Confirmed</option>
+            <option value="tbd"${status==='tbd'?' selected':''}>○ TBA</option>
+          </select>
+        </div>
         <div class="fg"><label>Date</label>
-          <input type="text" class="e-date" placeholder="Mar 7, 2026 or TBA" value="${esc(d.date||'')}"></div>
-        <div class="fg"><label>Venue</label>
-          <input type="text" class="e-venue" value="${esc(d.venue||'')}"></div>
+          <input type="text" class="e-date" placeholder="Jun 18 or July (TBA)" value="${esc(d.date||'')}"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Event / Billed Name</label>
+          <input type="text" class="e-venue" placeholder="thirds." value="${esc(d.venue||'')}"></div>
+        <div class="fg"><label>Venue Name</label>
+          <input type="text" class="e-full-venue" placeholder="YZ's Karaoke Bar" value="${esc(d.full_venue||'')}"></div>
       </div>
       <div class="fr">
         <div class="fg"><label>Location</label>
-          <input type="text" class="e-location" value="${esc(d.location||'')}"></div>
-        <div class="fg"><label>Type</label>
-          <input type="text" class="e-type" placeholder="DJ Set — Tech House" value="${esc(d.type||'')}"></div>
+          <input type="text" class="e-location" placeholder="Mesa, AZ" value="${esc(d.location||'')}"></div>
+        <div class="fg"><label>Set Type</label>
+          <input type="text" class="e-type" placeholder="DJ Set — House" value="${esc(d.type||'')}"></div>
       </div>
-      <div class="fg"><label>Link (use #contact for inquiry, or leave blank for "Booking Open")</label>
-        <input type="text" class="e-link" value="${esc(d.link||'')}"></div>`;
+      <div class="fr">
+        <div class="fg"><label>Action Text <span style="color:var(--gray);font-weight:300">(optional — replaces "Booking Open")</span></label>
+          <input type="text" class="e-note" placeholder="Set Recording Coming Soon" value="${esc(d.note||'')}"></div>
+        <div class="fg"><label>Link URL <span style="color:var(--gray);font-weight:300">(optional)</span></label>
+          <input type="text" class="e-link" placeholder="https:// or #contact" value="${esc(d.link||'')}"></div>
+      </div>`;
     wrap.appendChild(card);
   }
 
@@ -519,23 +565,30 @@
 
     const trackCards = document.querySelectorAll('#f-tracks-container .card');
     const tracks = Array.from(trackCards).map((c, i) => ({
-      number:                 String(i+1).padStart(2,'0'),
-      title:                  (c.querySelector('.t-title')?.value    || '').trim(),
-      meta:                   (c.querySelector('.t-meta')?.value     || '').trim(),
-      platform:               (c.querySelector('.t-platform')?.value || '').trim(),
-      soundcloud_embed:       (c.querySelector('.t-embed')?.value    || '').trim(),
-      soundcloud_profile_url: (c.querySelector('.t-sc-profile')?.value || '').trim(),
-      soundcloud_track_url:   (c.querySelector('.t-sc-track')?.value   || '').trim(),
-      soundcloud_track_title: (c.querySelector('.t-sc-title')?.value   || '').trim()
+      number:        String(i+1).padStart(2,'0'),
+      title:         (c.querySelector('.t-title')?.value || '').trim(),
+      meta:          (c.querySelector('.t-meta')?.value  || '').trim(),
+      dur:           (c.querySelector('.t-dur')?.value   || '').trim(),
+      artwork:       (c.querySelector('.t-art')?.value   || '').trim(),
+      soundcloud_url:(c.querySelector('.t-url')?.value   || '').trim()
     }));
 
-    const events = Array.from(document.querySelectorAll('#f-events-container .card')).map(c => ({
-      date:     (c.querySelector('.e-date')?.value     || '').trim(),
-      venue:    (c.querySelector('.e-venue')?.value    || '').trim(),
-      location: (c.querySelector('.e-location')?.value || '').trim(),
-      type:     (c.querySelector('.e-type')?.value     || '').trim(),
-      link:     (c.querySelector('.e-link')?.value     || '').trim()
-    }));
+    const events = Array.from(document.querySelectorAll('#f-events-container .card')).map(c => {
+      const note = (c.querySelector('.e-note')?.value || '').trim();
+      const link = (c.querySelector('.e-link')?.value || '').trim();
+      const full_venue = (c.querySelector('.e-full-venue')?.value || '').trim();
+      const ev = {
+        date:       (c.querySelector('.e-date')?.value     || '').trim(),
+        venue:      (c.querySelector('.e-venue')?.value    || '').trim(),
+        location:   (c.querySelector('.e-location')?.value || '').trim(),
+        type:       (c.querySelector('.e-type')?.value     || '').trim(),
+        status:     (c.querySelector('.e-status')?.value   || 'tbd'),
+      };
+      if (full_venue) ev.full_venue = full_venue;
+      if (note)       ev.note       = note;
+      if (link)       ev.link       = link;
+      return ev;
+    });
 
     const influences = val('f-influences').split(',').map(s => s.trim()).filter(Boolean);
 
