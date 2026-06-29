@@ -870,6 +870,87 @@
     /* letter scatter support */
     .gl-l { display: inline-block; }
     .t-hero, .glitch { overflow: visible; }
+
+    /* ─── ARTIST PRESENCE ─────────────────────────────────── */
+    #artist { position: relative; overflow: hidden; }
+    .art-hero {
+      position: relative; min-height: 88vh;
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: end;
+    }
+    .art-bg {
+      position: absolute; inset: 0;
+      background: url('images/artist-bg.jpg') center 25% / cover no-repeat;
+      will-change: transform;
+    }
+    .art-veil {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        105deg,
+        rgba(14,14,14,.15) 0%,
+        rgba(14,14,14,.05) 30%,
+        rgba(14,14,14,.75) 65%,
+        rgba(14,14,14,.97) 100%
+      );
+    }
+    .art-veil-bottom {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 40%;
+      background: linear-gradient(to bottom, transparent, rgba(14,14,14,1));
+    }
+    .art-text {
+      position: relative; z-index: 2;
+      grid-column: 2;
+      padding: clamp(60px,8vw,120px) var(--gutter) clamp(60px,8vw,100px) 40px;
+    }
+    .art-heading {
+      font-family: var(--bebas); font-size: clamp(4.5rem, 9vw, 8.5rem);
+      line-height: .92; letter-spacing: .03em; color: var(--white);
+      margin: 14px 0 22px;
+    }
+    .art-heading em { color: var(--sage); font-style: normal; }
+    .art-sub {
+      font-size: 13px; color: rgba(255,255,255,.6); max-width: 400px;
+      line-height: 1.65; margin-bottom: 36px; font-family: var(--mono);
+      font-weight: 300;
+    }
+    .art-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+    /* photo strip */
+    .art-strip {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      height: clamp(200px, 26vw, 320px); gap: 2px;
+      position: relative; z-index: 2;
+    }
+    .art-strip-img {
+      background-size: cover; background-position: center;
+      overflow: hidden; position: relative;
+      filter: grayscale(30%) brightness(.85);
+      transition: filter .6s var(--ease), transform .6s var(--ease);
+    }
+    .art-strip-img::after {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(14,14,14,.35);
+      transition: background .6s;
+    }
+    .art-strip-img:hover { filter: grayscale(0) brightness(1); }
+    .art-strip-img:hover::after { background: rgba(14,14,14,.1); }
+    @media (max-width: 768px) {
+      .art-hero { grid-template-columns: 1fr; }
+      .art-text {
+        grid-column: 1; padding: 0 var(--gutter) clamp(48px,8vw,80px);
+      }
+      .art-bg { background-position: 70% 20%; }
+      .art-veil {
+        background: linear-gradient(
+          to bottom,
+          rgba(14,14,14,.4) 0%,
+          rgba(14,14,14,.1) 40%,
+          rgba(14,14,14,.9) 80%,
+          rgba(14,14,14,1) 100%
+        );
+      }
+      .art-strip { grid-template-columns: 1fr 1fr; height: 180px; }
+      .art-strip-img:last-child { display: none; }
+    }
     @media (max-width: 640px) {
       #player { grid-template-columns: 1fr auto; padding: 0 16px; gap: 16px; }
       .p-wv, .p-progress, .p-close { display: none; }
@@ -1149,6 +1230,31 @@
 
     </div>
     <span class="sec-n" aria-hidden="true">03</span>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- ARTIST PRESENCE -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section id="artist" aria-label="Artist">
+    <div class="art-hero">
+      <div class="art-bg"></div>
+      <div class="art-veil"></div>
+      <div class="art-veil-bottom"></div>
+      <div class="art-text">
+        <span class="t-label r">GRLS CRY — SCOTTSDALE, AZ</span>
+        <h2 class="art-heading r d1">Built for<br><em>3AM.</em></h2>
+        <p class="art-sub r d2">Ten years building sets. Zero compromises on the sound.<br>Dark, high-energy, made for late nights when the filters drop.</p>
+        <div class="art-ctas r d3">
+          <a href="#contact" class="btn bs">Book a Set</a>
+          <a href="mailto:kristina.mktg.sound@outlook.com?subject=EPK+Request" class="btn bo">Request EPK ↗</a>
+        </div>
+      </div>
+    </div>
+    <div class="art-strip">
+      <div class="art-strip-img" style="background-image:url('images/artist-decks.jpg')"></div>
+      <div class="art-strip-img" style="background-image:url('images/artist-night.jpg');background-position:center 20%"></div>
+      <div class="art-strip-img" style="background-image:url('images/artist-live.jpg')"></div>
+    </div>
   </section>
 
   <div class="ornament-row" aria-hidden="true">
@@ -1574,7 +1680,14 @@
       };
       parallax('.about-thorn-bg',  -50, '#about');
       parallax('.contact-thorn',   -40, '#contact');
-      parallax('.foot-giant',       -28, 'footer');
+      parallax('.foot-giant',      -28, 'footer');
+
+      // artist section bg parallax
+      const artBg = document.querySelector('.art-bg');
+      if (artBg) gsap.to(artBg, {
+        yPercent: 20, ease: 'none',
+        scrollTrigger: { trigger: '#artist', start: 'top bottom', end: 'bottom top', scrub: true }
+      });
     }
 
     /* ── MAGNETIC BUTTONS ────────────────────────────────────── */
