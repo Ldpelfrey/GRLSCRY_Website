@@ -17,10 +17,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
-  <!-- GSAP + ScrollTrigger + Lenis -->
+  <!-- GSAP + ScrollTrigger + Lenis + SoundCloud Widget API -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+  <script src="https://w.soundcloud.com/player/api.js"></script>
   <style>
     /* ─── TOKENS ─────────────────────────────────────────────────── */
     :root {
@@ -807,6 +808,73 @@
     .sp-soon-label { font-size: 11px; color: var(--gray); letter-spacing: .12em; text-transform: uppercase; }
     .sp-soon-tag { font-size: 8px; letter-spacing: .18em; text-transform: uppercase; color: rgba(215,239,194,.25); padding: 3px 8px; border: 1px solid rgba(215,239,194,.1); }
 
+    /* ─── STICKY AUDIO PLAYER ─────────────────────────────────── */
+    #player {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 72px;
+      background: rgba(14,14,14,.96); backdrop-filter: blur(24px) saturate(1.5);
+      border-top: 1px solid var(--bm); z-index: 800;
+      display: grid; grid-template-columns: auto 1fr auto auto auto;
+      align-items: center; padding: 0 var(--gutter); gap: 20px;
+      transform: translateY(100%); transition: transform .5s var(--ease);
+    }
+    #player.open { transform: translateY(0); }
+    .p-wv { display: flex; align-items: flex-end; gap: 2px; height: 28px; flex-shrink: 0; }
+    .p-wv b {
+      display: block; width: 3px; border-radius: 1px;
+      background: rgba(215,239,194,.15);
+      animation: wvb 1.2s ease-in-out infinite; animation-play-state: paused;
+    }
+    #player.playing .p-wv b { background: var(--sage); animation-play-state: running; }
+    .p-wv b:nth-child(1){height:35%;animation-duration:1.1s}
+    .p-wv b:nth-child(2){height:70%;animation-duration:1.4s;animation-delay:.1s}
+    .p-wv b:nth-child(3){height:50%;animation-duration:1.0s;animation-delay:.2s}
+    .p-wv b:nth-child(4){height:90%;animation-duration:1.3s;animation-delay:.05s}
+    .p-wv b:nth-child(5){height:60%;animation-duration:1.2s;animation-delay:.15s}
+    .p-wv b:nth-child(6){height:40%;animation-duration:1.5s;animation-delay:.25s}
+    .p-wv b:nth-child(7){height:80%;animation-duration:0.9s}
+    .p-wv b:nth-child(8){height:55%;animation-duration:1.3s;animation-delay:.3s}
+    .p-info { display: flex; align-items: center; gap: 14px; min-width: 0; }
+    .p-num { font-family: var(--bebas); font-size: 26px; color: rgba(215,239,194,.12); line-height: 1; flex-shrink: 0; }
+    .p-title { font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--white); letter-spacing: .04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .p-meta { font-size: 9px; letter-spacing: .13em; color: var(--gray); text-transform: uppercase; margin-top: 3px; }
+    .p-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .p-btn { background: none; border: none; color: rgba(215,239,194,.5); cursor: pointer; font-size: 11px; padding: 6px 7px; line-height: 1; transition: color .2s; }
+    .p-btn:hover { color: var(--sage); }
+    #p-play {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 1px solid var(--bm) !important;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--sage) !important;
+      transition: background .2s, border-color .2s !important;
+    }
+    #p-play:hover { background: rgba(215,239,194,.08); border-color: var(--sage) !important; }
+    .p-progress { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .p-time, .p-dur { font-family: var(--mono); font-size: 9px; color: var(--gray); letter-spacing: .07em; flex-shrink: 0; }
+    .p-bar { flex: 1; min-width: 80px; height: 2px; background: rgba(215,239,194,.1); position: relative; cursor: pointer; border-radius: 1px; transition: height .15s; }
+    .p-bar:hover { height: 3px; }
+    .p-fill { height: 100%; background: var(--sage); border-radius: 1px; width: 0; pointer-events: none; }
+    .p-close {
+      background: none; border: none; color: var(--gray); font-size: 9px;
+      letter-spacing: .14em; cursor: pointer; padding: 6px 8px;
+      transition: color .2s; flex-shrink: 0; text-transform: uppercase;
+    }
+    .p-close:hover { color: var(--white); }
+    .tc-play {
+      background: none; border: 1px solid transparent; color: rgba(215,239,194,.3);
+      font-size: 8px; letter-spacing: .16em; text-transform: uppercase;
+      cursor: pointer; padding: 4px 9px; transition: color .25s, border-color .25s; flex-shrink: 0;
+    }
+    .tc-play:hover { color: var(--sage); border-color: rgba(215,239,194,.3); }
+    .tc.active .tc-play { color: var(--sage); border-color: var(--sage); }
+    .tc.active .wv b { background: var(--sage); animation-play-state: running; }
+    /* letter scatter support */
+    .gl-l { display: inline-block; }
+    .t-hero, .glitch { overflow: visible; }
+    @media (max-width: 640px) {
+      #player { grid-template-columns: 1fr auto; padding: 0 16px; gap: 16px; }
+      .p-wv, .p-progress, .p-close { display: none; }
+    }
+
   </style>
 </head>
 <body>
@@ -991,6 +1059,7 @@
             <div class="tm" id="c-track-1-meta">Tech House Mix · 2025</div>
           </div>
           <div class="wv" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
+          <button class="tc-play" data-track="0" aria-label="Play in player">▶ Play</button>
           <span class="tbg" id="c-track-1-platform">SoundCloud</span>
         </div>
         <div class="te">
@@ -1012,6 +1081,7 @@
             <div class="tm" id="c-track-2-meta">Live Mix · 2025</div>
           </div>
           <div class="wv" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
+          <button class="tc-play" data-track="1" aria-label="Play in player">▶ Play</button>
           <span class="tbg" id="c-track-2-platform">SoundCloud</span>
         </div>
         <div class="te">
@@ -1033,6 +1103,7 @@
             <div class="tm" id="c-track-3-meta">Mashup · 2026</div>
           </div>
           <div class="wv" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
+          <button class="tc-play" data-track="2" aria-label="Play in player">▶ Play</button>
           <span class="tbg" id="c-track-3-platform">SoundCloud</span>
         </div>
         <div class="te">
@@ -1459,6 +1530,53 @@
       });
     }
 
+    /* ── SCROLL CINEMATICS ───────────────────────────────────── */
+    if (!reduceMotion) {
+
+      // 1 — hero cinematic exit
+      const heroExit = gsap.timeline({
+        scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5 }
+      });
+      heroExit
+        .to('.heb',          { y: -30,  opacity: 0, ease: 'power2.in' }, 0)
+        .to('.h-ribbon',     { x: -80,  opacity: 0, ease: 'power2.in' }, 0)
+        .to('.t-hero',       { y: -80,  opacity: 0, ease: 'power2.in' }, 0)
+        .to('.ht',           { y: -50,  opacity: 0, ease: 'power2.in' }, 0.05)
+        .to('.h-ctx',        { y: -30,  opacity: 0, ease: 'power2.in' }, 0.08)
+        .to('.hc',           { y: -40,  opacity: 0, ease: 'power2.in' }, 0.1)
+        .to('.hs',           { opacity: 0 }, 0)
+        .to('.hero-deco-tr', { y: -140, opacity: 0 }, 0)
+        .to('.hero-deco-bl', { y:  140, opacity: 0 }, 0);
+
+      // 2 — letter scatter on h1
+      const glitchEl = document.querySelector('.glitch');
+      if (glitchEl) {
+        const word  = glitchEl.textContent;
+        const rand  = n => (Math.random() - .5) * n;
+        const seeds = word.split('').map(() => ({ x: rand(900), y: rand(600), r: rand(220) }));
+        glitchEl.innerHTML = word.split('').map(c => `<span class="gl-l">${c}</span>`).join('');
+        gsap.to('.gl-l', {
+          x: i => seeds[i].x,
+          y: i => seeds[i].y,
+          rotation: i => seeds[i].r,
+          opacity: 0,
+          ease: 'power2.in',
+          stagger: { each: 0.05, from: 'center' },
+          scrollTrigger: { trigger: '#hero', start: 'center top', end: 'bottom -20%', scrub: 2 }
+        });
+      }
+
+      // 3 — decorative parallax
+      const parallax = (sel, pct, trigger) => {
+        const el = document.querySelector(sel);
+        if (el) gsap.to(el, { yPercent: pct, ease: 'none',
+          scrollTrigger: { trigger, start: 'top bottom', end: 'bottom top', scrub: true } });
+      };
+      parallax('.about-thorn-bg',  -50, '#about');
+      parallax('.contact-thorn',   -40, '#contact');
+      parallax('.foot-giant',       -28, 'footer');
+    }
+
     /* ── MAGNETIC BUTTONS ────────────────────────────────────── */
     document.querySelectorAll('.btn').forEach(btn => {
       btn.addEventListener('mousemove', e => {
@@ -1473,6 +1591,174 @@
         setTimeout(() => btn.style.transition = '', 500);
       });
     });
+  </script>
+
+  <!-- ── HIDDEN SC CONTROL IFRAME ─────────────────────────────────── -->
+  <iframe id="sc-ctrl" width="1" height="1" scrolling="no" frameborder="no" allow="autoplay"
+    style="position:fixed;top:-9999px;left:-9999px;pointer-events:none;"
+    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/grlscry/marsolo-spaceship-grls-cry-flip&auto_play=false&hide_related=true&show_comments=false&show_teaser=false"></iframe>
+
+  <!-- ── STICKY AUDIO PLAYER ──────────────────────────────────────── -->
+  <div id="player" role="region" aria-label="Audio player">
+    <div class="p-wv" aria-hidden="true">
+      <b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
+    </div>
+    <div class="p-info">
+      <span class="p-num" id="p-num">01</span>
+      <div style="min-width:0;overflow:hidden;">
+        <div class="p-title" id="p-title">Spaceship Flip</div>
+        <div class="p-meta" id="p-meta">Tech House Mix · 2026</div>
+      </div>
+    </div>
+    <div class="p-controls">
+      <button class="p-btn" id="p-prev" aria-label="Previous track">◄</button>
+      <button class="p-btn" id="p-play" aria-label="Play / Pause">▶</button>
+      <button class="p-btn" id="p-next" aria-label="Next track">►</button>
+    </div>
+    <div class="p-progress">
+      <span class="p-time" id="p-time">0:00</span>
+      <div class="p-bar" id="p-bar"><div class="p-fill" id="p-fill"></div></div>
+      <span class="p-dur" id="p-dur">0:00</span>
+    </div>
+    <button class="p-close" id="p-close" aria-label="Close player">ESC</button>
+  </div>
+
+  <!-- ── AUDIO PLAYER JS ───────────────────────────────────────────── -->
+  <script>
+  (function() {
+    var TRACKS = [
+      { num:'01', title:'Spaceship Flip',              meta:'Tech House Mix · 2026', url:'https://soundcloud.com/grlscry/marsolo-spaceship-grls-cry-flip' },
+      { num:'02', title:'Tech House Mix Vol. 1',       meta:'Live Mix · 2026',       url:'https://soundcloud.com/grlscry/grlscry-techhousemixvol1-djpromo' },
+      { num:'03', title:'Room Shake vs Space Jam',     meta:'Mashup · 2026',         url:'https://soundcloud.com/grlscry/rooomshakevsspacejam' }
+    ];
+
+    var cur = 0, playing = false, ready = false, dur = 0, widget;
+
+    var playerEl = document.getElementById('player');
+    var playBtn  = document.getElementById('p-play');
+    var prevBtn  = document.getElementById('p-prev');
+    var nextBtn  = document.getElementById('p-next');
+    var closeBtn = document.getElementById('p-close');
+    var titleEl  = document.getElementById('p-title');
+    var metaEl   = document.getElementById('p-meta');
+    var numEl    = document.getElementById('p-num');
+    var fillEl   = document.getElementById('p-fill');
+    var timeEl   = document.getElementById('p-time');
+    var durEl    = document.getElementById('p-dur');
+    var barEl    = document.getElementById('p-bar');
+    var bttEl    = document.getElementById('btt');
+
+    function fmt(ms) {
+      var s = Math.floor(ms / 1000);
+      return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+    }
+
+    function setTrackInfo(i) {
+      var t = TRACKS[i];
+      titleEl.textContent = t.title;
+      metaEl.textContent  = t.meta;
+      numEl.textContent   = t.num;
+      document.querySelectorAll('.tc').forEach(function(el, n) {
+        el.classList.toggle('active', n === i);
+      });
+    }
+
+    function setPlayState(p) {
+      playing = p;
+      playBtn.textContent = p ? '⏸' : '▶';
+      playerEl.classList.toggle('playing', p);
+    }
+
+    function openPlayer() {
+      playerEl.classList.add('open');
+      if (bttEl) bttEl.style.bottom = '104px';
+    }
+
+    function closePlayer() {
+      playerEl.classList.remove('open');
+      if (bttEl) bttEl.style.bottom = '';
+      if (widget && ready) widget.pause();
+      setPlayState(false);
+      document.querySelectorAll('.tc').forEach(function(el) { el.classList.remove('active'); });
+    }
+
+    function loadTrack(i, autoplay) {
+      cur = i;
+      setTrackInfo(i);
+      fillEl.style.width = '0';
+      timeEl.textContent = '0:00';
+      durEl.textContent  = '0:00';
+      dur = 0;
+      openPlayer();
+      if (widget && ready) {
+        widget.load(TRACKS[i].url, {
+          auto_play: autoplay !== false,
+          hide_related: true, show_comments: false,
+          show_teaser: false, buying: false,
+          liking: false, download: false, sharing: false
+        });
+      }
+    }
+
+    function togglePlay() {
+      if (!widget || !ready) return;
+      widget.isPaused(function(paused) {
+        if (paused) widget.play(); else widget.pause();
+      });
+    }
+
+    window.addEventListener('load', function() {
+      if (typeof SC === 'undefined') return;
+      widget = SC.Widget(document.getElementById('sc-ctrl'));
+
+      widget.bind(SC.Widget.Events.READY, function() {
+        ready = true;
+      });
+      widget.bind(SC.Widget.Events.PLAY, function() {
+        setPlayState(true);
+        widget.getDuration(function(d) { dur = d; durEl.textContent = fmt(d); });
+      });
+      widget.bind(SC.Widget.Events.PAUSE, function() {
+        setPlayState(false);
+      });
+      widget.bind(SC.Widget.Events.FINISH, function() {
+        setPlayState(false);
+        loadTrack((cur + 1) % TRACKS.length, true);
+      });
+      widget.bind(SC.Widget.Events.PLAY_PROGRESS, function(e) {
+        fillEl.style.width = (e.relativePosition * 100) + '%';
+        timeEl.textContent = fmt(e.currentPosition);
+      });
+    });
+
+    playBtn.addEventListener('click', function() {
+      if (!playerEl.classList.contains('open')) { loadTrack(0, true); }
+      else { togglePlay(); }
+    });
+    prevBtn.addEventListener('click', function() { loadTrack((cur - 1 + TRACKS.length) % TRACKS.length, true); });
+    nextBtn.addEventListener('click', function() { loadTrack((cur + 1) % TRACKS.length, true); });
+    closeBtn.addEventListener('click', closePlayer);
+
+    barEl.addEventListener('click', function(e) {
+      if (!widget || !ready || !dur) return;
+      var rect = barEl.getBoundingClientRect();
+      widget.seekTo(((e.clientX - rect.left) / rect.width) * dur);
+    });
+
+    document.querySelectorAll('.tc-play').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        loadTrack(parseInt(btn.dataset.track, 10), true);
+      });
+    });
+
+    var streamNow = document.querySelector('a.btn.bs[href="#music"]');
+    if (streamNow) {
+      streamNow.addEventListener('click', function() {
+        setTimeout(function() { loadTrack(0, true); }, 600);
+      });
+    }
+  })();
   </script>
 
   <!-- ── CONTENT LOADER ───────────────────────────────────────────── -->
