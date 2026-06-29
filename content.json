@@ -27,10 +27,22 @@
       "House"
     ],
     "stats": [
-      { "value": "10+",   "label": "Years DJing" },
-      { "value": "PHX",   "label": "Desert Built" },
-      { "value": "ZERO",  "label": "Compromises" },
-      { "value": "3AM",   "label": "Peak Hour" }
+      {
+        "value": "10+",
+        "label": "Years DJing"
+      },
+      {
+        "value": "PHX",
+        "label": "Desert Built"
+      },
+      {
+        "value": "ZERO",
+        "label": "Compromises"
+      },
+      {
+        "value": "3AM",
+        "label": "Peak Hour"
+      }
     ],
     "tools": "Ableton Live 12 · Serum 2 · Pioneer DDJ-400 · Pioneer DDJ-GRV6 · CDJ 30000 · CDJ 20000 · DJM · A-Series",
     "inspiration": "GRLSCRY pulls from the real late-night underbelly: blacked-out warehouses, bass that hits your chest, feral crowds moving like tomorrow's cancelled. Sweat, smoke, glances that stick under dim strobes. Built by people who already own the room. Beats land with quiet empathy, natural charisma, subtle edge."
@@ -81,39 +93,35 @@
     {
       "date": "Jun 18",
       "venue": "thirds.",
-      "full_venue": "YZ's Karaoke Bar",
       "location": "Mesa, AZ",
       "type": "DJ Set — All Genres",
       "status": "live",
-      "note": "Set Recording Coming Soon",
-      "link": ""
+      "full_venue": "YZ's Karaoke Bar",
+      "note": "Set Recording Coming Soon"
     },
     {
       "date": "Jul 25",
       "venue": "MogFest",
-      "full_venue": "VIP Event Center",
       "location": "Phoenix, AZ",
       "type": "DJ Set — All Genres",
       "status": "live",
-      "link": ""
+      "full_venue": "VIP Event Center"
     },
     {
       "date": "July",
       "venue": "Almost Famous / Old Town Clubs",
-      "full_venue": "Old Town Scottsdale",
       "location": "Scottsdale, AZ",
       "type": "DJ Set — House",
       "status": "tbd",
-      "link": ""
+      "full_venue": "Old Town Scottsdale"
     },
     {
       "date": "August",
       "venue": "Electric Sanctuary Live Recording",
-      "full_venue": "Electric Sanctuary",
       "location": "Scottsdale, AZ",
       "type": "DJ Set — ???",
       "status": "live",
-      "link": ""
+      "full_venue": "Electric Sanctuary"
     }
   ],
   "contact": {
