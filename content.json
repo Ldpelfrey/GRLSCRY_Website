@@ -1,9 +1,9 @@
 {
   "meta": {
-    "title": "GRLSCRY — Tech House / SCOTTSDALE, AZ",
-    "description": "GRLSCRY — DJ / Producer. Dark. High Energy. Late Night. PHX, AZ. Tech House & Trance House."
+    "title": "GRLSCRY — House / SCOTTSDALE, AZ",
+    "description": "GRLSCRY — DJ / Producer. Dark. High Energy. Late Night. PHX, AZ. House & Multi-Genre."
   },
-  "ticker": "SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · TECH HOUSE · TRANCE HOUSE · DARK HIGH ENERGY · LATE NIGHT · KARAMBA NIGHTCLUB · BAR SMITH · MAYA DAY+NIGHTCLUB · WASTED GRAIN · VALLEY BAR · AFTER12 · RIOT HOUSE · LUXX · LOS ANGELES · EXCHANGE LA · SOUND NIGHTCLUB · AVALON HOLLYWOOD · MIAMI · CLUB SPACE · E11EVEN · LIV · NYC · BROOKLYN MIRAGE · PUBLIC RECORDS · NOWADAYS · ELSEWHERE · LONDON · FABRIC · MINISTRY OF SOUND · EGG LONDON · CORSICA STUDIOS · MANCHESTER · THE WHITE HOTEL · SOUP KITCHEN · BERLIN · BERGHAIN · TRESOR · WATERGATE · SISYPHOS · DOCUMENT DON'T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ",
+  "ticker": "SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · HOUSE · MULTI-GENRE · DARK HIGH ENERGY · LATE NIGHT · KARAMBA NIGHTCLUB · BAR SMITH · MAYA DAY+NIGHTCLUB · WASTED GRAIN · VALLEY BAR · AFTER12 · RIOT HOUSE · LUXX · LOS ANGELES · EXCHANGE LA · SOUND NIGHTCLUB · AVALON HOLLYWOOD · MIAMI · CLUB SPACE · E11EVEN · LIV · NYC · BROOKLYN MIRAGE · PUBLIC RECORDS · NOWADAYS · ELSEWHERE · LONDON · FABRIC · MINISTRY OF SOUND · EGG LONDON · CORSICA STUDIOS · MANCHESTER · THE WHITE HOTEL · SOUP KITCHEN · BERLIN · BERGHAIN · TRESOR · WATERGATE · SISYPHOS · DOCUMENT DON'T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ",
   "hero": {
     "pullquote": "\"he's got that raw bad boy attitude... just need to tame it\"",
     "label": "DJ / Producer — SCOTTSDALE, AZ",
@@ -13,7 +13,7 @@
     "pullquote": "Phoenix heat, late nights, dark rooms.",
     "bio": [
       "That's where GRLSCRY comes from.",
-      "DJ and producer building trance house that doesn't ask for permission—it just takes the room. Dark, high-energy, made for 3 a.m. when the filters are off and people actually move.",
+      "DJ and producer building house that doesn't ask for permission—it just takes the room. Dark, high-energy, made for 3 a.m. when the filters are off and people actually move.",
       "No chasing trends, no forced hype. Just clean, heavy sound that hits your chest and stays there. Raw emotion wrapped in tight rhythm. Tracks that don't fade, sets that don't apologize, a brand that shows up the same way every time: intentional, untouchable, a little dangerous.",
       "Step in. Feel it. Get on the ride."
     ],
@@ -23,7 +23,7 @@
       "Odd Mob",
       "Fisher",
       "Cloonee",
-      "Tech House",
+      "Multi-Genre",
       "House"
     ],
     "stats": [
@@ -33,38 +33,48 @@
       { "value": "3AM",   "label": "Peak Hour" }
     ],
     "tools": "Ableton Live 12 · Serum 2 · Pioneer DDJ-400 · Pioneer DDJ-GRV6 · CDJ 30000 · CDJ 20000 · DJM · A-Series",
-    "inspiration": "GRLSCRY pulls from the real late-night underbelly: blacked-out warehouses, bass that hits your chest, feral crowds moving like tomorrow's cancelled. Sweat, smoke, glances that stick under dim strobes. Built by people who already own the room. Beats land with quiet empathy, natural charisma, subtle edge. Slowed techno that shifts your head, indie dance built for 2026."
+    "inspiration": "GRLSCRY pulls from the real late-night underbelly: blacked-out warehouses, bass that hits your chest, feral crowds moving like tomorrow's cancelled. Sweat, smoke, glances that stick under dim strobes. Built by people who already own the room. Beats land with quiet empathy, natural charisma, subtle edge."
   },
   "tracks": [
     {
       "number": "01",
-      "title": "Spaceship Flip",
-      "meta": "Tech House Mix · 2026",
-      "platform": "SoundCloud",
-      "soundcloud_embed": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2241684236&color=070609&hide_related=true&show_comments=false&show_teaser=false",
-      "soundcloud_profile_url": "https://soundcloud.com/grlscry",
-      "soundcloud_track_url": "https://soundcloud.com/grlscry/marsolo-spaceship-grls-cry-flip",
-      "soundcloud_track_title": "Marsolo - Spaceship (GRLS CRY FLIP)"
+      "title": "GOLDRUSH DJ COMPETITION 2026",
+      "meta": "Competition Set · 2026",
+      "dur": "38:05",
+      "artwork": "https://i1.sndcdn.com/artworks-VwLdZ445YkCh2tww-YtDhRw-t500x500.png",
+      "soundcloud_url": "https://soundcloud.com/grlscry/goldrushcomp"
     },
     {
       "number": "02",
-      "title": "Tech House Mix Vol. 1",
+      "title": "thirds. test",
       "meta": "Live Mix · 2026",
-      "platform": "SoundCloud",
-      "soundcloud_embed": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2262546275&color=070609&hide_related=true&show_comments=false&show_teaser=false",
-      "soundcloud_profile_url": "https://soundcloud.com/grlscry",
-      "soundcloud_track_url": "https://soundcloud.com/grlscry/grlscry-techhousemixvol1-djpromo",
-      "soundcloud_track_title": "GRLS CRY - Tech House Mix Vol. 1 | DJ PROMO"
+      "dur": "1:00:11",
+      "artwork": "https://i1.sndcdn.com/artworks-hq9Hjze6OPcL0FyQ-f1jwuQ-t500x500.jpg",
+      "soundcloud_url": "https://soundcloud.com/grlscry/thirdstest"
     },
     {
       "number": "03",
-      "title": "Room Shake vs Space Jam (GRLS CRY Edit)",
-      "meta": "Mashup · 2026",
-      "platform": "SoundCloud",
-      "soundcloud_embed": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2279100026&color=736863",
-      "soundcloud_profile_url": "https://soundcloud.com/grlscry",
-      "soundcloud_track_url": "https://soundcloud.com/grlscry/rooomshakevsspacejam",
-      "soundcloud_track_title": "Room Shake vs Space Jam (GRLS CRY Edit)"
+      "title": "Perc Popper vs Say My Name",
+      "meta": "Edit · 2026",
+      "dur": "4:38",
+      "artwork": "https://i1.sndcdn.com/artworks-kY4htW0JmaqgrCM6-jeg7dQ-t500x500.jpg",
+      "soundcloud_url": "https://soundcloud.com/grlscry/saymynamevspercpopper"
+    },
+    {
+      "number": "04",
+      "title": "RIOT HOUSE — TEST",
+      "meta": "Live Mix · 2026",
+      "dur": "48:23",
+      "artwork": "https://i1.sndcdn.com/artworks-jsTBS8YBu3MzaOw7-cdfF2Q-t500x500.jpg",
+      "soundcloud_url": "https://soundcloud.com/grlscry/riothousetest"
+    },
+    {
+      "number": "05",
+      "title": "GRLS CRY — After12 (Full Set)",
+      "meta": "Full Set · 2026",
+      "dur": "1:00:30",
+      "artwork": "https://i1.sndcdn.com/artworks-pFonN0jQLyXQPSw9-flvvFg-t500x500.png",
+      "soundcloud_url": "https://soundcloud.com/grlscry/after12test"
     }
   ],
   "events": [
@@ -72,14 +82,14 @@
       "date": "03/20",
       "venue": "After12",
       "location": "Phoenix, AZ",
-      "type": "DJ Set — Tech House",
+      "type": "DJ Set — House",
       "link": "https://www.flite.city/e/after12-friday-3-20-26?p=GRLSCRY"
     },
     {
       "date": "TBA",
       "venue": "Ascension: Mogfest - Omega Strong Gym",
       "location": "Phoenix, AZ",
-      "type": "DJ Set — Hardstyle/Techno",
+      "type": "DJ Set — Multi-Genre",
       "link": ""
     }
   ],
@@ -94,6 +104,6 @@
     "booking_email": "kristina.mktg.sound@outlook.com"
   },
   "footer": {
-    "copyright": "© 2026 — SCOTTSDALE, AZ — Tech House / House - GRLS CRY Approved"
+    "copyright": "© 2026 — SCOTTSDALE, AZ — House / Multi-Genre - GRLS CRY Approved"
   }
 }

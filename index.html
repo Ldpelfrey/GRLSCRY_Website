@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GRLSCRY — Tech House / SCOTTSDALE, AZ</title>
-  <meta name="description" content="GRLSCRY — DJ / Producer. Dark. High Energy. Late Night. PHX, AZ. Tech House & Trance House.">
+  <title>GRLSCRY — House / SCOTTSDALE, AZ</title>
+  <meta name="description" content="GRLSCRY — DJ / Producer. Dark. High Energy. Late Night. PHX, AZ. House &amp; Multi-Genre.">
   <meta property="og:type"        content="website">
   <meta property="og:url"         content="https://grlscry.com">
-  <meta property="og:title"       content="GRLSCRY — Tech House / Scottsdale, AZ">
+  <meta property="og:title"       content="GRLSCRY — House / Scottsdale, AZ">
   <meta property="og:description" content="DJ / Producer. Dark. High Energy. Late Night. PHX, AZ.">
   <meta name="twitter:card"        content="summary_large_image">
   <meta name="twitter:site"        content="@grlscryofficial">
-  <meta name="twitter:title"       content="GRLSCRY — Tech House / Scottsdale, AZ">
+  <meta name="twitter:title"       content="GRLSCRY — House / Scottsdale, AZ">
   <meta name="twitter:description" content="DJ / Producer. Dark. High Energy. Late Night. PHX, AZ.">
   <meta name="theme-color"         content="#0e0e0e">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -304,19 +304,67 @@
     .chip:hover { border-color: var(--sage); color: var(--sage); }
     @media (max-width: 768px) { .ag { grid-template-columns: 1fr; gap: 48px; } }
 
-    /* ─── MUSIC ──────────────────────────────────────────────────── */
+    /* ─── MUSIC / CRATE PLAYER ─────────────────────────────────────── */
     #music { position: relative; z-index: 2; padding: clamp(80px,11vw,130px) var(--gutter); }
-    .tc { background: var(--s2); border: 1px solid var(--border); margin-bottom: 3px; transition: border-color .3s; overflow: hidden; }
-    .tc:hover { border-color: var(--bm); }
-    .thd { display: flex; align-items: center; gap: 16px; padding: 20px 24px; border-bottom: 1px solid var(--border); }
-    .tn { font-family: var(--bebas); font-size: 32px; color: rgba(215,239,194,.2); min-width: 38px; }
-    .ti { flex: 1; }
+    /* shared helpers kept for Spotify placeholder */
+    .ti { flex: 1; min-width: 0; }
     .tt { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--white); letter-spacing: .04em; }
     .tm { font-size: 9px; letter-spacing: .14em; color: var(--gray); text-transform: uppercase; margin-top: 3px; }
-    .tbg { padding: 4px 10px; border: 1px solid var(--border); font-size: 8px; letter-spacing: .14em; text-transform: uppercase; color: var(--gray); }
-    .te iframe { display: block; }
-    .sc-attr { font-size: 10px; color: #cccccc; line-break: anywhere; word-break: normal; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif; font-weight: 100; }
-    .sc-attr a { color: #cccccc; text-decoration: none; }
+    /* ── layout ── */
+    .crate { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); overflow: hidden; margin-bottom: 24px; }
+    /* ── list panel ── */
+    .cl { background: var(--s2); display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .cl-row { display: flex; align-items: center; gap: 13px; padding: 13px 17px; border-bottom: 1px solid var(--border); cursor: pointer; position: relative; transition: background .2s; overflow: hidden; }
+    .cl-row:last-of-type { border-bottom: none; }
+    .cl-row::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--sage); transform: scaleY(0); transform-origin: bottom; transition: transform .35s var(--ease); }
+    .cl-row.active::before { transform: scaleY(1); transform-origin: top; }
+    .cl-row:hover { background: rgba(215,239,194,.025); }
+    .cl-row.active { background: rgba(215,239,194,.045); }
+    .cl-n { font-family: var(--bebas); font-size: 20px; color: rgba(215,239,194,.18); min-width: 26px; flex-shrink: 0; transition: color .3s; line-height: 1; }
+    .cl-row.active .cl-n { color: var(--sage); }
+    .cl-thumb { flex-shrink: 0; width: 42px; height: 42px; overflow: hidden; }
+    .cl-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: .45; transition: opacity .3s; filter: grayscale(30%); }
+    .cl-row:hover .cl-thumb img { opacity: .75; filter: grayscale(0); }
+    .cl-row.active .cl-thumb img { opacity: 1; filter: grayscale(0); }
+    .cl-i { flex: 1; min-width: 0; }
+    .cl-t { font-family: var(--mono); font-size: 10px; font-weight: 500; color: rgba(255,255,255,.75); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .02em; transition: color .2s; }
+    .cl-row.active .cl-t { color: var(--white); }
+    .cl-m { font-size: 8px; letter-spacing: .13em; color: var(--gray); text-transform: uppercase; margin-top: 3px; }
+    .cl-d { font-family: var(--mono); font-size: 8px; color: rgba(115,115,115,.7); letter-spacing: .03em; flex-shrink: 0; }
+    .cl-play { flex-shrink: 0; width: 24px; height: 24px; border: 1px solid var(--border); background: transparent; color: var(--sage); font-size: 6px; cursor: pointer; opacity: 0; transition: opacity .15s, background .2s, border-color .2s; display: flex; align-items: center; justify-content: center; }
+    .cl-row:hover .cl-play, .cl-row.active .cl-play { opacity: 1; }
+    .cl-row.active .cl-play { background: var(--sage); color: var(--black); border-color: var(--sage); }
+    .cl-sc-link { padding: 11px 17px; font-family: var(--mono); font-size: 8px; letter-spacing: .13em; text-transform: uppercase; color: rgba(115,115,115,.6); transition: color .2s; display: block; border-top: 1px solid var(--border); margin-top: auto; }
+    .cl-sc-link:hover { color: var(--sage); }
+    /* ── stage panel ── */
+    .cs { background: var(--s1); display: flex; flex-direction: column; }
+    .cs-art { position: relative; aspect-ratio: 1 / 1; overflow: hidden; flex-shrink: 0; }
+    .cs-art img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .55s var(--ease); }
+    .cs-art img.fading { opacity: 0; }
+    .cs-art-veil { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(14,14,14,0) 45%, var(--s1) 100%); pointer-events: none; }
+    .cs-body { padding: 16px 22px 22px; display: flex; flex-direction: column; gap: 9px; flex: 1; }
+    .cs-wv { display: flex; align-items: flex-end; gap: 2px; height: 16px; }
+    .cs-wv b { display: block; width: 3px; border-radius: 1px; background: rgba(215,239,194,.12); animation: wvb 1.1s ease-in-out infinite; animation-play-state: paused; transition: background .3s; }
+    .cs.stage-playing .cs-wv b { background: var(--sage); animation-play-state: running; }
+    .cs-wv b:nth-child(1){height:32%;animation-duration:1.1s} .cs-wv b:nth-child(2){height:68%;animation-duration:1.3s;animation-delay:.08s} .cs-wv b:nth-child(3){height:48%;animation-duration:1.0s;animation-delay:.16s} .cs-wv b:nth-child(4){height:88%;animation-duration:1.4s;animation-delay:.04s} .cs-wv b:nth-child(5){height:62%;animation-duration:1.2s;animation-delay:.12s} .cs-wv b:nth-child(6){height:42%;animation-duration:1.5s;animation-delay:.2s} .cs-wv b:nth-child(7){height:78%;animation-duration:0.9s} .cs-wv b:nth-child(8){height:52%;animation-duration:1.3s;animation-delay:.28s}
+    .cs-label { font-family: var(--mono); font-size: 7px; letter-spacing: .22em; color: rgba(215,239,194,.4); text-transform: uppercase; }
+    .cs-title { font-family: var(--bebas); font-size: clamp(17px,1.9vw,24px); letter-spacing: .04em; color: var(--white); margin: 0; line-height: 1.15; }
+    .cs-meta { font-size: 8px; letter-spacing: .15em; color: var(--gray); text-transform: uppercase; }
+    .cs-controls { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+    .cs-btn { background: transparent; border: 1px solid var(--border); color: var(--white); width: 32px; height: 32px; cursor: pointer; font-size: 9px; display: flex; align-items: center; justify-content: center; transition: border-color .2s, color .2s, background .2s; flex-shrink: 0; }
+    .cs-btn:hover { border-color: var(--sage); color: var(--sage); }
+    .cs-play-btn { width: 42px; height: 42px; border-color: rgba(215,239,194,.5); color: var(--sage); font-size: 12px; }
+    .cs-play-btn:hover { background: var(--sage); color: var(--black); border-color: var(--sage); }
+    .cs.stage-playing .cs-play-btn { background: var(--sage); color: var(--black); border-color: var(--sage); }
+    .cs-prog { display: flex; align-items: center; gap: 9px; }
+    .cs-time, .cs-dur { font-family: var(--mono); font-size: 8px; color: var(--gray); letter-spacing: .04em; white-space: nowrap; flex-shrink: 0; }
+    .cs-bar { flex: 1; height: 2px; background: rgba(215,239,194,.08); cursor: pointer; position: relative; }
+    .cs-bar:hover { background: rgba(215,239,194,.15); }
+    .cs-fill { height: 100%; background: var(--sage); width: 0; pointer-events: none; }
+    .cs-sc { font-family: var(--mono); font-size: 7px; letter-spacing: .14em; text-transform: uppercase; color: rgba(115,115,115,.65); transition: color .2s; align-self: flex-start; }
+    .cs-sc:hover { color: var(--sage); }
+    @media (max-width: 960px) { .crate { grid-template-columns: 1fr; } .cl { border-right: none; border-bottom: 1px solid var(--border); } .cs-art { aspect-ratio: 16/9; } }
+    @media (max-width: 480px) { .cl-d { display: none; } }
 
     /* ─── DONATION ───────────────────────────────────────────────── */
     .don-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 36px; }
@@ -574,16 +622,6 @@
       box-shadow: 0 0 28px rgba(215,239,194,.22), 0 0 56px rgba(215,239,194,.07);
     }
 
-    /* ─── TRACK CARD LEFT ACCENT ────────────────────────────────── */
-    .tc { position: relative; }
-    .tc::before {
-      content: '';
-      position: absolute; left: 0; top: 0; bottom: 0;
-      width: 2px; background: var(--sage);
-      transform: scaleY(0); transform-origin: bottom;
-      transition: transform .4s var(--ease);
-      z-index: 1;
-    }
     .tc:hover::before { transform: scaleY(1); }
 
     /* ─── HERO RADIAL GLOW ──────────────────────────────────────── */
@@ -681,7 +719,6 @@
       animation-play-state: paused;
       transition: background .25s;
     }
-    .tc:hover .wv b { background: var(--sage); animation-play-state: running; }
     .wv b:nth-child(1)  { height:38%; animation-duration:1.1s; }
     .wv b:nth-child(2)  { height:68%; animation-duration:1.4s; animation-delay:.10s; }
     .wv b:nth-child(3)  { height:52%; animation-duration:1.0s; animation-delay:.20s; }
@@ -859,14 +896,6 @@
       transition: color .2s; flex-shrink: 0; text-transform: uppercase;
     }
     .p-close:hover { color: var(--white); }
-    .tc-play {
-      background: none; border: 1px solid transparent; color: rgba(215,239,194,.3);
-      font-size: 8px; letter-spacing: .16em; text-transform: uppercase;
-      cursor: pointer; padding: 4px 9px; transition: color .25s, border-color .25s; flex-shrink: 0;
-    }
-    .tc-play:hover { color: var(--sage); border-color: rgba(215,239,194,.3); }
-    .tc.active .tc-play { color: var(--sage); border-color: var(--sage); }
-    .tc.active .wv b { background: var(--sage); animation-play-state: running; }
     /* letter scatter support */
     .gl-l { display: inline-block; }
     .t-hero, .glitch { overflow: visible; }
@@ -976,10 +1005,10 @@
   <div class="status-bar" aria-hidden="true">
     <div class="status-bar-inner" id="marquee">
       <span>◆ <b>GRLSCRY</b></span>
-      <span>SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · TECH HOUSE · TRANCE HOUSE · DARK HIGH ENERGY · LATE NIGHT · KARAMBA NIGHTCLUB · BAR SMITH · MAYA DAY+NIGHTCLUB · WASTED GRAIN · VALLEY BAR · RIOT HOUSE · LUXX · LOS ANGELES · EXCHANGE LA · SOUND NIGHTCLUB · AVALON HOLLYWOOD · MIAMI · CLUB SPACE · E11EVEN · LIV · NYC · BROOKLYN MIRAGE · PUBLIC RECORDS · NOWADAYS · ELSEWHERE · LONDON · FABRIC · MINISTRY OF SOUND · EGG LONDON · CORSICA STUDIOS · MANCHESTER · THE WHITE HOTEL · SOUP KITCHEN · BERLIN · BERGHAIN · TRESOR · WATERGATE · SISYPHOS · DOCUMENT DON'T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ</span>
+      <span>SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · HOUSE · MULTI-GENRE · DARK HIGH ENERGY · LATE NIGHT · KARAMBA NIGHTCLUB · BAR SMITH · MAYA DAY+NIGHTCLUB · WASTED GRAIN · VALLEY BAR · RIOT HOUSE · LUXX · LOS ANGELES · EXCHANGE LA · SOUND NIGHTCLUB · AVALON HOLLYWOOD · MIAMI · CLUB SPACE · E11EVEN · LIV · NYC · BROOKLYN MIRAGE · PUBLIC RECORDS · NOWADAYS · ELSEWHERE · LONDON · FABRIC · MINISTRY OF SOUND · EGG LONDON · CORSICA STUDIOS · MANCHESTER · THE WHITE HOTEL · SOUP KITCHEN · BERLIN · BERGHAIN · TRESOR · WATERGATE · SISYPHOS · DOCUMENT DON'T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ</span>
       <span>◆</span>
       <span>◆ <b>GRLSCRY</b></span>
-      <span>SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · TECH HOUSE · TRANCE HOUSE · DARK HIGH ENERGY · LATE NIGHT · KARAMBA NIGHTCLUB · BAR SMITH · MAYA DAY+NIGHTCLUB · WASTED GRAIN · VALLEY BAR · RIOT HOUSE · LUXX · LOS ANGELES · EXCHANGE LA · SOUND NIGHTCLOUD · AVALON HOLLYWOOD · MIAMI · CLUB SPACE · E11EVEN · LIV · NYC · BROOKLYN MIRAGE · PUBLIC RECORDS · NOWADAYS · ELSEWHERE · LONDON · FABRIC · MINISTRY OF SOUND · EGG LONDON · CORSICA STUDIOS · MANCHESTER · THE WHITE HOTEL · SOUP KITCHEN · BERLIN · BERGHAIN · TRESOR · WATERGATE · SISYPHOS · DOCUMENT DON'T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ</span>
+      <span>SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · HOUSE · MULTI-GENRE · DARK HIGH ENERGY · LATE NIGHT · KARAMBA NIGHTCLUB · BAR SMITH · MAYA DAY+NIGHTCLUB · WASTED GRAIN · VALLEY BAR · RIOT HOUSE · LUXX · LOS ANGELES · EXCHANGE LA · SOUND NIGHTCLOUD · AVALON HOLLYWOOD · MIAMI · CLUB SPACE · E11EVEN · LIV · NYC · BROOKLYN MIRAGE · PUBLIC RECORDS · NOWADAYS · ELSEWHERE · LONDON · FABRIC · MINISTRY OF SOUND · EGG LONDON · CORSICA STUDIOS · MANCHESTER · THE WHITE HOTEL · SOUP KITCHEN · BERLIN · BERGHAIN · TRESOR · WATERGATE · SISYPHOS · DOCUMENT DON'T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ</span>
       <span>◆</span>
     </div>
   </div>
@@ -1029,7 +1058,7 @@
     </h1>
     <p class="ht" id="c-hero-tagline">Dark · High Energy · Late Night</p>
 
-    <p class="h-ctx">Scottsdale, AZ · Tech House · Trance House · 2026</p>
+    <p class="h-ctx">Scottsdale, AZ · House · Multi-Genre · 2026</p>
 
     <div class="hc">
       <a href="#music"   class="btn bs">Stream Now</a>
@@ -1075,7 +1104,7 @@
           <h2 class="t-sec r" id="about-h" style="margin-bottom:28px;">About</h2>
 
           <p class="t-body r d2" id="c-bio-1" style="margin-bottom:18px;">That’s where GRLSCRY comes from.</p>
-          <p class="t-body r d3" id="c-bio-2" style="margin-bottom:18px;">DJ and producer building trance house that doesn’t ask for permission—it just takes the room. Dark, high-energy, made for 3 a.m. when the filters are off and people actually move.</p>
+          <p class="t-body r d3" id="c-bio-2" style="margin-bottom:18px;">DJ and producer building house that doesn’t ask for permission—it just takes the room. Dark, high-energy, made for 3 a.m. when the filters are off and people actually move.</p>
           <p class="t-body r d3" id="c-bio-3">No chasing trends, no forced hype. Just clean, heavy sound that hits your chest and stays there. Raw emotion wrapped in tight rhythm. Tracks that don’t fade, sets that don’t apologize, a brand that shows up the same way every time: intentional, untouchable, a little dangerous.</p>
           <p class="t-body r d4" id="c-bio-4">Step in. Feel it. Get on the ride.</p>
           <div class="ph ph-philosophy r d4">
@@ -1087,7 +1116,7 @@
             <span class="chip">Odd Mob</span>
             <span class="chip">Fisher</span>
             <span class="chip">Cloonee</span>
-            <span class="chip">Tech House</span>
+            <span class="chip">Multi-Genre</span>
             <span class="chip">House</span>
           </div>
         </div>
@@ -1106,7 +1135,7 @@
           </div>
           <div class="ph r d3">
             <span class="t-cap">// Inspiration</span>
-            <p id="c-inspiration" style="margin-top:8px;">GRLSCRY pulls from the real late-night underbelly: blacked-out warehouses, bass that hits your chest, feral crowds moving like tomorrow's cancelled. Sweat, smoke, glances that stick under dim strobes. Built by people who already own the room. Beats land with quiet empathy, natural charisma, subtle edge. Slowed techno that shifts your head, indie dance built for 2026.</p>
+            <p id="c-inspiration" style="margin-top:8px;">GRLSCRY pulls from the real late-night underbelly: blacked-out warehouses, bass that hits your chest, feral crowds moving like tomorrow's cancelled. Sweat, smoke, glances that stick under dim strobes. Built by people who already own the room. Beats land with quiet empathy, natural charisma, subtle edge.</p>
           </div>
         </div>
       </div>
@@ -1131,74 +1160,93 @@
       </div>
       <h2 class="t-sec r" id="music-h" style="margin-bottom:44px;">Sound</h2>
 
-      <!-- ── Track 01 ── -->
-      <div class="tc r d1">
-        <div class="thd">
-          <span class="tn">01</span>
-          <div class="ti">
-            <div class="tt" id="c-track-1-title">Spaceship Flip</div>
-            <div class="tm" id="c-track-1-meta">Tech House Mix · 2025</div>
-          </div>
-          <div class="wv" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
-          <button class="tc-play" data-track="0" aria-label="Play in player">▶ Play</button>
-          <span class="tbg" id="c-track-1-platform">SoundCloud</span>
-        </div>
-        <div class="te">
-          <iframe id="c-track-1-iframe" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
-            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2241684236&color=070609&hide_related=true&show_comments=false&show_teaser=false"></iframe>
-          <div class="sc-attr">
-            <a id="c-track-1-sc-profile" href="https://soundcloud.com/grlscry" title="GRLS CRY" target="_blank">GRLS CRY</a>
-            · <a id="c-track-1-sc-track" href="https://soundcloud.com/grlscry/marsolo-spaceship-grls-cry-flip" title="Marsolo - Spaceship (GRLS CRY FLIP)" target="_blank">Marsolo - Spaceship (GRLS CRY FLIP)</a>
-          </div>
-        </div>
-      </div>
+      <!-- ── CRATE PLAYER ── -->
+      <div class="crate r d1">
 
-      <!-- ── Track 02 ── -->
-      <div class="tc r d2">
-        <div class="thd">
-          <span class="tn">02</span>
-          <div class="ti">
-            <div class="tt" id="c-track-2-title">Tech House Mix Vol. 1</div>
-            <div class="tm" id="c-track-2-meta">Live Mix · 2025</div>
+        <!-- Track List -->
+        <div class="cl">
+          <div class="cl-row active" data-track="0">
+            <span class="cl-n">01</span>
+            <div class="cl-thumb"><img src="https://i1.sndcdn.com/artworks-VwLdZ445YkCh2tww-YtDhRw-t500x500.png" alt="" loading="lazy"></div>
+            <div class="cl-i">
+              <div class="cl-t">GOLDRUSH DJ COMPETITION 2026</div>
+              <div class="cl-m">Competition Set · 2026</div>
+            </div>
+            <span class="cl-d">38:05</span>
+            <button class="cl-play" aria-label="Play track 1">▶</button>
           </div>
-          <div class="wv" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
-          <button class="tc-play" data-track="1" aria-label="Play in player">▶ Play</button>
-          <span class="tbg" id="c-track-2-platform">SoundCloud</span>
-        </div>
-        <div class="te">
-          <iframe id="c-track-2-iframe" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
-            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2262546275&color=070609&hide_related=true&show_comments=false&show_teaser=false"></iframe>
-          <div class="sc-attr">
-            <a id="c-track-2-sc-profile" href="https://soundcloud.com/grlscry" title="GRLS CRY" target="_blank">GRLS CRY</a>
-            · <a id="c-track-2-sc-track" href="https://soundcloud.com/grlscry/grlscry-techhousemixvol1-djpromo" title="GRLS CRY - Tech House Mix Vol. 1 | DJ PROMO" target="_blank">GRLS CRY - Tech House Mix Vol. 1 | DJ PROMO</a>
+          <div class="cl-row" data-track="1">
+            <span class="cl-n">02</span>
+            <div class="cl-thumb"><img src="https://i1.sndcdn.com/artworks-hq9Hjze6OPcL0FyQ-f1jwuQ-t500x500.jpg" alt="" loading="lazy"></div>
+            <div class="cl-i">
+              <div class="cl-t">thirds. test</div>
+              <div class="cl-m">Live Mix · 2026</div>
+            </div>
+            <span class="cl-d">1:00:11</span>
+            <button class="cl-play" aria-label="Play track 2">▶</button>
           </div>
+          <div class="cl-row" data-track="2">
+            <span class="cl-n">03</span>
+            <div class="cl-thumb"><img src="https://i1.sndcdn.com/artworks-kY4htW0JmaqgrCM6-jeg7dQ-t500x500.jpg" alt="" loading="lazy"></div>
+            <div class="cl-i">
+              <div class="cl-t">Perc Popper vs Say My Name</div>
+              <div class="cl-m">Edit · 2026</div>
+            </div>
+            <span class="cl-d">4:38</span>
+            <button class="cl-play" aria-label="Play track 3">▶</button>
+          </div>
+          <div class="cl-row" data-track="3">
+            <span class="cl-n">04</span>
+            <div class="cl-thumb"><img src="https://i1.sndcdn.com/artworks-jsTBS8YBu3MzaOw7-cdfF2Q-t500x500.jpg" alt="" loading="lazy"></div>
+            <div class="cl-i">
+              <div class="cl-t">RIOT HOUSE — TEST</div>
+              <div class="cl-m">Live Mix · 2026</div>
+            </div>
+            <span class="cl-d">48:23</span>
+            <button class="cl-play" aria-label="Play track 4">▶</button>
+          </div>
+          <div class="cl-row" data-track="4">
+            <span class="cl-n">05</span>
+            <div class="cl-thumb"><img src="https://i1.sndcdn.com/artworks-pFonN0jQLyXQPSw9-flvvFg-t500x500.png" alt="" loading="lazy"></div>
+            <div class="cl-i">
+              <div class="cl-t">GRLS CRY — After12 (Full Set)</div>
+              <div class="cl-m">Full Set · 2026</div>
+            </div>
+            <span class="cl-d">1:00:30</span>
+            <button class="cl-play" aria-label="Play track 5">▶</button>
+          </div>
+          <a href="https://soundcloud.com/grlscry" target="_blank" rel="noopener" class="cl-sc-link">◆ All tracks on SoundCloud ↗</a>
         </div>
-      </div>
 
-      <!-- ── Track 03 ── -->
-      <div class="tc r d3">
-        <div class="thd">
-          <span class="tn">03</span>
-          <div class="ti">
-            <div class="tt" id="c-track-3-title">Room Shake vs Space Jam (GRLS CRY Edit)</div>
-            <div class="tm" id="c-track-3-meta">Mashup · 2026</div>
+        <!-- Stage -->
+        <div class="cs">
+          <div class="cs-art">
+            <img id="cs-img" src="https://i1.sndcdn.com/artworks-VwLdZ445YkCh2tww-YtDhRw-t500x500.png" alt="Active track artwork">
+            <div class="cs-art-veil"></div>
           </div>
-          <div class="wv" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
-          <button class="tc-play" data-track="2" aria-label="Play in player">▶ Play</button>
-          <span class="tbg" id="c-track-3-platform">SoundCloud</span>
-        </div>
-        <div class="te">
-          <iframe id="c-track-3-iframe" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
-            src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/grlscry/rooomshakevsspacejam&color=%23736863&auto_play=false&hide_related=true&show_comments=false&show_teaser=false"></iframe>
-          <div class="sc-attr">
-            <a id="c-track-3-sc-profile" href="https://soundcloud.com/grlscry" title="GRLS CRY" target="_blank">GRLS CRY</a>
-            · <a id="c-track-3-sc-track" href="https://soundcloud.com/grlscry/rooomshakevsspacejam" title="Room Shake vs Space Jam (GRLS CRY Edit)" target="_blank">Room Shake vs Space Jam (GRLS CRY Edit)</a>
+          <div class="cs-body">
+            <div class="cs-wv" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
+            <span class="cs-label" id="cs-n">TRACK 01 / 05</span>
+            <h3 class="cs-title" id="cs-title">GOLDRUSH DJ COMPETITION 2026</h3>
+            <div class="cs-meta" id="cs-meta">Competition Set · 2026</div>
+            <div class="cs-controls">
+              <button class="cs-btn" id="cs-prev" aria-label="Previous track">◀</button>
+              <button class="cs-btn cs-play-btn" id="cs-play" aria-label="Play / Pause">▶</button>
+              <button class="cs-btn" id="cs-next" aria-label="Next track">▶▶</button>
+            </div>
+            <div class="cs-prog">
+              <span class="cs-time" id="cs-time">0:00</span>
+              <div class="cs-bar" id="cs-bar"><div class="cs-fill" id="cs-fill"></div></div>
+              <span class="cs-dur" id="cs-dur">38:05</span>
+            </div>
+            <a id="cs-sc-link" href="https://soundcloud.com/grlscry/goldrushcomp" target="_blank" rel="noopener" class="cs-sc">Open on SoundCloud ↗</a>
           </div>
         </div>
-      </div>
+
+      </div><!-- /.crate -->
 
       <!-- Spotify placeholder -->
-      <div class="sp-soon r d4">
+      <div class="sp-soon r d2">
         <span class="sp-soon-num">SP</span>
         <div class="ti">
           <div class="tt" style="color:var(--gray);">Spotify</div>
@@ -1208,7 +1256,7 @@
       </div>
 
       <!-- ── Give Back ── -->
-      <div style="margin-top:56px;" class="r d5">
+      <div style="margin-top:56px;" class="r d3">
         <div class="ew">
           <span class="el"></span>
           <span class="t-label">Give Back</span>
@@ -1298,7 +1346,7 @@
             <td class="ed">TBA</td>
             <td class="en">Phoenix Venue</td>
             <td>Phoenix, AZ</td>
-            <td>DJ Set — Tech House</td>
+            <td>DJ Set — House</td>
             <td><span class="tba">Booking Open</span></td>
           </tr>
           <tr>
@@ -1425,7 +1473,7 @@
       </div>
     </div>
     <div class="foot-bottom">
-      <span class="fc" id="c-footer-copyright">© 2026 — SCOTTSDALE, AZ — Tech House / House - GRLS CRY Approved</span>
+      <span class="fc" id="c-footer-copyright">© 2026 — SCOTTSDALE, AZ — House / Multi-Genre - GRLS CRY Approved</span>
       <h2 class="foot-giant" aria-hidden="true">GRLSCRY</h2>
     </div>
   </footer>
@@ -1451,7 +1499,7 @@
       cr.style.left = rx + 'px'; cr.style.top = ry + 'px';
       requestAnimationFrame(loop);
     })();
-    document.querySelectorAll('a, button, .chip, .sc, .tc, .don-card').forEach(el => {
+    document.querySelectorAll('a, button, .chip, .sc, .don-card').forEach(el => {
       el.addEventListener('mouseenter', () => document.body.classList.add('hov'));
       el.addEventListener('mouseleave', () => document.body.classList.remove('hov'));
     });
@@ -1720,7 +1768,7 @@
       <span class="p-num" id="p-num">01</span>
       <div style="min-width:0;overflow:hidden;">
         <div class="p-title" id="p-title">Spaceship Flip</div>
-        <div class="p-meta" id="p-meta">Tech House Mix · 2026</div>
+        <div class="p-meta" id="p-meta">House Mix · 2026</div>
       </div>
     </div>
     <div class="p-controls">
@@ -1740,13 +1788,16 @@
   <script>
   (function() {
     var TRACKS = [
-      { num:'01', title:'Spaceship Flip',              meta:'Tech House Mix · 2026', url:'https://soundcloud.com/grlscry/marsolo-spaceship-grls-cry-flip' },
-      { num:'02', title:'Tech House Mix Vol. 1',       meta:'Live Mix · 2026',       url:'https://soundcloud.com/grlscry/grlscry-techhousemixvol1-djpromo' },
-      { num:'03', title:'Room Shake vs Space Jam',     meta:'Mashup · 2026',         url:'https://soundcloud.com/grlscry/rooomshakevsspacejam' }
+      { num:'01', title:'GOLDRUSH DJ COMPETITION 2026', meta:'Competition Set · 2026', dur:'38:05', art:'https://i1.sndcdn.com/artworks-VwLdZ445YkCh2tww-YtDhRw-t500x500.png', url:'https://soundcloud.com/grlscry/goldrushcomp' },
+      { num:'02', title:'thirds. test',                  meta:'Live Mix · 2026',        dur:'1:00:11', art:'https://i1.sndcdn.com/artworks-hq9Hjze6OPcL0FyQ-f1jwuQ-t500x500.jpg',  url:'https://soundcloud.com/grlscry/thirdstest' },
+      { num:'03', title:'Perc Popper vs Say My Name',   meta:'Edit · 2026',            dur:'4:38',    art:'https://i1.sndcdn.com/artworks-kY4htW0JmaqgrCM6-jeg7dQ-t500x500.jpg',  url:'https://soundcloud.com/grlscry/saymynamevspercpopper' },
+      { num:'04', title:'RIOT HOUSE — TEST',             meta:'Live Mix · 2026',        dur:'48:23',   art:'https://i1.sndcdn.com/artworks-jsTBS8YBu3MzaOw7-cdfF2Q-t500x500.jpg',  url:'https://soundcloud.com/grlscry/riothousetest' },
+      { num:'05', title:'GRLS CRY — After12 (Full Set)',meta:'Full Set · 2026',        dur:'1:00:30', art:'https://i1.sndcdn.com/artworks-pFonN0jQLyXQPSw9-flvvFg-t500x500.png', url:'https://soundcloud.com/grlscry/after12test' }
     ];
 
     var cur = 0, playing = false, ready = false, dur = 0, widget;
 
+    /* ── bottom player ── */
     var playerEl = document.getElementById('player');
     var playBtn  = document.getElementById('p-play');
     var prevBtn  = document.getElementById('p-prev');
@@ -1760,6 +1811,20 @@
     var durEl    = document.getElementById('p-dur');
     var barEl    = document.getElementById('p-bar');
     var bttEl    = document.getElementById('btt');
+    /* ── stage ── */
+    var csEl      = document.querySelector('.cs');
+    var csImgEl   = document.getElementById('cs-img');
+    var csNumEl   = document.getElementById('cs-n');
+    var csTitleEl = document.getElementById('cs-title');
+    var csMetaEl  = document.getElementById('cs-meta');
+    var csFillEl  = document.getElementById('cs-fill');
+    var csTimeEl  = document.getElementById('cs-time');
+    var csDurEl   = document.getElementById('cs-dur');
+    var csBarEl   = document.getElementById('cs-bar');
+    var csPlayBtn = document.getElementById('cs-play');
+    var csPrevBtn = document.getElementById('cs-prev');
+    var csNextBtn = document.getElementById('cs-next');
+    var csScLink  = document.getElementById('cs-sc-link');
 
     function fmt(ms) {
       var s = Math.floor(ms / 1000);
@@ -1768,11 +1833,30 @@
 
     function setTrackInfo(i) {
       var t = TRACKS[i];
+      /* bottom player */
       titleEl.textContent = t.title;
       metaEl.textContent  = t.meta;
       numEl.textContent   = t.num;
-      document.querySelectorAll('.tc').forEach(function(el, n) {
-        el.classList.toggle('active', n === i);
+      /* stage label, title, meta */
+      if (csNumEl)   csNumEl.textContent   = 'TRACK ' + t.num + ' / 0' + TRACKS.length;
+      if (csTitleEl) csTitleEl.textContent = t.title;
+      if (csMetaEl)  csMetaEl.textContent  = t.meta;
+      if (csDurEl)   csDurEl.textContent   = t.dur;
+      if (csScLink)  csScLink.href         = t.url;
+      /* stage artwork crossfade */
+      if (csImgEl && csImgEl.src !== t.art) {
+        csImgEl.classList.add('fading');
+        setTimeout(function() {
+          csImgEl.src = t.art;
+          csImgEl.classList.remove('fading');
+        }, 280);
+      }
+      /* track list rows */
+      document.querySelectorAll('.cl-row').forEach(function(row, n) {
+        var isActive = (n === i);
+        row.classList.toggle('active', isActive);
+        var btn = row.querySelector('.cl-play');
+        if (btn) btn.textContent = (isActive && playing) ? '⏸' : '▶';
       });
     }
 
@@ -1780,6 +1864,12 @@
       playing = p;
       playBtn.textContent = p ? '⏸' : '▶';
       playerEl.classList.toggle('playing', p);
+      /* stage */
+      if (csPlayBtn) csPlayBtn.textContent = p ? '⏸' : '▶';
+      if (csEl) csEl.classList.toggle('stage-playing', p);
+      /* active row play button */
+      var activePlay = document.querySelector('.cl-row.active .cl-play');
+      if (activePlay) activePlay.textContent = p ? '⏸' : '▶';
     }
 
     function openPlayer() {
@@ -1792,7 +1882,6 @@
       if (bttEl) bttEl.style.bottom = '';
       if (widget && ready) widget.pause();
       setPlayState(false);
-      document.querySelectorAll('.tc').forEach(function(el) { el.classList.remove('active'); });
     }
 
     function loadTrack(i, autoplay) {
@@ -1802,6 +1891,8 @@
       timeEl.textContent = '0:00';
       durEl.textContent  = '0:00';
       dur = 0;
+      if (csFillEl) csFillEl.style.width = '0';
+      if (csTimeEl) csTimeEl.textContent = '0:00';
       openPlayer();
       if (widget && ready) {
         widget.load(TRACKS[i].url, {
@@ -1829,7 +1920,11 @@
       });
       widget.bind(SC.Widget.Events.PLAY, function() {
         setPlayState(true);
-        widget.getDuration(function(d) { dur = d; durEl.textContent = fmt(d); });
+        widget.getDuration(function(d) {
+          dur = d;
+          durEl.textContent = fmt(d);
+          if (csDurEl) csDurEl.textContent = fmt(d);
+        });
       });
       widget.bind(SC.Widget.Events.PAUSE, function() {
         setPlayState(false);
@@ -1839,11 +1934,15 @@
         loadTrack((cur + 1) % TRACKS.length, true);
       });
       widget.bind(SC.Widget.Events.PLAY_PROGRESS, function(e) {
-        fillEl.style.width = (e.relativePosition * 100) + '%';
+        var pct = (e.relativePosition * 100) + '%';
+        fillEl.style.width = pct;
         timeEl.textContent = fmt(e.currentPosition);
+        if (csFillEl) csFillEl.style.width = pct;
+        if (csTimeEl) csTimeEl.textContent = fmt(e.currentPosition);
       });
     });
 
+    /* ── bottom player controls ── */
     playBtn.addEventListener('click', function() {
       if (!playerEl.classList.contains('open')) { loadTrack(0, true); }
       else { togglePlay(); }
@@ -1851,20 +1950,40 @@
     prevBtn.addEventListener('click', function() { loadTrack((cur - 1 + TRACKS.length) % TRACKS.length, true); });
     nextBtn.addEventListener('click', function() { loadTrack((cur + 1) % TRACKS.length, true); });
     closeBtn.addEventListener('click', closePlayer);
-
     barEl.addEventListener('click', function(e) {
       if (!widget || !ready || !dur) return;
       var rect = barEl.getBoundingClientRect();
       widget.seekTo(((e.clientX - rect.left) / rect.width) * dur);
     });
 
-    document.querySelectorAll('.tc-play').forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
+    /* ── stage controls ── */
+    if (csPlayBtn) csPlayBtn.addEventListener('click', function() {
+      if (!playerEl.classList.contains('open')) { loadTrack(0, true); }
+      else { togglePlay(); }
+    });
+    if (csPrevBtn) csPrevBtn.addEventListener('click', function() { loadTrack((cur - 1 + TRACKS.length) % TRACKS.length, true); });
+    if (csNextBtn) csNextBtn.addEventListener('click', function() { loadTrack((cur + 1) % TRACKS.length, true); });
+    if (csBarEl) csBarEl.addEventListener('click', function(e) {
+      if (!widget || !ready || !dur) return;
+      var rect = csBarEl.getBoundingClientRect();
+      widget.seekTo(((e.clientX - rect.left) / rect.width) * dur);
+    });
+
+    /* ── track list row / play button clicks ── */
+    document.querySelectorAll('.cl-row').forEach(function(row) {
+      row.addEventListener('click', function() {
+        loadTrack(parseInt(row.dataset.track, 10), true);
+      });
+      var btn = row.querySelector('.cl-play');
+      if (btn) btn.addEventListener('click', function(e) {
         e.stopPropagation();
-        loadTrack(parseInt(btn.dataset.track, 10), true);
+        var idx = parseInt(row.dataset.track, 10);
+        if (idx === cur && playerEl.classList.contains('open')) { togglePlay(); }
+        else { loadTrack(idx, true); }
       });
     });
 
+    /* ── hero "Stream Now" ── */
     var streamNow = document.querySelector('a.btn.bs[href="#music"]');
     if (streamNow) {
       streamNow.addEventListener('click', function() {
