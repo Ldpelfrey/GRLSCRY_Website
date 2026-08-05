@@ -345,11 +345,14 @@
 
 <script>
   /* ══════════════════════════════════════════════════════════
-     CONFIG — only the admin password lives here.
-     The GitHub token lives in Netlify → Site settings →
-     Environment variables as GITHUB_TOKEN. Never in this file.
+     CONFIG — no password lives here.
+     The password is ADMIN_SECRET in Netlify → Site settings →
+     Environment variables, alongside GITHUB_TOKEN. It is verified
+     server-side by the save-content function and is never shipped
+     to the browser. What the user types is held in memory only for
+     the life of the tab, then sent as the x-admin-secret header.
      ══════════════════════════════════════════════════════════ */
-  const ADMIN_PASSWORD = 'Whiteyphresh1$admin';
+  let adminSecret = null;
   /* ══════════════════════════════════════════════════════════ */
 
   let trackSeq = 0;
@@ -373,18 +376,46 @@
     if (e.key === 'Enter') $('btn-login').click();
   });
 
-  $('btn-login').addEventListener('click', () => {
-    if ($('pw-input').value === ADMIN_PASSWORD) {
-      $('gate').style.display  = 'none';
-      $('panel').style.display = 'block';
-      loadContent();
-    } else {
-      $('pw-error').textContent = '✗ Incorrect password.';
-      setTimeout(() => { $('pw-error').textContent = ''; }, 3000);
+  $('btn-login').addEventListener('click', async () => {
+    const typed = $('pw-input').value;
+    if (!typed) return;
+
+    const btn = $('btn-login');
+    btn.disabled = true;
+    btn.textContent = 'Checking…';
+    $('pw-error').textContent = '';
+
+    try {
+      // The password is never checked here — only the server knows it.
+      const res = await fetch('/.netlify/functions/save-content', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-secret': typed },
+        body:    JSON.stringify({ verify: true }),
+      });
+
+      if (res.ok) {
+        adminSecret = typed;
+        $('pw-input').value = '';
+        $('gate').style.display  = 'none';
+        $('panel').style.display = 'block';
+        loadContent();
+      } else if (res.status === 401) {
+        $('pw-error').textContent = '✗ Incorrect password.';
+        setTimeout(() => { $('pw-error').textContent = ''; }, 3000);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        $('pw-error').textContent = `✗ ${err.error || 'Server error ' + res.status}`;
+      }
+    } catch (err) {
+      $('pw-error').textContent = `✗ Network error: ${err.message}`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Enter';
     }
   });
 
   $('btn-logout').addEventListener('click', () => {
+    adminSecret = null;
     $('panel').style.display = 'none';
     $('gate').style.display  = 'flex';
     $('pw-input').value = '';
@@ -633,14 +664,20 @@
     setStatus('Publishing…');
 
     try {
+      if (!adminSecret) throw new Error('Session expired — log in again.');
+
       const res = await fetch('/.netlify/functions/save-content', {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-admin-secret': adminSecret },
         body:    JSON.stringify({ content: collectData() })
       });
 
       const result = await res.json();
 
+      if (res.status === 401) {
+        adminSecret = null;
+        throw new Error('Session rejected — log in again.');
+      }
       if (!res.ok) {
         throw new Error(result.error || `Server error ${res.status}`);
       }

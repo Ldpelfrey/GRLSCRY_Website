@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /.netlify/
+
+Sitemap: https://grlscry.com/sitemap.xml

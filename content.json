@@ -95,7 +95,7 @@
       "venue": "thirds.",
       "location": "Mesa, AZ",
       "type": "DJ Set — All Genres",
-      "status": "live",
+      "status": "past",
       "full_venue": "YZ's Karaoke Bar",
       "note": "Set Recording Coming Soon"
     },
@@ -104,7 +104,7 @@
       "venue": "MogFest",
       "location": "Phoenix, AZ",
       "type": "DJ Set — All Genres",
-      "status": "live",
+      "status": "past",
       "full_venue": "VIP Event Center"
     },
     {
@@ -119,7 +119,7 @@
       "date": "September",
       "venue": "Electric Sanctuary Live Recording",
       "location": "Scottsdale, AZ",
-      "type": "DJ Set — ???",
+      "type": "DJ Set — House",
       "status": "live",
       "full_venue": "Electric Sanctuary"
     }
@@ -132,7 +132,7 @@
     "x_handle": "@grlscryofficial",
     "soundcloud_url": "https://soundcloud.com/grlscry",
     "soundcloud_handle": "grlscry",
-    "booking_email": "kristina.mktg.sound@outlook.com"
+    "booking_email": "GRLSCRYOfficial@gmail.com"
   },
   "footer": {
     "copyright": "© 2026 — SCOTTSDALE, AZ — House / Multi-Genre - GRLS CRY Approved"

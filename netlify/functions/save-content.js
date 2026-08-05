@@ -1,6 +1,10 @@
 // netlify/functions/save-content.js
 // Receives updated content JSON, commits it to GitHub as content.json.
-// GITHUB_TOKEN is read from Netlify environment variables — never from the repo.
+// GITHUB_TOKEN and ADMIN_SECRET are read from Netlify environment variables —
+// never from the repo. Requests must carry ADMIN_SECRET in the x-admin-secret
+// header; without it this endpoint would be an unauthenticated write to main.
+
+const crypto = require('crypto');
 
 const REPO   = 'Ldpelfrey/GRLSCRY_Website';
 const BRANCH = 'main';
@@ -13,6 +17,20 @@ exports.handler = async function (event) {
     return respond(405, { error: 'Method not allowed' });
   }
 
+  /* ── Caller must present the admin secret ──────────────── */
+  const secret = process.env.ADMIN_SECRET;
+  if (!secret) {
+    // Fail closed: an unset secret must never mean "allow everyone".
+    console.error('ADMIN_SECRET environment variable is not set');
+    return respond(500, { error: 'Server misconfiguration: ADMIN_SECRET not set' });
+  }
+
+  const supplied = event.headers['x-admin-secret'] || '';
+  if (!timingSafeEqual(supplied, secret)) {
+    console.warn('save-content: rejected request with bad or missing admin secret');
+    return respond(401, { error: 'Unauthorized' });
+  }
+
   /* ── Token must be set in Netlify env ──────────────────── */
   const token = process.env.GITHUB_TOKEN;
   if (!token) {
@@ -21,14 +39,22 @@ exports.handler = async function (event) {
   }
 
   /* ── Parse request body ─────────────────────────────────── */
-  let content;
+  let content, verifyOnly = false;
   try {
     const body = JSON.parse(event.body || '{}');
-    content = body.content;
-    if (!content || typeof content !== 'object') throw new Error('Missing content object');
+    // The admin panel calls this on login to check the password without writing.
+    if (body.verify === true) {
+      verifyOnly = true;
+    } else {
+      content = body.content;
+      if (!content || typeof content !== 'object') throw new Error('Missing content object');
+    }
   } catch (err) {
     return respond(400, { error: `Invalid request body: ${err.message}` });
   }
+
+  // Secret already validated above, so reaching here means the password is good.
+  if (verifyOnly) return respond(200, { ok: true });
 
   const headers = {
     Authorization:  `token ${token}`,
@@ -88,6 +114,14 @@ exports.handler = async function (event) {
     return respond(500, { error: err.message });
   }
 };
+
+// Constant-time compare so response latency can't be used to guess the secret.
+// Hashing both sides first keeps the buffers equal-length for timingSafeEqual.
+function timingSafeEqual(a, b) {
+  const ha = crypto.createHash('sha256').update(String(a), 'utf8').digest();
+  const hb = crypto.createHash('sha256').update(String(b), 'utf8').digest();
+  return crypto.timingSafeEqual(ha, hb);
+}
 
 function respond(statusCode, body) {
   return {

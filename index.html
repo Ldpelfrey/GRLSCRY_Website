@@ -9,11 +9,99 @@
   <meta property="og:url"         content="https://grlscry.com">
   <meta property="og:title"       content="GRLSCRY — House / Scottsdale, AZ">
   <meta property="og:description" content="DJ / Producer. Dark. High Energy. Late Night. PHX, AZ.">
+  <meta property="og:site_name"   content="GRLSCRY">
+  <meta property="og:image"       content="https://grlscry.com/images/og-cover.jpg">
+  <meta property="og:image:width"  content="2400">
+  <meta property="og:image:height" content="1260">
+  <meta property="og:image:alt"   content="GRLSCRY — DJ / Producer, Scottsdale AZ. Dark, high energy, late night.">
   <meta name="twitter:card"        content="summary_large_image">
   <meta name="twitter:site"        content="@grlscryofficial">
   <meta name="twitter:title"       content="GRLSCRY — House / Scottsdale, AZ">
   <meta name="twitter:description" content="DJ / Producer. Dark. High Energy. Late Night. PHX, AZ.">
+  <meta name="twitter:image"       content="https://grlscry.com/images/og-cover.jpg">
+  <meta name="twitter:image:alt"   content="GRLSCRY — DJ / Producer, Scottsdale AZ. Dark, high energy, late night.">
   <meta name="theme-color"         content="#0e0e0e">
+  <link rel="canonical" href="https://grlscry.com/">
+
+  <!-- Structured data. NOTE: event data is duplicated here, in the Shows table
+       below, and in content.json. Keep all three in sync until they are
+       consolidated. Only future-dated shows are listed — never emit a past
+       event as upcoming, it feeds search engines false data. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "MusicGroup",
+        "@id": "https://grlscry.com/#artist",
+        "name": "GRLSCRY",
+        "alternateName": "GRLS CRY",
+        "url": "https://grlscry.com/",
+        "image": "https://grlscry.com/images/og-cover.jpg",
+        "description": "DJ and producer building dark, high-energy house. Scottsdale, Arizona.",
+        "genre": ["House", "Electronic", "Multi-Genre"],
+        "email": "GRLSCRYOfficial@gmail.com",
+        "foundingLocation": {
+          "@type": "Place",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Scottsdale",
+            "addressRegion": "AZ",
+            "addressCountry": "US"
+          }
+        },
+        "sameAs": [
+          "https://instagram.com/grlscryofficial",
+          "https://x.com/grlscryofficial",
+          "https://soundcloud.com/grlscry"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://grlscry.com/#website",
+        "url": "https://grlscry.com/",
+        "name": "GRLSCRY",
+        "publisher": { "@id": "https://grlscry.com/#artist" }
+      },
+      {
+        "@type": "MusicEvent",
+        "name": "GRLSCRY at Almost Famous / Old Town Clubs",
+        "startDate": "2026-08",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "performer": { "@id": "https://grlscry.com/#artist" },
+        "location": {
+          "@type": "Place",
+          "name": "Old Town Scottsdale",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Scottsdale",
+            "addressRegion": "AZ",
+            "addressCountry": "US"
+          }
+        }
+      },
+      {
+        "@type": "MusicEvent",
+        "name": "GRLSCRY — Electric Sanctuary Live Recording",
+        "startDate": "2026-09",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "performer": { "@id": "https://grlscry.com/#artist" },
+        "location": {
+          "@type": "Place",
+          "name": "Electric Sanctuary",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Scottsdale",
+            "addressRegion": "AZ",
+            "addressCountry": "US"
+          }
+        }
+      }
+    ]
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -377,7 +465,13 @@
 
     /* ─── EVENTS ─────────────────────────────────────────────────── */
     #events { position: relative; z-index: 2; padding: clamp(80px,11vw,130px) var(--gutter); background: var(--s2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .evt { width: 100%; border-collapse: collapse; }
+    /* Fixed layout so the upcoming and played tables share column edges. */
+    .evt { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .evt td:nth-child(1), .evt th:nth-child(1) { width: 28px; }
+    .evt td:nth-child(2), .evt th:nth-child(2) { width: 110px; }
+    .evt td:nth-child(4), .evt th:nth-child(4) { width: 150px; }
+    .evt td:nth-child(5), .evt th:nth-child(5) { width: 170px; }
+    .evt td:nth-child(6), .evt th:nth-child(6) { width: 160px; }
     .evt thead tr { border-bottom: 1px solid var(--border); }
     .evt th { padding: 10px 16px; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--gray); text-align: left; font-weight: 400; }
     .evt td { padding: 18px 16px; font-size: 12px; color: var(--gray-lt); border-bottom: 1px solid var(--border); vertical-align: middle; }
@@ -778,6 +872,22 @@
     }
     .e-status.live { background: var(--sage); box-shadow: 0 0 6px rgba(215,239,194,.45); }
     .e-status.tbd  { background: var(--gray); opacity: .5; }
+    /* Played: hollow ring, no glow — reads as history, not availability. */
+    .e-status.past { background: transparent; box-shadow: inset 0 0 0 1px var(--gray); opacity: .55; }
+
+    .past-block { margin-top: 56px; }
+    .past-h {
+      font-family: var(--mono); font-size: 10px; font-weight: 400;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: var(--gray); margin: 0 0 14px;
+    }
+    .past-table { opacity: .62; }
+    .past-table:hover { opacity: .82; }
+    .past-table .en { color: var(--gray-lt); }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
     .evt tbody tr:hover td { background: #252525; color: var(--white); padding-left: 20px; }
     .evt tbody tr:hover .e-dot { padding-left: 16px !important; }
 
@@ -1299,7 +1409,7 @@
         <p class="art-sub r d2">Ten years building sets. Zero compromises on the sound.<br>Dark, high-energy, made for late nights when the filters drop.</p>
         <div class="art-ctas r d3">
           <a href="#contact" class="btn bs">Book a Set</a>
-          <a href="mailto:kristina.mktg.sound@outlook.com?subject=EPK+Request" class="btn bo">Request EPK ↗</a>
+          <a href="mailto:GRLSCRYOfficial@gmail.com?subject=EPK+Request" class="btn bo">Request EPK ↗</a>
         </div>
       </div>
     </div>
@@ -1339,24 +1449,8 @@
         </thead>
         <tbody id="c-events-tbody">
           <tr>
-            <td class="e-dot"><span class="e-status live" title="Confirmed"></span></td>
-            <td class="ed">Jun 18</td>
-            <td class="en">thirds.</td>
-            <td>Mesa, AZ</td>
-            <td>DJ Set — All Genres</td>
-            <td><span class="tba">Set Recording Coming Soon</span></td>
-          </tr>
-          <tr>
-            <td class="e-dot"><span class="e-status live" title="Confirmed"></span></td>
-            <td class="ed">Jul 25</td>
-            <td class="en">MogFest</td>
-            <td>Phoenix, AZ</td>
-            <td>DJ Set — All Genres</td>
-            <td><span class="tba">Booking Open</span></td>
-          </tr>
-          <tr>
             <td class="e-dot"><span class="e-status tbd" title="TBA"></span></td>
-            <td class="ed">July</td>
+            <td class="ed">August</td>
             <td class="en">Almost Famous / Old Town Clubs</td>
             <td>Scottsdale, AZ</td>
             <td>DJ Set — House</td>
@@ -1364,14 +1458,47 @@
           </tr>
           <tr>
             <td class="e-dot"><span class="e-status live" title="Confirmed"></span></td>
-            <td class="ed">August</td>
+            <td class="ed">September</td>
             <td class="en">Electric Sanctuary Live Recording</td>
             <td>Scottsdale, AZ</td>
-            <td>DJ Set — ???</td>
+            <td>DJ Set — House</td>
             <td><span class="tba">Booking Open</span></td>
           </tr>
         </tbody>
       </table>
+
+      <!-- Played sets. Proof of history, deliberately quieter than upcoming. -->
+      <div id="past-block" class="past-block r d2">
+        <h3 class="past-h">Played</h3>
+        <table class="evt past-table">
+          <caption class="sr-only">Past GRLSCRY sets — date, venue, location, type</caption>
+          <!-- This table has no thead, so column widths come from colgroup.
+               Values must match the .evt nth-child widths above. -->
+          <colgroup>
+            <col style="width:32px"><col style="width:110px"><col>
+            <col style="width:150px"><col style="width:170px"><col style="width:160px">
+          </colgroup>
+          <tbody id="c-past-tbody">
+            <tr>
+              <td class="e-dot"><span class="e-status past" title="Played"></span></td>
+              <td class="ed">Jun 18</td>
+              <td class="en">thirds.</td>
+              <td>Mesa, AZ</td>
+              <td>DJ Set — All Genres</td>
+              <td><span class="tba">Set Recording Coming Soon</span></td>
+            </tr>
+            <tr>
+              <td class="e-dot"><span class="e-status past" title="Played"></span></td>
+              <td class="ed">Jul 25</td>
+              <td class="en">MogFest</td>
+              <td>Phoenix, AZ</td>
+              <td>DJ Set — All Genres</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <p class="t-body r d2" style="margin-top:32px; color:var(--gray);">
         Confirmed dates and ticket links posted here as bookings are finalized.<br>
         Corporate event packages available — reach out with date, venue, and budget.
@@ -1416,14 +1543,19 @@
               <svg class="si-icon" width="16" height="11" viewBox="0 0 16 11" fill="currentColor" aria-hidden="true"><rect x="0" y="4.5" width="2" height="6.5" rx="1"/><rect x="3" y="2.5" width="2" height="8.5" rx="1"/><rect x="6" y="0" width="2" height="11" rx="1"/><rect x="9" y="3" width="2" height="8" rx="1"/><rect x="12" y="5" width="2" height="6" rx="1"/></svg>
               SoundCloud — grlscry
             </a>
-            <a id="c-contact-email" href="mailto:kristina.mktg.sound@outlook.com" class="si">
+            <a id="c-contact-email" href="mailto:GRLSCRYOfficial@gmail.com" class="si">
               <svg class="si-icon" width="15" height="12" viewBox="0 0 15 12" fill="none" aria-hidden="true"><rect x="1" y="1" width="13" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M1 3.5L7.5 7.5L14 3.5" stroke="currentColor" stroke-width="1.3"/></svg>
-              Management — kristina.mktg.sound@outlook.com
+              Management — GRLSCRYOfficial@gmail.com
             </a>
           </nav>
         </div>
         <div class="r d2">
-          <form id="cf" name="booking" netlify novalidate>
+          <form id="cf" name="booking" netlify netlify-honeypot="bot-field" novalidate>
+            <!-- Spam trap: hidden from people, tempting to bots. A submission
+                 that fills this in is silently discarded by Netlify. -->
+            <p hidden aria-hidden="true">
+              <label>Leave this field empty: <input name="bot-field" tabindex="-1" autocomplete="off"></label>
+            </p>
             <div class="fr">
               <div class="fg fl-wrap">
                 <input type="text" id="name" name="name" required aria-required="true" placeholder=" ">
@@ -1462,7 +1594,7 @@
     <div class="foot-grid">
       <div>
         <p class="foot-section-label">Booking</p>
-        <a href="mailto:kristina.mktg.sound@outlook.com" class="foot-email">kristina.mktg.sound<br>@outlook.com</a>
+        <a href="mailto:GRLSCRYOfficial@gmail.com" class="foot-email">GRLSCRYOfficial<br>@gmail.com</a>
       </div>
       <div>
         <p class="foot-section-label">Socials</p>
@@ -1768,7 +1900,8 @@
   </script>
 
   <!-- ── HIDDEN SC CONTROL IFRAME ─────────────────────────────────── -->
-  <iframe id="sc-ctrl" width="1" height="1" scrolling="no" frameborder="no" allow="autoplay"
+  <iframe id="sc-ctrl" title="SoundCloud audio player (hidden controller)" aria-hidden="true"
+          width="1" height="1" scrolling="no" frameborder="no" allow="autoplay"
     style="position:fixed;top:-9999px;left:-9999px;pointer-events:none;"
     src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/grlscry/marsolo-spaceship-grls-cry-flip&auto_play=false&hide_related=true&show_comments=false&show_teaser=false"></iframe>
 
@@ -2091,23 +2224,34 @@
           });
         }
 
-        /* Events */
+        /* Events — upcoming and played render into separate tables.
+           A played set must never show "Booking Open". */
         if (c.events && c.events.length) {
+          var rowHtml = function(ev) {
+            var status = ev.status || 'tbd';
+            var isPast = status === 'past';
+            var dotTitle = isPast ? 'Played' : (status === 'live' ? 'Confirmed' : 'TBA');
+            var dot = '<td class="e-dot"><span class="e-status ' + status + '" title="' + dotTitle + '"></span></td>';
+            var linkCell = ev.link
+              ? '<a href="' + ev.link + '" class="da">Info ↗</a>'
+              : ev.note
+                ? '<span class="tba">' + ev.note + '</span>'
+                : isPast ? '' : '<span class="tba">Booking Open</span>';
+            return '<tr>' + dot + '<td class="ed">' + ev.date + '</td><td class="en">' + ev.venue +
+              '</td><td>' + ev.location + '</td><td>' + ev.type + '</td><td>' + linkCell + '</td></tr>';
+          };
+
+          var upcoming = c.events.filter(function(ev) { return (ev.status || 'tbd') !== 'past'; });
+          var played   = c.events.filter(function(ev) { return (ev.status || 'tbd') === 'past'; });
+
           var tbody = el('c-events-tbody');
-          if (tbody) {
-            tbody.innerHTML = c.events.map(function(ev) {
-              var status = ev.status || 'tbd';
-              var dotTitle = status === 'live' ? 'Confirmed' : 'TBA';
-              var dot = '<td class="e-dot"><span class="e-status ' + status + '" title="' + dotTitle + '"></span></td>';
-              var linkCell = ev.link
-                ? '<a href="' + ev.link + '" class="da">Info ↗</a>'
-                : ev.note
-                  ? '<span class="tba">' + ev.note + '</span>'
-                  : '<span class="tba">Booking Open</span>';
-              return '<tr>' + dot + '<td class="ed">' + ev.date + '</td><td class="en">' + ev.venue +
-                '</td><td>' + ev.location + '</td><td>' + ev.type + '</td><td>' + linkCell + '</td></tr>';
-            }).join('');
-          }
+          if (tbody) tbody.innerHTML = upcoming.map(rowHtml).join('');
+
+          var pastBody  = el('c-past-tbody');
+          var pastBlock = el('past-block');
+          if (pastBody) pastBody.innerHTML = played.map(rowHtml).join('');
+          // Hide the whole block rather than leave a stranded heading.
+          if (pastBlock) pastBlock.style.display = played.length ? '' : 'none';
         }
 
         /* Contact */
