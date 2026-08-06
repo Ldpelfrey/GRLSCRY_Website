@@ -56,6 +56,16 @@ exports.handler = async function (event) {
   // Secret already validated above, so reaching here means the password is good.
   if (verifyOnly) return respond(200, { ok: true });
 
+  /* ── Validate shape before it reaches the repo ───────────────
+     Defence in depth. The public page escapes on output, but a
+     malformed payload committed here would still deploy site-wide,
+     so reject anything that isn't the expected schema. */
+  const shapeError = validateContent(content);
+  if (shapeError) {
+    console.warn('save-content: rejected payload —', shapeError);
+    return respond(422, { error: `Invalid content: ${shapeError}` });
+  }
+
   const headers = {
     Authorization:  `token ${token}`,
     Accept:         'application/vnd.github.v3+json',
@@ -114,6 +124,50 @@ exports.handler = async function (event) {
     return respond(500, { error: err.message });
   }
 };
+
+const ALLOWED_KEYS = ['meta','ticker','hero','about','tracks','events','contact','footer'];
+const MAX_BYTES    = 256 * 1024;   // content.json is ~6KB today
+const MAX_STRING   = 8000;
+const MAX_ITEMS    = 200;
+
+// Structural validation only — no content blocklisting. Output escaping on the
+// page handles hostile *values*; this rejects hostile *shapes*.
+function validateContent(c) {
+  const size = Buffer.byteLength(JSON.stringify(c), 'utf8');
+  if (size > MAX_BYTES) return `payload too large (${size} bytes, max ${MAX_BYTES})`;
+
+  for (const k of Object.keys(c)) {
+    if (!ALLOWED_KEYS.includes(k)) return `unexpected top-level key "${k}"`;
+  }
+  if (c.events && !Array.isArray(c.events)) return 'events must be an array';
+  if (c.tracks && !Array.isArray(c.tracks)) return 'tracks must be an array';
+  // Fields that must be scalars, so an object here can't render as "[object Object]"
+  if ('ticker' in c && typeof c.ticker !== 'string') return 'ticker must be a string';
+  // Fields that must be objects
+  for (const k of ['meta','hero','about','contact','footer']) {
+    if (k in c && (typeof c[k] !== 'object' || c[k] === null || Array.isArray(c[k]))) {
+      return `${k} must be an object`;
+    }
+  }
+  if (Array.isArray(c.events) && c.events.length > MAX_ITEMS) return 'too many events';
+  if (Array.isArray(c.tracks) && c.tracks.length > MAX_ITEMS) return 'too many tracks';
+
+  // Every leaf must be a primitive; no nested objects smuggling in structure.
+  let bad = null;
+  (function walk(node, path, depth) {
+    if (bad || depth > 6) { if (depth > 6) bad = `nesting too deep at ${path}`; return; }
+    if (Array.isArray(node)) return node.forEach((v, i) => walk(v, `${path}[${i}]`, depth + 1));
+    if (node && typeof node === 'object') {
+      return Object.keys(node).forEach(k => walk(node[k], `${path}.${k}`, depth + 1));
+    }
+    if (typeof node === 'string' && node.length > MAX_STRING) bad = `string too long at ${path}`;
+    else if (node !== null && !['string','number','boolean'].includes(typeof node)) {
+      bad = `unsupported value type "${typeof node}" at ${path}`;
+    }
+  })(c, 'content', 0);
+
+  return bad;
+}
 
 // Constant-time compare so response latency can't be used to guess the secret.
 // Hashing both sides first keeps the buffers equal-length for timingSafeEqual.

@@ -2319,6 +2319,22 @@
     function setText(id, val) { var e = el(id); if (e && val != null) e.textContent = val; }
     function setHtml(id, val) { var e = el(id); if (e && val != null) e.innerHTML = val; }
 
+    /* content.json is attacker-controlled if the admin credential is ever
+       compromised, and every value below lands in innerHTML. Escape on the
+       way out. CSP can't help here: script-src carries 'unsafe-inline',
+       which permits injected onerror= handlers. */
+    function esc(v) {
+      return String(v == null ? '' : v)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    /* Only http(s) and mailto survive — blocks javascript: and data: URLs. */
+    function safeUrl(v) {
+      var s = String(v == null ? '' : v).trim();
+      return /^(https?:|mailto:|\/|#)/i.test(s) ? esc(s) : '';
+    }
+
     fetch('/content.json' + CACHE_BUST)
       .then(function(r) {
         if (!r.ok) throw new Error('content.json not found (' + r.status + ')');
@@ -2339,7 +2355,7 @@
         if (c.ticker) {
           var marquee = el('marquee');
           if (marquee) {
-            var t = c.ticker;
+            var t = esc(c.ticker);
             marquee.innerHTML =
               '<span>◆ <b>GRLSCRY</b></span>' +
               '<span>' + t + '</span><span>◆</span>' +
@@ -2350,7 +2366,7 @@
 
         /* Hero */
         if (c.hero) {
-          setHtml('c-pullquote',    c.hero.pullquote);
+          setHtml('c-pullquote',    esc(c.hero.pullquote));
           setText('c-hero-label',   c.hero.label);
           setText('c-hero-tagline', c.hero.tagline);
         }
@@ -2364,12 +2380,12 @@
           setText('c-inspiration', c.about.inspiration);
           if (c.about.influences && c.about.influences.length) {
             setHtml('c-chips', c.about.influences.map(function(inf) {
-              return '<span class="chip">' + inf + '</span>';
+              return '<span class="chip">' + esc(inf) + '</span>';
             }).join(''));
           }
           if (c.about.stats && c.about.stats.length) {
             setHtml('c-stats', c.about.stats.map(function(s) {
-              return '<div class="sc"><div class="sv">' + s.value + '</div><div class="sl">' + s.label + '</div></div>';
+              return '<div class="sc"><div class="sv">' + esc(s.value) + '</div><div class="sl">' + esc(s.label) + '</div></div>';
             }).join(''));
           }
         }
@@ -2386,10 +2402,10 @@
               iframe.src = track.soundcloud_embed;
             }
             var scProfile = el('c-track-' + n + '-sc-profile');
-            if (scProfile && track.soundcloud_profile_url) scProfile.href = track.soundcloud_profile_url;
+            if (scProfile && track.soundcloud_profile_url) scProfile.href = safeUrl(track.soundcloud_profile_url);
             var scTrack = el('c-track-' + n + '-sc-track');
             if (scTrack && track.soundcloud_track_url) {
-              scTrack.href = track.soundcloud_track_url;
+              scTrack.href = safeUrl(track.soundcloud_track_url);
               if (track.soundcloud_track_title) scTrack.textContent = track.soundcloud_track_title;
             }
           });
@@ -2402,14 +2418,18 @@
             var status = ev.status || 'tbd';
             var isPast = status === 'past';
             var dotTitle = isPast ? 'Played' : (status === 'live' ? 'Confirmed' : 'TBA');
-            var dot = '<td class="e-dot"><span class="e-status ' + status + '" title="' + dotTitle + '"></span></td>';
-            var linkCell = ev.link
-              ? '<a href="' + ev.link + '" class="da">Info ↗</a>'
+            /* status is used as a class name, so constrain it to known values
+               rather than escaping — an arbitrary string here breaks styling. */
+            var safeStatus = (status === 'live' || status === 'past') ? status : 'tbd';
+            var dot = '<td class="e-dot"><span class="e-status ' + safeStatus + '" title="' + esc(dotTitle) + '"></span></td>';
+            var href = safeUrl(ev.link);
+            var linkCell = href
+              ? '<a href="' + href + '" class="da" rel="noopener">Info ↗</a>'
               : ev.note
-                ? '<span class="tba">' + ev.note + '</span>'
+                ? '<span class="tba">' + esc(ev.note) + '</span>'
                 : isPast ? '' : '<span class="tba">Booking Open</span>';
-            return '<tr>' + dot + '<td class="ed">' + ev.date + '</td><td class="en">' + ev.venue +
-              '</td><td>' + ev.location + '</td><td>' + ev.type + '</td><td>' + linkCell + '</td></tr>';
+            return '<tr>' + dot + '<td class="ed">' + esc(ev.date) + '</td><td class="en">' + esc(ev.venue) +
+              '</td><td>' + esc(ev.location) + '</td><td>' + esc(ev.type) + '</td><td>' + linkCell + '</td></tr>';
           };
 
           var upcoming = c.events.filter(function(ev) { return (ev.status || 'tbd') !== 'past'; });
@@ -2429,11 +2449,11 @@
         if (c.contact) {
           setText('c-contact-blurb', c.contact.blurb);
           var ig = el('c-contact-ig');
-          if (ig && c.contact.instagram_url) { ig.href = c.contact.instagram_url; ig.textContent = 'Instagram — ' + (c.contact.instagram_handle || c.contact.instagram_url); }
+          if (ig && c.contact.instagram_url) { ig.href = safeUrl(c.contact.instagram_url); ig.textContent = 'Instagram — ' + (c.contact.instagram_handle || c.contact.instagram_url); }
           var xEl = el('c-contact-x');
-          if (xEl && c.contact.x_url) { xEl.href = c.contact.x_url; xEl.textContent = 'X — ' + (c.contact.x_handle || c.contact.x_url); }
+          if (xEl && c.contact.x_url) { xEl.href = safeUrl(c.contact.x_url); xEl.textContent = 'X — ' + (c.contact.x_handle || c.contact.x_url); }
           var sc = el('c-contact-sc');
-          if (sc && c.contact.soundcloud_url) { sc.href = c.contact.soundcloud_url; sc.textContent = 'SoundCloud — ' + (c.contact.soundcloud_handle || c.contact.soundcloud_url); }
+          if (sc && c.contact.soundcloud_url) { sc.href = safeUrl(c.contact.soundcloud_url); sc.textContent = 'SoundCloud — ' + (c.contact.soundcloud_handle || c.contact.soundcloud_url); }
           var em = el('c-contact-email');
           if (em && c.contact.booking_email) { em.href = 'mailto:' + c.contact.booking_email; em.textContent = 'Management — ' + c.contact.booking_email; }
         }
