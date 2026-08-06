@@ -1,0 +1,9 @@
+{
+  "name": "grlscry-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "GRLSCRY — DJ portfolio and booking site. Static page plus two Vercel serverless functions.",
+  "dependencies": {
+    "nodemailer": "^6.9.14"
+  }
+}
