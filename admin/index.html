@@ -387,7 +387,7 @@
 
     try {
       // The password is never checked here — only the server knows it.
-      const res = await fetch('/.netlify/functions/save-content', {
+      const res = await fetch('/api/save-content', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-secret': typed },
         body:    JSON.stringify({ verify: true }),
@@ -662,7 +662,7 @@
   }
 
   /* ── SAVE → Netlify function → GitHub ─────────────────────
-     POSTs the content object to /.netlify/functions/save-content.
+     POSTs the content object to /api/save-content.
      The function reads GITHUB_TOKEN from process.env server-side.
      No token ever touches this file or the browser.
   ─────────────────────────────────────────────────────────── */
@@ -675,7 +675,7 @@
     try {
       if (!adminSecret) throw new Error('Session expired — log in again.');
 
-      const res = await fetch('/.netlify/functions/save-content', {
+      const res = await fetch('/api/save-content', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-secret': adminSecret },
         body:    JSON.stringify({ content: collectData() })

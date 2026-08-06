@@ -1699,7 +1699,7 @@
           </nav>
         </div>
         <div class="r d2">
-          <form id="cf" name="booking" netlify netlify-honeypot="bot-field" novalidate>
+          <form id="cf" name="booking" method="post" action="/api/booking" novalidate>
             <!-- Spam trap: hidden from people, tempting to bots. A submission
                  that fills this in is silently discarded by Netlify. -->
             <p hidden aria-hidden="true">
@@ -1919,21 +1919,34 @@
       fs.textContent = '';
       fs.style.color = 'var(--sage)';
 
-      const data = new FormData(this);
-      fetch('/', { method: 'POST', body: data })
-        .then(() => {
+      const reset = () => {
+        btn.disabled = false;
+        btn.textContent = 'Send Inquiry';
+        btn.classList.remove('btn-loading');
+      };
+
+      const payload = {};
+      new FormData(this).forEach((v, k) => { payload[k] = v; });
+
+      // The previous version treated any response as success, so a 404 still
+      // showed "Message received". Check the status and surface real failures.
+      fetch('/api/booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+        .then(async (r) => {
+          const out = await r.json().catch(() => ({}));
+          if (!r.ok) throw new Error(out.error || 'Server error ' + r.status);
           fs.textContent = '✓ Message received. We\'ll be in touch.';
-          btn.disabled = false;
-          btn.textContent = 'Send Inquiry';
-          btn.classList.remove('btn-loading');
+          fs.style.color = 'var(--sage)';
           this.reset();
+          reset();
         })
-        .catch(() => {
-          fs.textContent = '✗ Something went wrong — email us directly.';
+        .catch((err) => {
+          fs.textContent = '✗ ' + (err.message || 'Something went wrong — email us directly.');
           fs.style.color = 'var(--pink)';
-          btn.disabled = false;
-          btn.textContent = 'Send Inquiry';
-          btn.classList.remove('btn-loading');
+          reset();
         });
     });
 
