@@ -1,0 +1,14 @@
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://w.soundcloud.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.sndcdn.com https://i1.sndcdn.com; frame-src https://w.soundcloud.com; connect-src 'self' https://api.soundcloud.com https://w.soundcloud.com; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests
+
+# The admin panel must never be framed or indexed.
+/admin/*
+  X-Frame-Options: DENY
+  X-Robots-Tag: noindex, nofollow
+
+/.netlify/functions/*
+  X-Robots-Tag: noindex, nofollow
