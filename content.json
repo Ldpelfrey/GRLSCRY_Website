@@ -134,6 +134,34 @@
     "soundcloud_handle": "grlscry",
     "booking_email": "GRLSCRYOfficial@gmail.com"
   },
+  "shop": {
+    "enabled": true,
+    "product": {
+      "name": "GRLS CRY BOXY TEE",
+      "blurb": "Heavyweight loose boxy tee. Front and back print.",
+      "price": "35",
+      "shipping": "6",
+      "currency": "USD",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+      ],
+      "images": [
+        "images/tee-front.jpg",
+        "images/tee-back.jpg"
+      ],
+      "size_chart": "",
+      "ships_note": "Made to order — ships in 2–3 weeks",
+      "sold_out": false,
+      "stripe_buy_button_id": "",
+      "stripe_publishable_key": ""
+    }
+  },
   "footer": {
     "copyright": "© 2026 — SCOTTSDALE, AZ — House / Multi-Genre - GRLS CRY Approved"
   }

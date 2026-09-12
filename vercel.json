@@ -11,7 +11,7 @@
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
         {
           "key": "Permissions-Policy",
-          "value": "geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=()"
+          "value": "geolocation=(), microphone=(), camera=(), payment=(self \"https://js.stripe.com\"), usb=(), interest-cohort=()"
         },
         {
           "key": "Strict-Transport-Security",
@@ -19,7 +19,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://w.soundcloud.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.sndcdn.com; frame-src https://w.soundcloud.com; connect-src 'self' https://api.soundcloud.com https://w.soundcloud.com; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://w.soundcloud.com https://js.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.sndcdn.com https://*.stripe.com; frame-src https://w.soundcloud.com https://js.stripe.com https://checkout.stripe.com https://hooks.stripe.com; connect-src 'self' https://api.soundcloud.com https://w.soundcloud.com https://api.stripe.com https://js.stripe.com https://checkout.stripe.com; form-action 'self' https://checkout.stripe.com; base-uri 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests"
         }
       ]
     },

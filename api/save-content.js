@@ -11,7 +11,7 @@ const BRANCH = 'main';
 const FILE   = 'content.json';
 const API    = `https://api.github.com/repos/${REPO}/contents/${FILE}`;
 
-const ALLOWED_KEYS = ['meta','ticker','hero','about','tracks','events','contact','footer'];
+const ALLOWED_KEYS = ['meta','ticker','hero','about','tracks','events','contact','shop','footer'];
 const MAX_BYTES    = 256 * 1024;
 const MAX_STRING   = 8000;
 const MAX_ITEMS    = 200;
@@ -118,7 +118,7 @@ function validateContent(c) {
   if (c.events && !Array.isArray(c.events)) return 'events must be an array';
   if (c.tracks && !Array.isArray(c.tracks)) return 'tracks must be an array';
   if ('ticker' in c && typeof c.ticker !== 'string') return 'ticker must be a string';
-  for (const k of ['meta','hero','about','contact','footer']) {
+  for (const k of ['meta','hero','about','contact','shop','footer']) {
     if (k in c && (typeof c[k] !== 'object' || c[k] === null || Array.isArray(c[k]))) {
       return `${k} must be an object`;
     }

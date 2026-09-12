@@ -324,6 +324,65 @@
       <div class="fg"><label>Booking / Management Email</label><input type="email" id="f-email"></div>
     </div>
 
+    <!-- SHOP ─────────────────────────────────────────────── -->
+    <div class="admin-section">
+      <div class="section-title">Shop / Merch</div>
+
+      <div class="fr">
+        <div class="fg"><label>Section Live</label>
+          <select id="f-shop-enabled">
+            <option value="true">● Show the shop</option>
+            <option value="false">○ Hide the shop entirely</option>
+          </select>
+        </div>
+        <div class="fg"><label>Stock</label>
+          <select id="f-shop-soldout">
+            <option value="false">● For sale</option>
+            <option value="true">✕ SOLD OUT</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fg"><label>Product Name</label>
+        <input type="text" id="f-shop-name" placeholder="GRLS CRY BOXY TEE"></div>
+      <div class="fg"><label>Blurb</label>
+        <textarea id="f-shop-blurb" placeholder="Heavyweight loose boxy tee. Front and back print."></textarea></div>
+
+      <div class="fr">
+        <div class="fg"><label>Price (USD, number only)</label>
+          <input type="text" id="f-shop-price" placeholder="35"></div>
+        <div class="fg"><label>Shipping (USD, number only)</label>
+          <input type="text" id="f-shop-shipping" placeholder="6"></div>
+      </div>
+
+      <div class="fg"><label>Sizes <span style="color:var(--gray);font-weight:300">(comma separated, in display order)</span></label>
+        <input type="text" id="f-shop-sizes" placeholder="XS, S, M, L, XL, 2XL, 3XL"></div>
+
+      <div class="fr">
+        <div class="fg"><label>Front Image Path</label>
+          <input type="text" id="f-shop-img-1" placeholder="images/tee-front.jpg"></div>
+        <div class="fg"><label>Back Image Path</label>
+          <input type="text" id="f-shop-img-2" placeholder="images/tee-back.jpg"></div>
+      </div>
+
+      <div class="fg"><label>Ships Note</label>
+        <input type="text" id="f-shop-ships-note" placeholder="Made to order — ships in 2–3 weeks"></div>
+      <div class="fg"><label>Size Chart URL <span style="color:var(--gray);font-weight:300">(optional)</span></label>
+        <input type="text" id="f-shop-size-chart"></div>
+
+      <div class="fr">
+        <div class="fg"><label>Stripe Buy Button ID</label>
+          <input type="text" id="f-shop-buy-id" placeholder="buy_btn_..."></div>
+        <div class="fg"><label>Stripe Publishable Key</label>
+          <input type="text" id="f-shop-pk" placeholder="pk_live_..."></div>
+      </div>
+      <p style="font-family:var(--mono);font-size:10px;line-height:1.7;color:var(--gray);margin:-4px 0 0;">
+        Both Stripe fields must be filled before the buy button works — until then the
+        section shows a disabled &ldquo;Checkout opening soon&rdquo; button. The chosen size
+        arrives on the Stripe payment as <code>client_reference_id</code> (e.g. TEE-M).
+      </p>
+    </div>
+
     <!-- FOOTER ───────────────────────────────────────────── -->
     <div class="admin-section">
       <div class="section-title">Footer</div>
@@ -491,6 +550,22 @@
     set('f-sc-url',        c.contact?.soundcloud_url);
     set('f-sc-handle',     c.contact?.soundcloud_handle);
     set('f-email',         c.contact?.booking_email);
+
+    const sp = c.shop?.product || {};
+    set('f-shop-enabled',    String(c.shop?.enabled !== false));
+    set('f-shop-soldout',    String(sp.sold_out === true));
+    set('f-shop-name',       sp.name);
+    set('f-shop-blurb',      sp.blurb);
+    set('f-shop-price',      sp.price);
+    set('f-shop-shipping',   sp.shipping);
+    set('f-shop-sizes',      (sp.sizes || []).join(', '));
+    set('f-shop-img-1',      (sp.images || [])[0]);
+    set('f-shop-img-2',      (sp.images || [])[1]);
+    set('f-shop-ships-note', sp.ships_note);
+    set('f-shop-size-chart', sp.size_chart);
+    set('f-shop-buy-id',     sp.stripe_buy_button_id);
+    set('f-shop-pk',         sp.stripe_publishable_key);
+
     set('f-footer-copyright', c.footer?.copyright);
   }
 
@@ -656,6 +731,23 @@
         soundcloud_url:    val('f-sc-url'),
         soundcloud_handle: val('f-sc-handle'),
         booking_email:     val('f-email')
+      },
+      shop: {
+        enabled: val('f-shop-enabled') === 'true',
+        product: {
+          name:       val('f-shop-name'),
+          blurb:      val('f-shop-blurb'),
+          price:      val('f-shop-price'),
+          shipping:   val('f-shop-shipping'),
+          currency:   'USD',
+          sizes:      val('f-shop-sizes').split(',').map(s => s.trim()).filter(Boolean),
+          images:     [val('f-shop-img-1'), val('f-shop-img-2')].filter(Boolean),
+          size_chart: val('f-shop-size-chart'),
+          ships_note: val('f-shop-ships-note'),
+          sold_out:   val('f-shop-soldout') === 'true',
+          stripe_buy_button_id:   val('f-shop-buy-id'),
+          stripe_publishable_key: val('f-shop-pk')
+        }
       },
       footer: { copyright: val('f-footer-copyright') }
     };

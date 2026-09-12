@@ -159,6 +159,9 @@
     a  { color: inherit; text-decoration: none; }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+      /* The .r reveal is driven by GSAP, which is skipped under reduced
+         motion — without this the content stays at opacity 0 forever. */
+      .r { opacity: 1 !important; transform: none !important; }
     }
 
     /* ─── SCANLINE OVERLAY ──────────────────────────────────────── */
@@ -356,6 +359,70 @@
     .bo:hover { border-color: var(--white); }
     .bg { background: transparent; color: var(--sage); border: 1px solid var(--bm); padding: 10px 22px; }
     .bg:hover { background: var(--sage-bg); border-color: var(--sage); }
+
+    /* ─── SHOP ───────────────────────────────────────────────────── */
+    .shop-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(28px,5vw,56px); align-items: start; }
+    .shop-media { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    /* aspect-ratio is load-bearing: it reserves the box before the image
+       decodes, so nothing below this section reflows and shifts a trigger. */
+    .shop-fig { position: relative; margin: 0; aspect-ratio: 4 / 5; background: var(--s1); border: 1px solid var(--border); overflow: hidden; }
+    .shop-fig img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .shop-fig figcaption {
+      position: absolute; left: 8px; bottom: 8px;
+      font-family: var(--mono); font-size: 8px; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--sage-dim); background: rgba(14,14,14,.72); padding: 3px 7px;
+    }
+    /* Shown when a mockup path is missing or fails to load. */
+    .shop-fig.ph::after {
+      content: attr(data-ph); position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+      color: rgba(215,239,194,.28); background: var(--s1);
+    }
+    .shop-name { font-family: var(--display); font-stretch: 112%; font-size: clamp(22px,2.6vw,30px); font-weight: 800; letter-spacing: .05em; text-transform: uppercase; line-height: 1.05; margin-bottom: 12px; }
+    .shop-blurb { color: var(--gray-lt); font-size: 13px; line-height: 1.75; margin-bottom: 22px; max-width: 42ch; }
+    .shop-price { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; }
+    .shop-amount { font-family: var(--display); font-stretch: 112%; font-size: 30px; font-weight: 800; color: var(--sage); letter-spacing: .03em; }
+    .shop-ship { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--gray); }
+    .shop-note { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--sage-dim); margin-bottom: 26px; }
+    .shop-sizes-label { font-family: var(--mono); font-size: 9px; letter-spacing: .24em; text-transform: uppercase; color: var(--sage); margin-bottom: 10px; }
+    .shop-sizes { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; border: 0; padding: 0; }
+    .shop-size {
+      min-width: 46px; min-height: 44px; padding: 0 12px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: .1em;
+      background: transparent; color: var(--gray-lt); border: 1px solid var(--border);
+      cursor: pointer; transition: all .2s var(--ease);
+    }
+    .shop-size:hover { border-color: var(--bm); color: var(--white); }
+    .shop-size[aria-pressed="true"] { background: var(--sage); border-color: var(--sage); color: #1F1F1F; }
+    .shop-buy { min-height: 52px; }
+    .shop-buy .btn[disabled] { opacity: .38; cursor: not-allowed; pointer-events: none; }
+    .shop-soldout {
+      display: inline-flex; align-items: center; min-height: 52px;
+      font-family: var(--display); font-stretch: 112%; font-size: 20px; font-weight: 800;
+      letter-spacing: .22em; text-transform: uppercase; color: var(--pink);
+    }
+    .shop-fine { font-family: var(--mono); font-size: 9px; line-height: 1.9; letter-spacing: .08em; color: var(--gray); margin-top: 16px; }
+    @media (max-width: 860px) {
+      .shop-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── POLICIES (footer) ──────────────────────────────────────── */
+    /* footer is a wrapping flexbox — claim a full row or this collapses
+       into a narrow column beside the nav grid. */
+    .policies { flex: 1 1 100%; width: 100%; border-top: 1px solid var(--border); margin-top: 28px; padding-top: 22px; }
+    .policies > .foot-section-label { margin-bottom: 12px; }
+    .policy { border-bottom: 1px solid var(--border); }
+    .policy > summary {
+      cursor: pointer; list-style: none; padding: 12px 0; min-height: 44px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--gray-lt);
+    }
+    .policy > summary::-webkit-details-marker { display: none; }
+    .policy > summary::after { content: '+'; color: var(--sage); font-size: 13px; }
+    .policy[open] > summary::after { content: '−'; }
+    .policy > summary:hover { color: var(--white); }
+    .policy p { font-size: 12px; line-height: 1.8; color: var(--gray); padding: 0 0 16px; max-width: 76ch; }
 
     /* ─── ORNAMENT DIVIDER ───────────────────────────────────────── */
     .ornament-row {
@@ -1264,6 +1331,7 @@
       <li><a href="#about">About</a></li>
       <li><a href="#events">Shows</a></li>
       <li><a href="#music">Sound</a></li>
+      <li><a href="#shop" id="nav-shop">Shop</a></li>
       <li><a href="#contact" class="nb">Book a Set</a></li>
     </ul>
     <button id="nt" aria-label="Toggle navigation" aria-expanded="false">
@@ -1276,6 +1344,7 @@
     <a href="#about"   onclick="cm()">About</a>
     <a href="#events"  onclick="cm()">Shows</a>
     <a href="#music"   onclick="cm()">Sound</a>
+    <a href="#shop"    onclick="cm()" id="nav-shop-mob">Shop</a>
     <a href="#contact" onclick="cm()">Book</a>
   </div>
 
@@ -1650,11 +1719,62 @@
 
   <div class="ornament-row" aria-hidden="true">
     <div class="ornament-line"></div>
-    <span class="ornament-text">∴ Shows ∴</span>
+    <span class="ornament-text">∴ Shop ∴</span>
     <div class="ornament-line"></div>
   </div>
 
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- SHOP — one product, one size choice, one button.                -->
+  <!-- Checkout is Stripe's hosted page via <stripe-buy-button>. It      -->
+  <!-- redirects the top window rather than opening a modal, which is    -->
+  <!-- deliberate: a modal would fight Lenis for scroll lock.            -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <section id="shop" aria-labelledby="shop-h">
+    <div class="w">
+      <div class="ew r">
+        <span class="el"></span>
+        <span class="t-label">Merch</span>
+      </div>
+      <h2 class="t-sec r" id="shop-h" style="margin-bottom:44px;">Shop</h2>
 
+      <div class="shop-grid">
+        <div class="shop-media r d1">
+          <figure class="shop-fig ph" id="c-shop-fig-1" data-ph="Front">
+            <img id="c-shop-img-1" alt="GRLS CRY boxy tee, front print" loading="lazy" decoding="async" width="800" height="1000" hidden>
+            <figcaption>Front</figcaption>
+          </figure>
+          <figure class="shop-fig ph" id="c-shop-fig-2" data-ph="Back">
+            <img id="c-shop-img-2" alt="GRLS CRY boxy tee, back print" loading="lazy" decoding="async" width="800" height="1000" hidden>
+            <figcaption>Back</figcaption>
+          </figure>
+        </div>
+
+        <div class="shop-info r d2">
+          <h3 class="shop-name" id="c-shop-name">GRLS CRY BOXY TEE</h3>
+          <p class="shop-blurb" id="c-shop-blurb">Heavyweight loose boxy tee. Front and back print.</p>
+
+          <div class="shop-price">
+            <span class="shop-amount" id="c-shop-price">$35</span>
+            <span class="shop-ship" id="c-shop-shipping">+ $6 shipping</span>
+          </div>
+          <p class="shop-note" id="c-shop-ships-note">Made to order — ships in 2–3 weeks</p>
+
+          <fieldset class="shop-sizes-wrap" style="border:0;padding:0;margin:0;">
+            <legend class="shop-sizes-label">Size</legend>
+            <div class="shop-sizes" id="c-shop-sizes" role="group" aria-label="Choose a size"></div>
+          </fieldset>
+
+          <div class="shop-buy" id="c-shop-buy">
+            <button class="btn bs" type="button" disabled>Select a size</button>
+          </div>
+
+          <p class="shop-fine" id="c-shop-fine">
+            Secure checkout by Stripe. Made to order — see refund and shipping terms in the footer.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="ornament-row" aria-hidden="true">
     <div class="ornament-line"></div>
@@ -1763,6 +1883,7 @@
           <a href="#about">About</a>
           <a href="#music">Sound</a>
           <a href="#events">Shows</a>
+          <a href="#shop" id="nav-shop-foot">Shop</a>
           <a href="#contact">Book</a>
         </nav>
       </div>
@@ -1770,6 +1891,38 @@
         <button class="btt-inline" id="btt-inline" aria-label="Back to top">↑</button>
       </div>
     </div>
+    <!-- Stripe expects published refund / shipping / contact terms before a
+         live account sells. The 2-3 week window is stated plainly on purpose:
+         it is the primary defence against "item never arrived" chargebacks. -->
+    <div class="policies" id="shop-policies">
+      <p class="foot-section-label">Store Policies</p>
+
+      <details class="policy">
+        <summary>Shipping</summary>
+        <p>Every tee is made to order — nothing is printed until you buy it. Production plus delivery takes <strong>2–3 weeks</strong> from the day your order is placed. Shipping is $6, charged separately from the $35 item price, and orders ship within the United States. You will get a confirmation email at checkout; tracking follows once the order leaves the printer.</p>
+      </details>
+
+      <details class="policy">
+        <summary>Returns &amp; Refunds</summary>
+        <p>Because each shirt is printed to order, we do not accept returns or exchanges for size or change of mind — please use the size guidance before ordering. If your item arrives misprinted, damaged, or defective, email us within 14 days of delivery with a photo and we will reprint or refund it in full. Refunds are issued to the original payment method.</p>
+      </details>
+
+      <details class="policy">
+        <summary>Terms</summary>
+        <p>Orders are fulfilled manually and are subject to availability; if an item cannot be produced you will be refunded in full. Prices are in USD. All artwork, names, and marks on this site remain the property of GRLS CRY and may not be reproduced. Placing an order confirms you accept these terms and the shipping and refund policies above.</p>
+      </details>
+
+      <details class="policy">
+        <summary>Privacy</summary>
+        <p>Payments are processed by Stripe — card details are entered on Stripe's hosted checkout and never touch this site. We receive only your name, email, shipping address, and chosen size, and use them solely to fulfil your order. We do not sell or share your information. See Stripe's privacy policy for how they handle payment data.</p>
+      </details>
+
+      <details class="policy">
+        <summary>Contact</summary>
+        <p>Questions about an order, a size, or a damaged item: <a href="mailto:GRLSCRYOfficial@gmail.com" style="color:var(--sage)">GRLSCRYOfficial@gmail.com</a>. We reply within 2–3 business days.</p>
+      </details>
+    </div>
+
     <div class="foot-bottom">
       <span class="fc" id="c-footer-copyright">© 2026 — SCOTTSDALE, AZ — House / Multi-Genre - GRLS CRY Approved</span>
       <h2 class="foot-giant" aria-hidden="true">GRLSCRY</h2>
@@ -2471,6 +2624,12 @@
           if (em && c.contact.booking_email) { em.href = 'mailto:' + c.contact.booking_email; em.textContent = 'Management — ' + c.contact.booking_email; }
         }
 
+        /* Shop — one product. The whole section disappears when it is
+           switched off, and degrades to a disabled button when Stripe has
+           not been wired up yet, so a half-configured store never shows a
+           button that goes nowhere. */
+        renderShop(c.shop);
+
         /* Footer */
         if (c.footer && c.footer.copyright) { setText('c-footer-copyright', c.footer.copyright); }
 
@@ -2478,6 +2637,148 @@
       .catch(function(err) {
         console.info('[content-loader] Using hardcoded content:', err.message);
       });
+
+    /* ── SHOP ──────────────────────────────────────────────────────
+       Stripe's buy button maps one button to one price, and it reads its
+       attributes when it mounts — changing them afterwards does nothing.
+       So the element is destroyed and rebuilt whenever the size changes,
+       carrying the size in client-reference-id. That id shows on the
+       payment in the Stripe dashboard, which is how the size reaches
+       fulfilment: orders are entered by hand.
+    ───────────────────────────────────────────────────────────────── */
+    var STRIPE_SRC = 'https://js.stripe.com/v3/buy-button.js';
+    var stripeLoading = false;
+
+    function loadStripe() {
+      if (stripeLoading || document.querySelector('script[src="' + STRIPE_SRC + '"]')) return;
+      stripeLoading = true;
+      var sc = document.createElement('script');
+      sc.async = true;
+      sc.src = STRIPE_SRC;
+      document.head.appendChild(sc);
+    }
+
+    /* Relative paths and https only — no javascript:, no data:. */
+    function safeAsset(v) {
+      var s = String(v == null ? '' : v).trim();
+      if (!s) return '';
+      if (/^[a-z][a-z0-9+.-]*:/i.test(s)) return /^https?:/i.test(s) ? s : '';
+      return /^[\w./-]+$/.test(s) ? s : '';
+    }
+
+    /* Stripe ids are written straight into attributes — keep them boring. */
+    function safeStripeId(v) {
+      var s = String(v == null ? '' : v).trim();
+      return /^[A-Za-z0-9_]{6,255}$/.test(s) ? s : '';
+    }
+
+    function hideShop() {
+      var sec = el('shop');
+      if (sec) sec.style.display = 'none';
+      ['nav-shop', 'nav-shop-mob', 'nav-shop-foot'].forEach(function(id) {
+        var n = el(id);
+        if (n && n.parentNode) n.parentNode.style.display = 'none';
+      });
+      var pol = el('shop-policies');
+      if (pol) pol.style.display = 'none';
+      /* The section just changed height — every trigger below it moved. */
+      refreshTriggers();
+    }
+
+    function refreshTriggers() {
+      if (window.ScrollTrigger && typeof window.ScrollTrigger.refresh === 'function') {
+        window.ScrollTrigger.refresh();
+      }
+    }
+
+    function renderShop(shop) {
+      if (!shop || shop.enabled === false) { hideShop(); return; }
+      var pr = shop.product || {};
+
+      setText('c-shop-name',  pr.name);
+      setText('c-shop-blurb', pr.blurb);
+      if (pr.price != null && pr.price !== '') setText('c-shop-price', '$' + pr.price);
+      if (pr.shipping != null && pr.shipping !== '') setText('c-shop-shipping', '+ $' + pr.shipping + ' shipping');
+      setText('c-shop-ships-note', pr.ships_note);
+
+      /* Images. The figure keeps its placeholder until the file actually
+         decodes, so a missing mockup shows a labelled box rather than a
+         broken-image icon — and the box is the same size either way. */
+      var imgs = Array.isArray(pr.images) ? pr.images : [];
+      var pending = 0;
+      [1, 2].forEach(function(n) {
+        var fig = el('c-shop-fig-' + n), img = el('c-shop-img-' + n);
+        if (!fig || !img) return;
+        var src = safeAsset(imgs[n - 1]);
+        if (!src) return;
+        pending++;
+        img.addEventListener('load', function() {
+          fig.classList.remove('ph');
+          img.hidden = false;
+          if (--pending === 0) refreshTriggers();
+        });
+        img.addEventListener('error', function() {
+          console.info('[shop] mockup missing:', src);
+          if (--pending === 0) refreshTriggers();
+        });
+        img.src = src;
+      });
+
+      /* Sizes */
+      var sizes = Array.isArray(pr.sizes) ? pr.sizes.filter(Boolean) : [];
+      var sizeWrap = el('c-shop-sizes');
+      var selected = null;
+      if (sizeWrap) {
+        sizeWrap.innerHTML = sizes.map(function(sz) {
+          return '<button type="button" class="shop-size" aria-pressed="false" data-size="' +
+                 esc(sz) + '">' + esc(sz) + '</button>';
+        }).join('');
+        sizeWrap.addEventListener('click', function(e) {
+          var b = e.target.closest('.shop-size');
+          if (!b) return;
+          Array.prototype.forEach.call(sizeWrap.querySelectorAll('.shop-size'), function(x) {
+            x.setAttribute('aria-pressed', String(x === b));
+          });
+          selected = b.getAttribute('data-size');
+          paintBuy();
+        });
+      }
+
+      var buyId = safeStripeId(pr.stripe_buy_button_id);
+      var pubKey = safeStripeId(pr.stripe_publishable_key);
+      var configured = !!(buyId && pubKey);
+      if (configured) loadStripe();
+
+      function paintBuy() {
+        var box = el('c-shop-buy');
+        if (!box) return;
+
+        if (pr.sold_out === true) {
+          box.innerHTML = '<span class="shop-soldout">Sold Out</span>';
+          if (sizeWrap) sizeWrap.style.display = 'none';
+          return;
+        }
+        if (!configured) {
+          box.innerHTML = '<button class="btn bs" type="button" disabled>Checkout opening soon</button>';
+          return;
+        }
+        if (!selected) {
+          box.innerHTML = '<button class="btn bs" type="button" disabled>Select a size</button>';
+          return;
+        }
+
+        box.innerHTML = '';
+        var btn = document.createElement('stripe-buy-button');
+        btn.setAttribute('buy-button-id', buyId);
+        btn.setAttribute('publishable-key', pubKey);
+        btn.setAttribute('client-reference-id', 'TEE-' + String(selected).replace(/[^A-Za-z0-9]/g, ''));
+        box.appendChild(btn);
+      }
+
+      paintBuy();
+      /* Text and images above have changed the section's height. */
+      refreshTriggers();
+    }
   })();
   </script>
 

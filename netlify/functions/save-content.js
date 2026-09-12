@@ -125,7 +125,7 @@ exports.handler = async function (event) {
   }
 };
 
-const ALLOWED_KEYS = ['meta','ticker','hero','about','tracks','events','contact','footer'];
+const ALLOWED_KEYS = ['meta','ticker','hero','about','tracks','events','contact','shop','footer'];
 const MAX_BYTES    = 256 * 1024;   // content.json is ~6KB today
 const MAX_STRING   = 8000;
 const MAX_ITEMS    = 200;
@@ -144,7 +144,7 @@ function validateContent(c) {
   // Fields that must be scalars, so an object here can't render as "[object Object]"
   if ('ticker' in c && typeof c.ticker !== 'string') return 'ticker must be a string';
   // Fields that must be objects
-  for (const k of ['meta','hero','about','contact','footer']) {
+  for (const k of ['meta','hero','about','contact','shop','footer']) {
     if (k in c && (typeof c[k] !== 'object' || c[k] === null || Array.isArray(c[k]))) {
       return `${k} must be an object`;
     }
