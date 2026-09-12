@@ -3,24 +3,22 @@
 DJ portfolio, booking, and merch site for GRLS CRY (Scottsdale, AZ). Live at
 **https://grlscry.com**.
 
-## ⚠️ Current state — read before deploying
+## ⚠️ Current state (2026-09-12) — this is the `vercel-migration` branch
 
-**The live site and this repo are not the same thing.**
+**This branch is parked.** It moves the site from Netlify to Vercel and has never
+been deployed. `grlscry.com` still serves from **Netlify**.
 
-- `grlscry.com` currently serves from **Netlify** (verified: `server: Netlify`
-  in the response headers).
-- Local `main` is **2 commits ahead of `origin/main`**, and those two commits
-  (`97239ce`, `47a73bb`) **migrate the site from Netlify to Vercel** — they add
-  `vercel.json`, `api/*.js`, and `package.json`, and repoint the admin panel and
-  the booking form at `/api/…`.
-- Those commits have never been deployed. Pushing them to a repo that Netlify
-  still builds will publish a Vercel-shaped site to Netlify: `/api/booking` and
-  `/api/save-content` do not exist there, so **the booking form and the admin
-  panel would both break.**
-
-Decide the host before pushing. Either finish the Vercel cutover (point the
-domain at Vercel, set the env vars there) or revert the migration. Do not push
-"just the content change" without resolving this.
+- **Never push this branch to `main` while the domain is on Netlify.** Its booking
+  form posts to `/api/booking` and its admin to `/api/save-content`, and both 404
+  on Netlify. Booking and admin would break together.
+- The shop ships to production from the **`shop-netlify`** branch, a fast-forward
+  of `origin/main`. This branch carries the same shop work so the Vercel cutover
+  doesn't lose it.
+- To finish the cutover: point DNS at Vercel, set `ADMIN_SECRET`, `GITHUB_TOKEN`,
+  `GMAIL_USER`, and `GMAIL_APP_PASSWORD` in Vercel, verify booking and admin end
+  to end, then retire Netlify. Only then merge this into `main`.
+- Local `main` still points at the two migration commits (`47a73bb`), unchanged
+  on purpose. Moving it is Luke's call.
 
 ## What it is
 
@@ -40,7 +38,7 @@ it in a browser. Third-party code is CDN `<script>` tags only.
 | `netlify/functions/save-content.js` | The Netlify twin of `save-content`. Still live. |
 | `_headers` | Netlify security headers + CSP. **Currently the live one.** |
 | `vercel.json` | Vercel headers + CSP. Mirror of `_headers`. |
-| `images/` | Photography and OG cover. WebP with JPG fallback. |
+| `images/` | Photography, OG cover, tee mockups. |
 
 `_headers` and `vercel.json` carry the same CSP. **Change both together** —
 whichever host is live, the other is one push away from being live.
@@ -72,8 +70,9 @@ Set on whichever host is live:
 | `GITHUB_TOKEN` | `save-content` | Login works, publishing 500s. |
 | `GMAIL_USER` / `GMAIL_APP_PASSWORD` | `api/booking.js` | Booking form errors. |
 
-**Neither `ADMIN_SECRET` nor `GITHUB_TOKEN` has been confirmed set.** The admin
-save path has never been tested end to end.
+**`ADMIN_SECRET` is verified NOT set on the live Netlify site** (the function
+returns 500 `ADMIN_SECRET not set`). Nothing is set on Vercel yet. `GITHUB_TOKEN`
+status is unknown. The admin save path has never been tested end to end.
 
 ## Sections
 
@@ -99,13 +98,18 @@ as an Instagram bio link.
   visible on the payment in the Stripe dashboard. A buy button maps to one price
   and reads its attributes at mount, so the element is destroyed and rebuilt on
   every size change. That is why size selection is required before the button
-  appears.
+  appears. It is **not** on the customer's receipt, and the final mechanism is an
+  open decision (launch prompt, D1). **Never run two size inputs at once.**
 - **Not yet live.** `stripe_buy_button_id` and `stripe_publishable_key` are empty
   in `content.json`; until both are filled the section shows a disabled
   "Checkout opening soon" button. Fill them in the admin panel.
-- **Product mockups do not exist yet.** `images/tee-front.jpg` and
-  `images/tee-back.jpg` are referenced but absent, so both figures render as
-  labelled placeholder boxes. Drop the files in at 4:5 and they appear.
+- **Mockups:** `images/tee-front.jpg` / `tee-back.jpg`, cut out of Luke's own
+  `~/Pictures/Merch-Mockup-goodbadgirls.png` using its alpha channel, on 4:5
+  `#1A1A1A` cards. ⚠️ The mockup puts the front print on the **left chest**, but
+  the product docs say **centered chest**. The photo must match what Tapstitch
+  prints.
+- `size_chart`, when set to a relative image path or an https URL, shows a
+  "Size chart ↗" link under the size buttons. Hidden when empty or sold out.
 - `sold_out: true` is the drop mechanic — one toggle in the admin panel swaps the
   button for "SOLD OUT" and hides the size picker.
 - Store policies (shipping / refunds / terms / privacy / contact) are a

@@ -402,6 +402,13 @@
       font-family: var(--display); font-stretch: 112%; font-size: 20px; font-weight: 800;
       letter-spacing: .22em; text-transform: uppercase; color: var(--pink);
     }
+    .shop-chart { display: inline-block; margin: -12px 0 24px; font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--sage-dim); text-decoration: underline; text-underline-offset: 3px; }
+    .shop-chart:hover { color: var(--sage); }
+    /* .shop-chart's display beats the UA [hidden] style — restore it. */
+    .shop-chart[hidden] { display: none; }
+    /* Hide a not-yet-loaded mockup with opacity, never display:none —
+       Chrome does not fetch a lazy image that isn't rendered. */
+    .shop-fig.ph img { opacity: 0; }
     .shop-fine { font-family: var(--mono); font-size: 9px; line-height: 1.9; letter-spacing: .08em; color: var(--gray); margin-top: 16px; }
     @media (max-width: 860px) {
       .shop-grid { grid-template-columns: 1fr; }
@@ -1740,11 +1747,11 @@
       <div class="shop-grid">
         <div class="shop-media r d1">
           <figure class="shop-fig ph" id="c-shop-fig-1" data-ph="Front">
-            <img id="c-shop-img-1" alt="GRLS CRY boxy tee, front print" loading="lazy" decoding="async" width="800" height="1000" hidden>
+            <img id="c-shop-img-1" alt="GRLS CRY boxy tee, front print" loading="lazy" decoding="async" width="800" height="1000">
             <figcaption>Front</figcaption>
           </figure>
           <figure class="shop-fig ph" id="c-shop-fig-2" data-ph="Back">
-            <img id="c-shop-img-2" alt="GRLS CRY boxy tee, back print" loading="lazy" decoding="async" width="800" height="1000" hidden>
+            <img id="c-shop-img-2" alt="GRLS CRY boxy tee, back print" loading="lazy" decoding="async" width="800" height="1000">
             <figcaption>Back</figcaption>
           </figure>
         </div>
@@ -1763,6 +1770,7 @@
             <legend class="shop-sizes-label">Size</legend>
             <div class="shop-sizes" id="c-shop-sizes" role="group" aria-label="Choose a size"></div>
           </fieldset>
+          <a class="shop-chart" id="c-shop-size-chart" target="_blank" rel="noopener" hidden>Size chart ↗</a>
 
           <div class="shop-buy" id="c-shop-buy">
             <button class="btn bs" type="button" disabled>Select a size</button>
@@ -2714,7 +2722,6 @@
         pending++;
         img.addEventListener('load', function() {
           fig.classList.remove('ph');
-          img.hidden = false;
           if (--pending === 0) refreshTriggers();
         });
         img.addEventListener('error', function() {
@@ -2744,6 +2751,11 @@
         });
       }
 
+      /* Optional size chart — a relative image path or an https link. */
+      var chart = el('c-shop-size-chart');
+      var chartUrl = safeAsset(pr.size_chart);
+      if (chart && chartUrl) { chart.href = chartUrl; chart.hidden = false; }
+
       var buyId = safeStripeId(pr.stripe_buy_button_id);
       var pubKey = safeStripeId(pr.stripe_publishable_key);
       var configured = !!(buyId && pubKey);
@@ -2756,6 +2768,7 @@
         if (pr.sold_out === true) {
           box.innerHTML = '<span class="shop-soldout">Sold Out</span>';
           if (sizeWrap) sizeWrap.style.display = 'none';
+          if (chart) chart.hidden = true;
           return;
         }
         if (!configured) {
