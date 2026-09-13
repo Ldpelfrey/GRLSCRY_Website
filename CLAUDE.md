@@ -9,17 +9,20 @@ DJ portfolio, booking, and merch site for GRLS CRY (Scottsdale, AZ). Live at
 nameservers), the registrar is **Namecheap**, and the zone has **no MX or TXT
 records**, so moving DNS cannot break any email.
 
-Vercel project `grlscry-site` (linked locally via `.vercel/`). Production env has
-`GMAIL_USER`, `BOOKING_TO`, and `ADMIN_SECRET`.
+Vercel project `grlscry-site` (linked locally via `.vercel/`), **already connected
+to GitHub** — the production branch is `main`, so **any push deploys**. Production
+env has `GMAIL_USER`, `BOOKING_TO`, and `ADMIN_SECRET` (**rotated 2026-09-13**,
+verified working; the value lives in `~/.config/grlscry/credentials-local.json`,
+never in the repo). The current build is live on `grlscry-site.vercel.app`.
 
 **Cutover order. Do not reorder it:**
 
 1. **Vercel env (Production).** Add `GMAIL_APP_PASSWORD` — without it booking
-   returns 500. Add `GITHUB_TOKEN` — fine-grained, `contents:write` on this repo
-   only. **Rotate `ADMIN_SECRET`**: the current value is unknown, and the old admin
-   password is public in git history, so it must never be reused.
-2. **Connect the project to GitHub** (Settings → Git, production branch `main`).
-   Without this, admin publishes commit to GitHub and never deploy.
+   returns 500. Add `GITHUB_TOKEN` — fine-grained, Contents read/write on this
+   repo only. **Do not use the `gh` CLI token**: it has `repo` scope over every
+   repo. Luke fills both in `~/.config/grlscry/credentials-local.json`, and they
+   get piped into `vercel env add` without being printed. ✅ `ADMIN_SECRET` is done.
+2. ✅ GitHub is already connected. Nothing to do.
 3. **Deploy production and verify on `grlscry-site.vercel.app`**: a real booking
    email arrives, and one admin publish lands a commit.
 4. **Add `grlscry.com` + `www.grlscry.com` to the project**, then at Namecheap set
