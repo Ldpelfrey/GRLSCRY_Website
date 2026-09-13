@@ -3,22 +3,34 @@
 DJ portfolio, booking, and merch site for GRLS CRY (Scottsdale, AZ). Live at
 **https://grlscry.com**.
 
-## ⚠️ Current state (2026-09-12) — this is the `vercel-migration` branch
+## ⚠️ Current state (2026-09-12) — `vercel-migration` branch, cutover in progress
 
-**This branch is parked.** It moves the site from Netlify to Vercel and has never
-been deployed. `grlscry.com` still serves from **Netlify**.
+`grlscry.com` still serves from **Netlify**. DNS is **Netlify DNS** (NS1
+nameservers), the registrar is **Namecheap**, and the zone has **no MX or TXT
+records**, so moving DNS cannot break any email.
 
-- **Never push this branch to `main` while the domain is on Netlify.** Its booking
-  form posts to `/api/booking` and its admin to `/api/save-content`, and both 404
-  on Netlify. Booking and admin would break together.
-- The shop ships to production from the **`shop-netlify`** branch, a fast-forward
-  of `origin/main`. This branch carries the same shop work so the Vercel cutover
-  doesn't lose it.
-- To finish the cutover: point DNS at Vercel, set `ADMIN_SECRET`, `GITHUB_TOKEN`,
-  `GMAIL_USER`, and `GMAIL_APP_PASSWORD` in Vercel, verify booking and admin end
-  to end, then retire Netlify. Only then merge this into `main`.
-- Local `main` still points at the two migration commits (`47a73bb`), unchanged
-  on purpose. Moving it is Luke's call.
+Vercel project `grlscry-site` (linked locally via `.vercel/`). Production env has
+`GMAIL_USER`, `BOOKING_TO`, and `ADMIN_SECRET`.
+
+**Cutover order. Do not reorder it:**
+
+1. **Vercel env (Production).** Add `GMAIL_APP_PASSWORD` — without it booking
+   returns 500. Add `GITHUB_TOKEN` — fine-grained, `contents:write` on this repo
+   only. **Rotate `ADMIN_SECRET`**: the current value is unknown, and the old admin
+   password is public in git history, so it must never be reused.
+2. **Connect the project to GitHub** (Settings → Git, production branch `main`).
+   Without this, admin publishes commit to GitHub and never deploy.
+3. **Deploy production and verify on `grlscry-site.vercel.app`**: a real booking
+   email arrives, and one admin publish lands a commit.
+4. **Add `grlscry.com` + `www.grlscry.com` to the project**, then at Namecheap set
+   nameservers to `ns1.vercel-dns.com` / `ns2.vercel-dns.com`. **Keep the Netlify
+   site running during propagation** — both hosts then serve a working site.
+5. After propagation: `git push origin vercel-migration:main` (a fast-forward of
+   `origin/main`), then delete the Netlify site. Only after that, remove
+   `netlify/` and `_headers`.
+
+Fallback: branch `shop-netlify` is the shop on the Netlify setup, in case the
+cutover is abandoned. Local `main` is untouched at `47a73bb`.
 
 ## What it is
 
@@ -38,6 +50,7 @@ it in a browser. Third-party code is CDN `<script>` tags only.
 | `netlify/functions/save-content.js` | The Netlify twin of `save-content`. Still live. |
 | `_headers` | Netlify security headers + CSP. **Currently the live one.** |
 | `vercel.json` | Vercel headers + CSP. Mirror of `_headers`. |
+| `.vercelignore` | What deploys leave out (`CLAUDE.md`, `netlify/`, `_headers`, `README.md`). `.gitignore` does not control deploys. |
 | `images/` | Photography, OG cover, tee mockups. |
 
 `_headers` and `vercel.json` carry the same CSP. **Change both together** —
@@ -94,15 +107,16 @@ as an Instagram bio link.
   replace it with an overlay cart.
 - **Fulfilment is manual.** Tapstitch has no public API. Orders are typed in by
   hand.
-- **Size reaches fulfilment via `client_reference_id`** (`TEE-M`, `TEE-2XL`, …),
-  visible on the payment in the Stripe dashboard. A buy button maps to one price
-  and reads its attributes at mount, so the element is destroyed and rebuilt on
-  every size change. That is why size selection is required before the button
-  appears. It is **not** on the customer's receipt, and the final mechanism is an
-  open decision (launch prompt, D1). **Never run two size inputs at once.**
-- **Not yet live.** `stripe_buy_button_id` and `stripe_publishable_key` are empty
-  in `content.json`; until both are filled the section shows a disabled
-  "Checkout opening soon" button. Fill them in the admin panel.
+- **One Stripe buy button per size**, all $35, each product named with its size
+  ("GRLS CRY Boxy Tee — M"). The size prints on the customer's receipt, and there
+  is no second size input to disagree with the page. `content.json` holds
+  `stripe_buy_button_ids: {size: id}`. A size with no id shows as "unavailable".
+  The button reads its attributes at mount, so it is rebuilt on every size change;
+  `client-reference-id` (`TEE-M`) repeats the size as a dashboard cross-check.
+  **Never add a Stripe size dropdown on top of this.**
+- **Not yet live.** The publishable key and all per-size ids are empty. With no
+  key or no ids, the section shows a disabled "Checkout opening soon" button.
+  Fill them in the admin panel's Shop card (one input per size).
 - **Mockups:** `images/tee-front.jpg` / `tee-back.jpg`, cut out of Luke's own
   `~/Pictures/Merch-Mockup-goodbadgirls.png` using its alpha channel, on 4:5
   `#1A1A1A` cards. ⚠️ The mockup puts the front print on the **left chest**, but

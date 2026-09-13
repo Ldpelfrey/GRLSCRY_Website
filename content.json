@@ -158,7 +158,15 @@
       "size_chart": "",
       "ships_note": "Made to order — ships in 2–3 weeks",
       "sold_out": false,
-      "stripe_buy_button_id": "",
+      "stripe_buy_button_ids": {
+        "XS": "",
+        "S": "",
+        "M": "",
+        "L": "",
+        "XL": "",
+        "2XL": "",
+        "3XL": ""
+      },
       "stripe_publishable_key": ""
     }
   },

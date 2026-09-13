@@ -1,0 +1,6 @@
+# Deploys upload the working tree. .gitignore does not control what is served —
+# only this file does. Keep notes and dead Netlify config off the public site.
+CLAUDE.md
+README.md
+netlify/
+_headers

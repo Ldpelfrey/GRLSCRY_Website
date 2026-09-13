@@ -2647,12 +2647,12 @@
       });
 
     /* ── SHOP ──────────────────────────────────────────────────────
-       Stripe's buy button maps one button to one price, and it reads its
-       attributes when it mounts — changing them afterwards does nothing.
-       So the element is destroyed and rebuilt whenever the size changes,
-       carrying the size in client-reference-id. That id shows on the
-       payment in the Stripe dashboard, which is how the size reaches
-       fulfilment: orders are entered by hand.
+       One Stripe buy button PER SIZE, all at the same price. The size is in
+       each Stripe product's name, so it prints on the customer's receipt and
+       there is no second size input to disagree with the page. The button
+       reads its attributes when it mounts, so it is rebuilt on every size
+       change. client-reference-id repeats the size as a dashboard cross-check
+       for manual fulfilment.
     ───────────────────────────────────────────────────────────────── */
     var STRIPE_SRC = 'https://js.stripe.com/v3/buy-button.js';
     var stripeLoading = false;
@@ -2756,9 +2756,11 @@
       var chartUrl = safeAsset(pr.size_chart);
       if (chart && chartUrl) { chart.href = chartUrl; chart.hidden = false; }
 
-      var buyId = safeStripeId(pr.stripe_buy_button_id);
+      var buyIds = (pr.stripe_buy_button_ids && typeof pr.stripe_buy_button_ids === 'object')
+        ? pr.stripe_buy_button_ids : {};
       var pubKey = safeStripeId(pr.stripe_publishable_key);
-      var configured = !!(buyId && pubKey);
+      function buyIdFor(sz) { return safeStripeId(buyIds[sz]); }
+      var configured = !!pubKey && sizes.some(function(sz) { return !!buyIdFor(sz); });
       if (configured) loadStripe();
 
       function paintBuy() {
@@ -2777,6 +2779,12 @@
         }
         if (!selected) {
           box.innerHTML = '<button class="btn bs" type="button" disabled>Select a size</button>';
+          return;
+        }
+
+        var buyId = buyIdFor(selected);
+        if (!buyId) {
+          box.innerHTML = '<button class="btn bs" type="button" disabled>' + esc(selected) + ' unavailable</button>';
           return;
         }
 

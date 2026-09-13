@@ -370,16 +370,15 @@
       <div class="fg"><label>Size Chart URL <span style="color:var(--gray);font-weight:300">(optional)</span></label>
         <input type="text" id="f-shop-size-chart"></div>
 
-      <div class="fr">
-        <div class="fg"><label>Stripe Buy Button ID</label>
-          <input type="text" id="f-shop-buy-id" placeholder="buy_btn_..."></div>
-        <div class="fg"><label>Stripe Publishable Key</label>
-          <input type="text" id="f-shop-pk" placeholder="pk_live_..."></div>
-      </div>
+      <div class="fg"><label>Stripe Publishable Key</label>
+        <input type="text" id="f-shop-pk" placeholder="pk_live_..."></div>
+      <div class="fg" style="margin-bottom:6px;"><label>Stripe Buy Button ID — one per size
+        <span style="color:var(--gray);font-weight:300">(one $35 Stripe product per size, named e.g. &ldquo;GRLS CRY Boxy Tee — M&rdquo;)</span></label></div>
+      <div class="fr" id="f-shop-buy-ids" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr));"></div>
       <p style="font-family:var(--mono);font-size:10px;line-height:1.7;color:var(--gray);margin:-4px 0 0;">
-        Both Stripe fields must be filled before the buy button works — until then the
-        section shows a disabled &ldquo;Checkout opening soon&rdquo; button. The chosen size
-        arrives on the Stripe payment as <code>client_reference_id</code> (e.g. TEE-M).
+        The size prints on the customer&rsquo;s receipt because it is in the product name.
+        A size with no ID shows as unavailable; with no key or no IDs at all the section
+        shows a disabled &ldquo;Checkout opening soon&rdquo; button.
       </p>
     </div>
 
@@ -563,7 +562,7 @@
     set('f-shop-img-2',      (sp.images || [])[1]);
     set('f-shop-ships-note', sp.ships_note);
     set('f-shop-size-chart', sp.size_chart);
-    set('f-shop-buy-id',     sp.stripe_buy_button_id);
+    renderBuyIds(sp.sizes || [], sp.stripe_buy_button_ids || {});
     set('f-shop-pk',         sp.stripe_publishable_key);
 
     set('f-footer-copyright', c.footer?.copyright);
@@ -670,6 +669,23 @@
   $('btn-add-track').addEventListener('click', () => addTrack());
   $('btn-add-event').addEventListener('click', () => addEvent());
 
+  /* ── SHOP: one buy-button id per size ──────────────────── */
+  function renderBuyIds(sizes, ids) {
+    $('f-shop-buy-ids').innerHTML = sizes.map(sz =>
+      `<div class="fg"><label>${esc(sz)}</label>
+        <input type="text" data-size="${esc(sz)}" placeholder="buy_btn_..." value="${esc(ids[sz] || '')}"></div>`
+    ).join('');
+  }
+  function collectBuyIds() {
+    const out = {};
+    $('f-shop-buy-ids').querySelectorAll('input[data-size]').forEach(i => { out[i.dataset.size] = i.value.trim(); });
+    return out;
+  }
+  // Editing the size list redraws the id inputs, keeping ids already typed.
+  $('f-shop-sizes').addEventListener('change', () => {
+    renderBuyIds(val('f-shop-sizes').split(',').map(s => s.trim()).filter(Boolean), collectBuyIds());
+  });
+
   /* ── COLLECT FORM DATA ─────────────────────────────────── */
   function collectData() {
     const statEls = $('f-stats-container').querySelectorAll('.stat-card');
@@ -745,7 +761,7 @@
           size_chart: val('f-shop-size-chart'),
           ships_note: val('f-shop-ships-note'),
           sold_out:   val('f-shop-soldout') === 'true',
-          stripe_buy_button_id:   val('f-shop-buy-id'),
+          stripe_buy_button_ids:  collectBuyIds(),
           stripe_publishable_key: val('f-shop-pk')
         }
       },
