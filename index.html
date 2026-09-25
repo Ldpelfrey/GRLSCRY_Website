@@ -1825,8 +1825,8 @@
 
   <!-- ═════════════════════════════════════════════════════════════ -->
   <!-- SHOP — one product, one size choice, one button.                -->
-  <!-- Checkout is Stripe's hosted page via <stripe-buy-button>. It      -->
-  <!-- redirects the top window rather than opening a modal, which is    -->
+  <!-- Checkout is Stripe's hosted page via a per-size Payment Link. It  -->
+  <!-- navigates the top window rather than opening a modal, which is    -->
   <!-- deliberate: a modal would fight Lenis for scroll lock.            -->
   <!-- ═════════════════════════════════════════════════════════════ -->
   <section id="shop" aria-labelledby="shop-h">
@@ -2823,25 +2823,13 @@
       });
 
     /* ── SHOP ──────────────────────────────────────────────────────
-       One Stripe buy button PER SIZE, all at the same price. The size is in
+       One Stripe PAYMENT LINK per size, all at the same price. The size is in
        each Stripe product's name, so it prints on the customer's receipt and
-       there is no second size input to disagree with the page. The button
-       reads its attributes when it mounts, so it is rebuilt on every size
-       change. client-reference-id repeats the size as a dashboard cross-check
-       for manual fulfilment.
+       there is no second size input to disagree with the page. The buy button
+       is a plain link to Stripe's hosted checkout (same tab, no Stripe script
+       on this page); ?client_reference_id=TEE-<size> repeats the size as a
+       dashboard cross-check for manual fulfilment.
     ───────────────────────────────────────────────────────────────── */
-    var STRIPE_SRC = 'https://js.stripe.com/v3/buy-button.js';
-    var stripeLoading = false;
-
-    function loadStripe() {
-      if (stripeLoading || document.querySelector('script[src="' + STRIPE_SRC + '"]')) return;
-      stripeLoading = true;
-      var sc = document.createElement('script');
-      sc.async = true;
-      sc.src = STRIPE_SRC;
-      document.head.appendChild(sc);
-    }
-
     /* Relative paths and https only — no javascript:, no data:. */
     function safeAsset(v) {
       var s = String(v == null ? '' : v).trim();
@@ -2850,10 +2838,10 @@
       return /^[\w./-]+$/.test(s) ? s : '';
     }
 
-    /* Stripe ids are written straight into attributes — keep them boring. */
-    function safeStripeId(v) {
+    /* Only Stripe-hosted payment links (live or test_) ever become an href. */
+    function safePaymentLink(v) {
       var s = String(v == null ? '' : v).trim();
-      return /^[A-Za-z0-9_]{6,255}$/.test(s) ? s : '';
+      return /^https:\/\/buy\.stripe\.com\/[A-Za-z0-9_]{6,255}$/.test(s) ? s : '';
     }
 
     function hideShop() {
@@ -2932,12 +2920,10 @@
       var chartUrl = safeAsset(pr.size_chart);
       if (chart && chartUrl) { chart.href = chartUrl; chart.hidden = false; }
 
-      var buyIds = (pr.stripe_buy_button_ids && typeof pr.stripe_buy_button_ids === 'object')
-        ? pr.stripe_buy_button_ids : {};
-      var pubKey = safeStripeId(pr.stripe_publishable_key);
-      function buyIdFor(sz) { return safeStripeId(buyIds[sz]); }
-      var configured = !!pubKey && sizes.some(function(sz) { return !!buyIdFor(sz); });
-      if (configured) loadStripe();
+      var links = (pr.stripe_payment_links && typeof pr.stripe_payment_links === 'object')
+        ? pr.stripe_payment_links : {};
+      function linkFor(sz) { return safePaymentLink(links[sz]); }
+      var configured = sizes.some(function(sz) { return !!linkFor(sz); });
 
       function paintBuy() {
         var box = el('c-shop-buy');
@@ -2958,18 +2944,15 @@
           return;
         }
 
-        var buyId = buyIdFor(selected);
-        if (!buyId) {
+        var link = linkFor(selected);
+        if (!link) {
           box.innerHTML = '<button class="btn bs" type="button" disabled>' + esc(selected) + ' unavailable</button>';
           return;
         }
 
-        box.innerHTML = '';
-        var btn = document.createElement('stripe-buy-button');
-        btn.setAttribute('buy-button-id', buyId);
-        btn.setAttribute('publishable-key', pubKey);
-        btn.setAttribute('client-reference-id', 'TEE-' + String(selected).replace(/[^A-Za-z0-9]/g, ''));
-        box.appendChild(btn);
+        var ref = 'TEE-' + String(selected).replace(/[^A-Za-z0-9]/g, '');
+        box.innerHTML = '<a class="btn bs shop-checkout" href="' + esc(link + '?client_reference_id=' + ref) + '">' +
+                        'Buy ' + esc(selected) + ' — $' + esc(pr.price) + '</a>';
       }
 
       paintBuy();
