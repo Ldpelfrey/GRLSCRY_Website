@@ -228,6 +228,10 @@
     }
     #nav.sc { background: rgba(14,14,14,.96); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
     .nl { font-family: var(--poster); font-stretch: 125%; font-weight: 800; font-size: 20px; letter-spacing: .04em; color: var(--white); flex-shrink: 0; }
+    /* nav brand = the jelly logo (same file the hero loads, so no extra bytes) */
+    .nl img { display: block; height: 52px; width: auto; filter: drop-shadow(0 4px 10px rgba(255,105,180,.35)); transition: transform .35s var(--ease); }
+    .nl:hover img, .nl:focus-visible img { transform: rotate(-3deg) scale(1.05); }
+    @media (max-width: 600px) { .nl img { height: 44px; } }
     .nv { display: flex; align-items: center; gap: 24px; margin-left: auto; list-style: none; }
     .nv a {
       font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
@@ -313,7 +317,8 @@
     .hn { position: relative; z-index: 2; opacity: 0; animation: su 1s var(--ease) .3s forwards; margin-bottom: 2px; }
     /* ─── HERO PLATE (own live footage) + JELLY LOGO ─────────────── */
     .hero-plate { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: var(--black); }
-    .hero-plate video { width: 100%; height: 100%; object-fit: cover; display: block; opacity: .5; }
+    .hero-plate video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity 1s ease; }
+    .hero-plate video.on { opacity: .5; }
     .hero-plate::after {
       content: ''; position: absolute; inset: 0;
       background:
@@ -1391,7 +1396,7 @@
 
   <!-- NAVIGATION -->
   <nav id="nav" role="navigation" aria-label="Main Navigation">
-    <a href="#hero" class="nl">GRLSCRY</a>
+    <a href="#hero" class="nl"><img src="images/brand/grlscry-logo-900.webp" width="900" height="488" alt="GRLSCRY"></a>
     <ul class="nv" role="list">
       <li><a href="#about">About</a></li>
       <li><a href="#events">Shows</a></li>
@@ -1423,7 +1428,7 @@
     <!-- cinematic plate: GRLS CRY's own live-set footage. Sources are attached by JS
          (size by viewport, skipped under reduced motion / Save-Data); the poster is the fallback. -->
     <div class="hero-plate" aria-hidden="true">
-      <video id="hero-video" muted playsinline loop preload="none" tabindex="-1"
+      <video id="hero-video" class="on" muted playsinline preload="none" tabindex="-1"
              poster="images/hero/plate-poster.jpg" width="1600" height="900"></video>
     </div>
 
@@ -2271,31 +2276,78 @@
     }
 
     /* ── HERO PLATE ──────────────────────────────────────────── */
+    /* Four clips of GRLS CRY's own live-set footage (7.mov), played in shuffled
+       order: every clip once per round, never the same clip twice in a row.
+       Two stacked <video>s: the idle one preloads the next clip and crossfades
+       in ~1s before the playing one ends. Only one clip downloads at a time. */
     (() => {
-      const v = document.getElementById('hero-video');
+      const a = document.getElementById('hero-video');
       const saveData = navigator.connection && navigator.connection.saveData;
-      if (!v || reduceMotion || saveData) return;           // poster only
+      if (!a || reduceMotion || saveData) return;           // poster only
       const small = window.matchMedia('(max-width: 767px)').matches;
-      const srcs = small
-        ? [['images/hero/plate-854.mp4', 'video/mp4']]
-        : [['images/hero/plate-1600.webm', 'video/webm'], ['images/hero/plate-1600.mp4', 'video/mp4']];
-      srcs.forEach(([src, type]) => {
-        const s = document.createElement('source'); s.src = src; s.type = type; v.appendChild(s);
+      const webm = !small && a.canPlayType('video/webm; codecs="vp9"') !== '';
+      const CLIPS = ['plate', 'plate-2', 'plate-3', 'plate-4'];
+      const srcOf = n => 'images/hero/' + n + (small ? '-854.mp4' : webm ? '-1600.webm' : '-1600.mp4');
+
+      const b = a.cloneNode(false);
+      b.removeAttribute('id'); b.removeAttribute('poster'); b.classList.remove('on');
+      a.after(b);
+      const vids = [a, b];
+      vids.forEach(v => { v.muted = true; v.playsInline = true; });
+
+      let bag = [], last = null;
+      const next = () => {
+        if (!bag.length) {
+          bag = CLIPS.slice();
+          for (let i = bag.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [bag[i], bag[j]] = [bag[j], bag[i]]; }
+          if (bag[0] === last) bag.push(bag.shift());       // no repeat across rounds
+        }
+        return (last = bag.shift());
+      };
+
+      let cur = 0, onScreen = false, switching = false;
+      const tryPlay = v => { const p = v.play(); if (p) p.catch(() => {}); return p; };
+      const load = (v, name) => { v.src = srcOf(name); v.preload = 'auto'; v.load(); };
+
+      load(a, next());
+      const armNext = () => { const idle = vids[1 - cur]; idle.preload = 'auto'; load(idle, next()); };
+      a.addEventListener('playing', armNext, { once: true });
+
+      const swap = () => {
+        if (switching) return;
+        switching = true;
+        const from = vids[cur], to = vids[1 - cur];
+        to.currentTime = 0;
+        const p = onScreen ? tryPlay(to) : null;
+        if (p) p.catch(() => {
+          // Low Power Mode: only the element the tap started may play, so
+          // hand the clip to it instead (no crossfade, but the rotation continues)
+          to.classList.remove('on'); from.classList.add('on');
+          cur = vids.indexOf(from);
+          from.src = to.src; from.load(); tryPlay(from);
+        });
+        to.classList.add('on'); from.classList.remove('on');
+        cur = 1 - cur;
+        setTimeout(() => { if (vids[cur] !== from) from.pause(); switching = false; armNext(); }, 1100);
+      };
+      vids.forEach(v => {
+        v.addEventListener('timeupdate', () => {
+          if (v === vids[cur] && v.duration && v.duration - v.currentTime < 1.05) swap();
+        });
+        v.addEventListener('ended', () => { if (v === vids[cur]) swap(); });
       });
-      v.preload = 'auto'; v.load();
+
       // play only while the hero is on screen
-      let onScreen = false;
-      const tryPlay = () => { const p = v.play(); if (p) p.catch(() => {}); };
       new IntersectionObserver(([e]) => {
         onScreen = e.isIntersecting;
-        if (onScreen) tryPlay(); else v.pause();
-      }, { threshold: 0 }).observe(v);
+        if (onScreen) tryPlay(vids[cur]); else vids.forEach(v => v.pause());
+      }, { threshold: 0 }).observe(a);
       // iOS Low Power Mode (and some in-app browsers) refuse unprompted play();
       // a tap is a user gesture, so retry on the first one until playback starts
-      const onGesture = () => { if (onScreen && v.paused) tryPlay(); };
+      const onGesture = () => { if (onScreen && vids[cur].paused) tryPlay(vids[cur]); };
       window.addEventListener('touchend', onGesture, { passive: true });
       window.addEventListener('click', onGesture);
-      v.addEventListener('playing', () => {
+      a.addEventListener('playing', () => {
         window.removeEventListener('touchend', onGesture);
         window.removeEventListener('click', onGesture);
       }, { once: true });

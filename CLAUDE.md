@@ -24,7 +24,7 @@ hostnames.
 `netlify/` + `_headers` were removed from the repo the same day. The old
 `shop-netlify` branch is history only; there is no Netlify fallback any more.
 
-The 3D jelly-logo hero (V1, approved) shipped with the cutover. Its specs are in
+The 3D jelly-logo hero (V1, approved) shipped with the cutover. Since 2026-09-25 the hero plate **rotates through 4 clips of 7.mov in shuffled order** (two stacked `<video>`s, 1 s crossfade, each clip once per round, no back-to-back repeats; Low Power Mode falls back to swapping clips inside the one tap-unlocked element). The **nav brand is the jelly logo** (`.nl img`, same file as the hero). Its specs are in
 `PROMPT-cinematic-jelly-logo.md` and `PROMPT-logo-3d-motion.md` (Tier B, WebGL
 lighting, not built). Media provenance is in `images/brand/MANIFEST.md`.
 

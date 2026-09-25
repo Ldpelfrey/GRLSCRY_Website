@@ -15,3 +15,13 @@ Budgets: plate-1600.mp4 2.9 MB, plate-1600.webm 2.2 MB, plate-854.mp4 1.1 MB, po
 | `images/brand/pieces.json` | per-piece centre + bottom as % of the logo (build data; values are inlined in `index.html`) |
 
 Added transfer: 92 KB at 1x (900w pieces), 232 KB at 2x (1800w pieces). The flat logo still loads first as the fallback and accessible name.
+
+## Hero rotation (2026-09-25)
+Four clips from `7.mov`, same grade (24 fps, gblur 1.4, eq −.06/1.08/1.15), played in shuffled order with a 1 s crossfade. Only `plate` is a seamless loop; the others are straight cuts.
+
+| Clip | `7.mov` span | Content | 1600 mp4 / webm / 854 mp4 |
+|---|---|---|---|
+| `plate` | 38–48 s (loop) | tattooed back at the decks, crowd | 2.9 / 2.2 / 1.1 MB |
+| `plate-2` | 13.3–22.9 s | tattooed back at the decks, crowd | 2.9 / 2.5 / 1.1 MB |
+| `plate-3` | 70.2–79.4 s | masked DJ, blue light | 2.1 / 2.0 / 0.8 MB |
+| `plate-4` | 79.4–86.8 s | crowd from behind the decks | 2.0 / 1.6 / 0.8 MB |
