@@ -32,6 +32,11 @@ never in the repo). The current build is live on `grlscry-site.vercel.app`.
    `origin/main`), then delete the Netlify site. Only after that, remove
    `netlify/` and `_headers`.
 
+**Branch `cinematic-logo`** (2026-09-24, off `vercel-migration`, not pushed): jelly-logo H1 over a
+looping plate of GRLS CRY's own footage (`images/hero/`, provenance in `images/brand/MANIFEST.md`,
+spec in `PROMPT-cinematic-jelly-logo.md`). The letter scatter is gone; the H1 is an image now.
+Merge into `vercel-migration` only after Luke approves the look.
+
 Fallback: branch `shop-netlify` is the shop on the Netlify setup, in case the
 cutover is abandoned. Local `main` is untouched at `47a73bb`.
 
