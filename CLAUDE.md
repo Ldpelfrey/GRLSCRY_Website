@@ -24,9 +24,14 @@ never in the repo). The current build is live on `grlscry-site.vercel.app`.
    repo. Luke fills both in `~/.config/grlscry/credentials-local.json`, and they
    get piped into `vercel env add` without being printed. ✅ `ADMIN_SECRET` is done.
 2. ✅ GitHub is already connected. Nothing to do.
-3. **Deploy production and verify on `grlscry-site.vercel.app`**: a real booking
+3. ✅ **DONE 2026-09-24** (CLI deploy of `vercel-migration` incl. V1 hero; test booking
+   returned 200 — arrival in the inbox is Luke's to confirm; admin `verify` login 200, bad
+   secret 401). **The admin PUBLISH test is deferred to after step 5**: `save-content`
+   commits to `main`, which before step 5 would redeploy the OLD `main` on both Netlify
+   (live site) and Vercel (overwriting this deploy). **Deploy production and verify on `grlscry-site.vercel.app`**: a real booking
    email arrives, and one admin publish lands a commit.
-4. **Add `grlscry.com` + `www.grlscry.com` to the project**, then at Namecheap set
+4. ✅ Domains added to the Vercel project 2026-09-24. ⏳ **Namecheap nameserver change is Luke's.**
+   **Add `grlscry.com` + `www.grlscry.com` to the project**, then at Namecheap set
    nameservers to `ns1.vercel-dns.com` / `ns2.vercel-dns.com`. **Keep the Netlify
    site running during propagation** — both hosts then serve a working site.
 5. After propagation: `git push origin vercel-migration:main` (a fast-forward of
