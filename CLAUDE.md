@@ -17,7 +17,8 @@ never in the repo). The current build is live on `grlscry-site.vercel.app`.
 
 **Cutover order. Do not reorder it:**
 
-1. **Vercel env (Production).** Add `GMAIL_APP_PASSWORD` — without it booking
+1. ✅ **DONE 2026-09-24** (validated before adding: Gmail 16 letters, token is
+   fine-grained with push on this repo). **Vercel env (Production).** Add `GMAIL_APP_PASSWORD` — without it booking
    returns 500. Add `GITHUB_TOKEN` — fine-grained, Contents read/write on this
    repo only. **Do not use the `gh` CLI token**: it has `repo` scope over every
    repo. Luke fills both in `~/.config/grlscry/credentials-local.json`, and they
@@ -35,7 +36,7 @@ never in the repo). The current build is live on `grlscry-site.vercel.app`.
 **Branch `cinematic-logo`** (2026-09-24, off `vercel-migration`, pushed to origin as its own branch; V1 approved): jelly-logo H1 over a
 looping plate of GRLS CRY's own footage (`images/hero/`, provenance in `images/brand/MANIFEST.md`,
 spec in `PROMPT-cinematic-jelly-logo.md`). The letter scatter is gone; the H1 is an image now.
-Merge into `vercel-migration` only after Luke approves the look.
+**Merged (fast-forward) into `vercel-migration` 2026-09-24**; `vercel-migration` is now on origin too.
 
 Fallback: branch `shop-netlify` is the shop on the Netlify setup, in case the
 cutover is abandoned. Local `main` is untouched at `47a73bb`.
@@ -153,8 +154,8 @@ audio player.
 - Keep motion inside the existing `if (!reduceMotion)` gate.
 - Reveal-on-scroll uses `class="r"` plus `d1`–`d5` for stagger.
 
-After any structural change, load the page and check: hero letter-scatter
-(`.gl-l`), Artist parallax (`.art-bg`), the Shows table, and the sticky player.
+After any structural change, load the page and check: the hero 3D logo (intro,
+tilt, scroll exit of the 4 `.lp` pieces), Artist parallax (`.art-bg`), the Shows table, and the sticky player.
 A diff cannot tell you these still work.
 
 ## Local development
