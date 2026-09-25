@@ -3,48 +3,30 @@
 DJ portfolio, booking, and merch site for GRLS CRY (Scottsdale, AZ). Live at
 **https://grlscry.com**.
 
-## ⚠️ Current state (2026-09-12) — `vercel-migration` branch, cutover in progress
+## Current state (2026-09-25): LIVE ON VERCEL, cutover complete
 
-`grlscry.com` still serves from **Netlify**. DNS is **Netlify DNS** (NS1
-nameservers), the registrar is **Namecheap**, and the zone has **no MX or TXT
-records**, so moving DNS cannot break any email.
+`grlscry.com` and `www.grlscry.com` are served by **Vercel** project `grlscry-site`
+(linked locally via `.vercel/`). DNS is **Vercel DNS** (`ns1/ns2.vercel-dns.com`, set at
+**Namecheap** 2026-09-24; the zone has no MX/TXT records, so no email depends on it).
+GitHub is connected: **`main` is production, any push to `main` deploys.**
 
-Vercel project `grlscry-site` (linked locally via `.vercel/`), **already connected
-to GitHub** — the production branch is `main`, so **any push deploys**. Production
-env has `GMAIL_USER`, `BOOKING_TO`, and `ADMIN_SECRET` (**rotated 2026-09-13**,
-verified working; the value lives in `~/.config/grlscry/credentials-local.json`,
-never in the repo). The current build is live on `grlscry-site.vercel.app`.
+Production env has all five: `ADMIN_SECRET`, `GITHUB_TOKEN` (fine-grained, this repo
+only), `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `BOOKING_TO`. Values live in
+`~/.config/grlscry/credentials-local.json`, never in the repo, and get piped into
+`vercel env add` without being printed.
 
-**Cutover order. Do not reorder it:**
+Verified 2026-09-24/25: test booking returned 200 (inbox arrival is Luke's to confirm);
+admin login 200 and bad secret 401; an admin publish committed `c3603be` to `main`
+(the only change was the trailing newline of `content.json`); valid HTTPS on both
+hostnames.
 
-1. ✅ **DONE 2026-09-24** (validated before adding: Gmail 16 letters, token is
-   fine-grained with push on this repo). **Vercel env (Production).** Add `GMAIL_APP_PASSWORD` — without it booking
-   returns 500. Add `GITHUB_TOKEN` — fine-grained, Contents read/write on this
-   repo only. **Do not use the `gh` CLI token**: it has `repo` scope over every
-   repo. Luke fills both in `~/.config/grlscry/credentials-local.json`, and they
-   get piped into `vercel env add` without being printed. ✅ `ADMIN_SECRET` is done.
-2. ✅ GitHub is already connected. Nothing to do.
-3. ✅ **DONE 2026-09-24** (CLI deploy of `vercel-migration` incl. V1 hero; test booking
-   returned 200 — arrival in the inbox is Luke's to confirm; admin `verify` login 200, bad
-   secret 401). **The admin PUBLISH test is deferred to after step 5**: `save-content`
-   commits to `main`, which before step 5 would redeploy the OLD `main` on both Netlify
-   (live site) and Vercel (overwriting this deploy). **Deploy production and verify on `grlscry-site.vercel.app`**: a real booking
-   email arrives, and one admin publish lands a commit.
-4. ✅ Domains added to the Vercel project 2026-09-24. ⏳ **Namecheap nameserver change is Luke's.**
-   **Add `grlscry.com` + `www.grlscry.com` to the project**, then at Namecheap set
-   nameservers to `ns1.vercel-dns.com` / `ns2.vercel-dns.com`. **Keep the Netlify
-   site running during propagation** — both hosts then serve a working site.
-5. After propagation: `git push origin vercel-migration:main` (a fast-forward of
-   `origin/main`), then delete the Netlify site. Only after that, remove
-   `netlify/` and `_headers`.
+**Netlify site `grlscry` is DISABLED, not deleted** (Luke, 2026-09-24). Deleting it is
+Luke's call. `netlify/` and `_headers` stay in the repo until it's deleted, since the
+`shop-netlify` branch is the fallback if Netlify is ever re-enabled.
 
-**Branch `cinematic-logo`** (2026-09-24, off `vercel-migration`, pushed to origin as its own branch; V1 approved): jelly-logo H1 over a
-looping plate of GRLS CRY's own footage (`images/hero/`, provenance in `images/brand/MANIFEST.md`,
-spec in `PROMPT-cinematic-jelly-logo.md`). The letter scatter is gone; the H1 is an image now.
-**Merged (fast-forward) into `vercel-migration` 2026-09-24**; `vercel-migration` is now on origin too.
-
-Fallback: branch `shop-netlify` is the shop on the Netlify setup, in case the
-cutover is abandoned. Local `main` is untouched at `47a73bb`.
+The 3D jelly-logo hero (V1, approved) shipped with the cutover. Its specs are in
+`PROMPT-cinematic-jelly-logo.md` and `PROMPT-logo-3d-motion.md` (Tier B, WebGL
+lighting, not built). Media provenance is in `images/brand/MANIFEST.md`.
 
 ## What it is
 
@@ -61,8 +43,8 @@ it in a browser. Third-party code is CDN `<script>` tags only.
 | `admin/index.html` | Password-gated panel that edits `content.json` and publishes it. |
 | `api/save-content.js` | Vercel function: commits `content.json` to GitHub. |
 | `api/booking.js` | Vercel function: sends booking-form mail via nodemailer. |
-| `netlify/functions/save-content.js` | The Netlify twin of `save-content`. Still live. |
-| `_headers` | Netlify security headers + CSP. **Currently the live one.** |
+| `netlify/functions/save-content.js` | The Netlify twin of `save-content`. Not live (Netlify disabled). |
+| `_headers` | Netlify security headers + CSP. **Not live** (Netlify disabled); `vercel.json` is the live CSP. |
 | `vercel.json` | Vercel headers + CSP. Mirror of `_headers`. |
 | `.vercelignore` | What deploys leave out (`CLAUDE.md`, `netlify/`, `_headers`, `README.md`). `.gitignore` does not control deploys. |
 | `images/` | Photography, OG cover, tee mockups. |
@@ -97,9 +79,8 @@ Set on whichever host is live:
 | `GITHUB_TOKEN` | `save-content` | Login works, publishing 500s. |
 | `GMAIL_USER` / `GMAIL_APP_PASSWORD` | `api/booking.js` | Booking form errors. |
 
-**`ADMIN_SECRET` is verified NOT set on the live Netlify site** (the function
-returns 500 `ADMIN_SECRET not set`). Nothing is set on Vercel yet. `GITHUB_TOKEN`
-status is unknown. The admin save path has never been tested end to end.
+All five are set on Vercel Production, and the admin save path was tested end to end
+on 2026-09-25.
 
 ## Sections
 
