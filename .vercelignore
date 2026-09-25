@@ -7,3 +7,5 @@ _headers
 PROMPT-*.md
 images/brand/*-source.png
 images/brand/MANIFEST.md
+tools/
+images/brand/pieces.json

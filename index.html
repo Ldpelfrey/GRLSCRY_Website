@@ -317,7 +317,7 @@
         radial-gradient(ellipse 60% 50% at 38% 58%, rgba(255,105,180,.12), transparent 70%),
         linear-gradient(180deg, rgba(14,14,14,.6) 0%, rgba(14,14,14,.1) 30%, rgba(14,14,14,.55) 62%, var(--black) 100%);
     }
-    .hero-logo-wrap { display: block; perspective: 1100px; margin: 0 0 10px -1.2%; will-change: transform, opacity, filter; }
+    .hero-logo-wrap { display: block; width: fit-content; perspective: 1100px; margin: 0 0 10px -1.2%; will-change: transform, opacity, filter; }
     .hero-logo {
       position: relative; display: block;
       width: clamp(300px, 60vw, 980px); aspect-ratio: 1800 / 977;
@@ -339,6 +339,36 @@
       mix-blend-mode: screen;
       animation: sheen 7s ease-in-out 2s infinite;
     }
+    /* 3D pieces: the logo's 4 alpha-connected parts (GR, LS, CR, Y), built by
+       tools/split_logo.py, each drawn on the full logo canvas so they share its
+       pixel grid. JS adds .pieces-on only when motion is allowed; otherwise the
+       single <img> above stays visible. Each piece sits at depth --z and is scaled
+       by (P - z) / P about the logo centre (= the wrap's perspective origin), so at
+       rest the assembled pieces project to exactly the flat logo (P = 1100px). */
+    .logo-pieces { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none; display: none; }
+    .pieces-on .logo-pieces { display: block; }
+    .pieces-on .hero-logo-jelly { animation: none; opacity: 0; }
+    .pieces-on .hero-logo-jelly::after { display: none; }
+    .lp {
+      position: absolute; inset: 0;
+      transform-style: preserve-3d;
+      transform: translateZ(calc(var(--z) * 1px)) scale(calc((1100 - var(--z)) / 1100));
+    }
+    .lp-exit, .lp-move, .lp-body { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: calc(var(--cx) * 1%) calc(var(--cy) * 1%); }
+    .lp-body { transform-origin: calc(var(--cx) * 1%) calc(var(--bot) * 1%); animation: jelly 5.5s ease-in-out infinite; animation-delay: var(--d, 0s); }
+    .lp-body img { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .lp-face { filter: drop-shadow(0 22px 44px rgba(255,105,180,.30)) drop-shadow(0 3px 2px rgba(0,0,0,.45)); }
+    .lp-ext { filter: brightness(.5) saturate(1.35); }
+    .lp-body::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      -webkit-mask: var(--m) center / 100% 100% no-repeat;
+              mask: var(--m) center / 100% 100% no-repeat;
+      background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,.5) 49%, transparent 60%);
+      background-size: 260% 100%; background-position: 135% 0;
+      mix-blend-mode: screen;
+      animation: sheen 7s ease-in-out infinite; animation-delay: calc(2s + var(--d, 0s));
+    }
+    .hn.logo-3d { animation: none; opacity: 1; }
     @keyframes jelly { 0%,100% { transform: scale(1,1); } 42% { transform: scale(1.012,.986); } 58% { transform: scale(.994,1.01); } }
     @keyframes sheen { 0% { background-position: 135% 0; } 30%,100% { background-position: -35% 0; } }
     @media (max-width: 600px) {
@@ -1416,6 +1446,28 @@
               <img src="images/brand/grlscry-logo-900.png" width="1800" height="977" alt="GRLSCRY" fetchpriority="high" decoding="async">
             </picture>
           </span>
+          <span class="logo-pieces" aria-hidden="true">
+            <span class="lp" data-p="gr" style="--cx:25.92;--cy:39.87;--bot:61.21;--z:40;--d:0s;--m:url(images/brand/logo-piece-gr-900.webp)">
+              <span class="lp-exit"><span class="lp-move"><span class="lp-body">
+                <img class="lp-face" src="images/brand/logo-piece-gr-900.webp" srcset="images/brand/logo-piece-gr-900.webp 900w, images/brand/logo-piece-gr-1800.webp 1800w" sizes="(max-width: 600px) 92vw, 60vw" alt="" loading="eager" decoding="async">
+              </span></span></span>
+            </span>
+            <span class="lp" data-p="ls" style="--cx:76.03;--cy:22.67;--bot:44.01;--z:10;--d:0.7s;--m:url(images/brand/logo-piece-ls-900.webp)">
+              <span class="lp-exit"><span class="lp-move"><span class="lp-body">
+                <img class="lp-face" src="images/brand/logo-piece-ls-900.webp" srcset="images/brand/logo-piece-ls-900.webp 900w, images/brand/logo-piece-ls-1800.webp 1800w" sizes="(max-width: 600px) 92vw, 60vw" alt="" loading="eager" decoding="async">
+              </span></span></span>
+            </span>
+            <span class="lp" data-p="cr" style="--cx:42.81;--cy:78.15;--bot:98.67;--z:60;--d:1.3s;--m:url(images/brand/logo-piece-cr-900.webp)">
+              <span class="lp-exit"><span class="lp-move"><span class="lp-body">
+                <img class="lp-face" src="images/brand/logo-piece-cr-900.webp" srcset="images/brand/logo-piece-cr-900.webp 900w, images/brand/logo-piece-cr-1800.webp 1800w" sizes="(max-width: 600px) 92vw, 60vw" alt="" loading="eager" decoding="async">
+              </span></span></span>
+            </span>
+            <span class="lp" data-p="y" style="--cx:78.83;--cy:63.36;--bot:79.94;--z:90;--d:0.35s;--m:url(images/brand/logo-piece-y-900.webp)">
+              <span class="lp-exit"><span class="lp-move"><span class="lp-body">
+                <img class="lp-face" src="images/brand/logo-piece-y-900.webp" srcset="images/brand/logo-piece-y-900.webp 900w, images/brand/logo-piece-y-1800.webp 1800w" sizes="(max-width: 600px) 92vw, 60vw" alt="" loading="eager" decoding="async">
+              </span></span></span>
+            </span>
+          </span>
         </span>
       </span>
     </h1>
@@ -2251,32 +2303,75 @@
         .to('.hero-deco-tr', { y: -140, opacity: 0 }, 0)
         .to('.hero-deco-bl', { y:  140, opacity: 0 }, 0);
 
-      // 2 — logo fly-through: pushes toward the camera, tips back, blurs out
-      gsap.fromTo('.hero-logo-wrap',
-        { scale: 1, y: 0, rotationX: 0, opacity: 1, filter: 'blur(0px)' },
-        { scale: 1.9, y: -60, rotationX: 22, opacity: 0, filter: 'blur(10px)',
-          ease: 'power2.in', transformOrigin: '38% 60%',
-          scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.2 } });
+      // 2 — 3D logo: 4 pieces at their own depths (see .lp in CSS)
+      const logo   = document.querySelector('.hero-logo');
+      const heroEl = document.getElementById('hero');
+      const fine   = window.matchMedia('(pointer: fine)').matches;
+      if (logo) {
+        logo.classList.add('pieces-on');
+        document.querySelector('.hn').classList.add('logo-3d');
+        const moves = gsap.utils.toArray('.lp-move');
 
-      // pointer tilt on the logo (fine pointers only)
-      const logo = document.querySelector('.hero-logo');
-      if (logo && window.matchMedia('(pointer: fine)').matches) {
-        const heroEl = document.getElementById('hero');
-        let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
-        const tick = () => {
-          cx += (tx - cx) * .08; cy += (ty - cy) * .08;
+        // extrusion: darkened copies behind each face (desktop only — paint cost)
+        if (window.matchMedia('(pointer: fine) and (min-width: 900px)').matches) {
+          document.querySelectorAll('.lp-face').forEach(face => {
+            for (let i = 4; i >= 1; i--) {
+              const ext = face.cloneNode();
+              ext.className = 'lp-ext';
+              ext.style.transform = `translateZ(${-3 * i}px)`;
+              face.before(ext);
+            }
+          });
+        }
+
+        // intro: drop in from the camera, jelly landing, then independent floats
+        const floats = [[4.1, 6, 1.5], [4.7, 5, -1.2], [5.3, 6, 1.1], [3.9, 7, -1.6]];
+        gsap.timeline({ delay: .25 })
+          .from(moves, { z: 400, y: -120, rotationX: -35, opacity: 0, duration: .6, ease: 'power3.in', stagger: .09 })
+          .fromTo(moves, { scaleY: .86, scaleX: 1.08 }, { scaleY: 1, scaleX: 1, duration: .75, ease: 'elastic.out(1, .45)', stagger: .09 }, .6)
+          .add(() => moves.forEach((m, i) => {
+            const [p, y, r] = floats[i];
+            gsap.to(m, { y: -y, rotation: r, duration: p / 2, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+          }));
+
+        // exit: one ScrollTrigger (count stays at 48) — the pieces separate in depth
+        const piece = k => `.lp[data-p="${k}"] .lp-exit`;
+        gsap.timeline({ scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.2 } })
+          .fromTo('.hero-logo-wrap',
+            { scale: 1, y: 0, rotationX: 0, opacity: 1, filter: 'blur(0px)' },
+            { scale: 1.45, y: -60, rotationX: 18, opacity: 0, filter: 'blur(8px)', ease: 'power2.in', transformOrigin: '38% 60%' }, 0)
+          .to(piece('y'),  { z:  520, x:  60, rotation:  22, ease: 'power2.in' }, 0)
+          .to(piece('cr'), { z:  360, x: -40, rotation: -12, ease: 'power2.in' }, 0)
+          .to(piece('gr'), { z: -420, x: -90, rotation: -16, ease: 'power2.in' }, 0)
+          .to(piece('ls'), { z: -300, x:  90, rotation:  14, ease: 'power2.in' }, 0);
+
+        // tilt: pointer on desktop, scroll on touch; slow auto-orbit after 3s idle
+        let tx = 0, ty = 0, cx = 0, cy = 0, lastMove = -1e9, raf = 0, onScreen = true;
+        if (fine) {
+          heroEl.addEventListener('pointermove', e => {
+            const r = heroEl.getBoundingClientRect();
+            ty =  ((e.clientX - r.left) / r.width  - .5) * 14;
+            tx = -((e.clientY - r.top)  / r.height - .5) * 10;
+            lastMove = performance.now();
+          });
+          heroEl.addEventListener('pointerleave', () => { lastMove = -1e9; });
+        }
+        const tick = now => {
+          if (now - lastMove > 3000) {
+            const t = now / 1000;
+            ty = Math.sin(t * Math.PI * 2 / 9) * 7;
+            tx = fine ? Math.sin(t * Math.PI * 2 / 13) * 2
+                      : Math.min(1, Math.max(0, -heroEl.getBoundingClientRect().top / (heroEl.offsetHeight * .3))) * 10;
+          }
+          cx += (tx - cx) * .06; cy += (ty - cy) * .06;
           logo.style.setProperty('--tx', cx.toFixed(2) + 'deg');
           logo.style.setProperty('--ty', cy.toFixed(2) + 'deg');
-          raf = (Math.abs(tx - cx) + Math.abs(ty - cy) > .01) ? requestAnimationFrame(tick) : 0;
+          raf = onScreen ? requestAnimationFrame(tick) : 0;
         };
-        const kick = () => { if (!raf) raf = requestAnimationFrame(tick); };
-        heroEl.addEventListener('pointermove', e => {
-          const r = heroEl.getBoundingClientRect();
-          ty =  ((e.clientX - r.left) / r.width  - .5) * 14;
-          tx = -((e.clientY - r.top)  / r.height - .5) * 10;
-          kick();
-        });
-        heroEl.addEventListener('pointerleave', () => { tx = 0; ty = 0; kick(); });
+        new IntersectionObserver(([e]) => {
+          onScreen = e.isIntersecting;
+          if (onScreen && !raf) raf = requestAnimationFrame(tick);
+        }, { threshold: 0 }).observe(heroEl);
       }
 
       // 3 — decorative parallax
