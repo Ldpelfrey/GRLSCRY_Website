@@ -1,5 +1,5 @@
 // api/save-content.js — Vercel serverless function.
-// Ported from netlify/functions/save-content.js. Same contract:
+// Originally ported from the Netlify function (removed 2026-09-25). Same contract:
 // POST with an x-admin-secret header matching ADMIN_SECRET; body is either
 // {verify:true} to check the password, or {content:{...}} to commit
 // content.json to GitHub. Fails closed if ADMIN_SECRET is unset.

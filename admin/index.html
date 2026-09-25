@@ -402,8 +402,8 @@
 <script>
   /* ══════════════════════════════════════════════════════════
      CONFIG — no password lives here.
-     The password is ADMIN_SECRET in Netlify → Site settings →
-     Environment variables, alongside GITHUB_TOKEN. It is verified
+     The password is ADMIN_SECRET in Vercel → project grlscry-site →
+     Settings → Environment Variables, alongside GITHUB_TOKEN. It is verified
      server-side by the save-content function and is never shipped
      to the browser. What the user types is held in memory only for
      the life of the tab, then sent as the x-admin-secret header.
@@ -464,8 +464,8 @@
         // reads as a crash when it is really a one-time config step.
         if (res.status === 500 && /ADMIN_SECRET/.test(err.error || '')) {
           $('pw-error').innerHTML =
-            'Setup needed: add <strong>ADMIN_SECRET</strong> in Netlify &rarr; ' +
-            'Site settings &rarr; Environment variables, then redeploy. ' +
+            'Setup needed: add <strong>ADMIN_SECRET</strong> in Vercel &rarr; ' +
+            'project Settings &rarr; Environment Variables, then redeploy. ' +
             'Its value becomes this password.';
         } else {
           $('pw-error').textContent = `✗ ${err.error || 'Server error ' + res.status}`;
@@ -489,7 +489,7 @@
 
   /* ── LOAD CONTENT ──────────────────────────────────────────
      Reads content.json directly from the site root.
-     Netlify serves it as a static file — no token needed.
+     Vercel serves it as a static file — no token needed.
   ─────────────────────────────────────────────────────────── */
   function loadContent() {
     $('load-overlay').classList.add('show');
@@ -765,7 +765,7 @@
     };
   }
 
-  /* ── SAVE → Netlify function → GitHub ─────────────────────
+  /* ── SAVE → Vercel function → GitHub ──────────────────────
      POSTs the content object to /api/save-content.
      The function reads GITHUB_TOKEN from process.env server-side.
      No token ever touches this file or the browser.
@@ -795,7 +795,7 @@
         throw new Error(result.error || `Server error ${res.status}`);
       }
 
-      setStatus(`✓ Published! Netlify deploying now (~30s). Commit: ${result.commit}`);
+      setStatus(`✓ Published! Vercel deploying now (~30s). Commit: ${result.commit}`);
 
     } catch (err) {
       setStatus(`✗ ${err.message}`, false);

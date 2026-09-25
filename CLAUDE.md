@@ -20,9 +20,9 @@ admin login 200 and bad secret 401; an admin publish committed `c3603be` to `mai
 (the only change was the trailing newline of `content.json`); valid HTTPS on both
 hostnames.
 
-**Netlify site `grlscry` is DISABLED, not deleted** (Luke, 2026-09-24). Deleting it is
-Luke's call. `netlify/` and `_headers` stay in the repo until it's deleted, since the
-`shop-netlify` branch is the fallback if Netlify is ever re-enabled.
+**Netlify is gone.** Luke deleted the `grlscry` Netlify project on 2026-09-25, and
+`netlify/` + `_headers` were removed from the repo the same day. The old
+`shop-netlify` branch is history only; there is no Netlify fallback any more.
 
 The 3D jelly-logo hero (V1, approved) shipped with the cutover. Its specs are in
 `PROMPT-cinematic-jelly-logo.md` and `PROMPT-logo-3d-motion.md` (Tier B, WebGL
@@ -43,14 +43,9 @@ it in a browser. Third-party code is CDN `<script>` tags only.
 | `admin/index.html` | Password-gated panel that edits `content.json` and publishes it. |
 | `api/save-content.js` | Vercel function: commits `content.json` to GitHub. |
 | `api/booking.js` | Vercel function: sends booking-form mail via nodemailer. |
-| `netlify/functions/save-content.js` | The Netlify twin of `save-content`. Not live (Netlify disabled). |
-| `_headers` | Netlify security headers + CSP. **Not live** (Netlify disabled); `vercel.json` is the live CSP. |
-| `vercel.json` | Vercel headers + CSP. Mirror of `_headers`. |
-| `.vercelignore` | What deploys leave out (`CLAUDE.md`, `netlify/`, `_headers`, `README.md`). `.gitignore` does not control deploys. |
+| `vercel.json` | Security headers + CSP. The only place the CSP lives. |
+| `.vercelignore` | What deploys leave out (`CLAUDE.md`, `README.md`, prompts, `tools/`, the logo source PNG). `.gitignore` does not control deploys. |
 | `images/` | Photography, OG cover, tee mockups. |
-
-`_headers` and `vercel.json` carry the same CSP. **Change both together** —
-whichever host is live, the other is one push away from being live.
 
 ## Content pipeline
 
@@ -63,7 +58,7 @@ whichever host is live, the other is one push away from being live.
 
 **Adding a content key means touching four places:** `content.json`, the
 hydration block at the bottom of `index.html`, `populateForm`/`collectData` in
-`admin/index.html`, and `ALLOWED_KEYS` in **both** `save-content.js` files. Miss
+`admin/index.html`, and `ALLOWED_KEYS` in `api/save-content.js`. Miss
 the last one and every admin save fails with a 422.
 
 Everything from `content.json` lands in `innerHTML`, so it goes through `esc()`
@@ -114,11 +109,12 @@ as an Instagram bio link.
   `tools/stripe_setup.py test|live` (re)creates products, prices, the shipping rate and
   links idempotently, using `STRIPE_{TEST,LIVE}_RESTRICTED_KEY` from the credentials file.
   Stripe account review was still "in progress" on 2026-09-25.
-- **Mockups:** `images/tee-front.jpg` / `tee-back.jpg`, cut out of Luke's own
-  `~/Pictures/Merch-Mockup-goodbadgirls.png` using its alpha channel, on 4:5
-  `#1A1A1A` cards. ⚠️ The mockup puts the front print on the **left chest**, but
-  the product docs say **centered chest**. The photo must match what Tapstitch
-  prints.
+- **Mockups:** 4:5 `#1A1A1A` cards, tee spanning x 57–1143. `tee-back.jpg` is cut out
+  of Luke's `~/Pictures/Merch-Mockup-goodbadgirls.png`. **`tee-front.jpg` was replaced
+  2026-09-25** with Luke's correct **centred-chest** mockup
+  (`~/Pictures/4b243e5689b54b34b544084c0092aae2.png`): cut from its white background,
+  and the charcoal fabric darkened to the back's black (RGB ≈ 8), with the print left
+  untouched.
 - `size_chart`, when set to a relative image path or an https URL, shows a
   "Size chart ↗" link under the size buttons. Hidden when empty or sold out.
 - `sold_out: true` is the drop mechanic — one toggle in the admin panel swaps the
@@ -162,8 +158,8 @@ the booking form and admin publishing will fail locally, which is expected.
 - Event data is duplicated in three places: the JSON-LD block in `<head>`, the
   hardcoded Shows table, and `content.json`. Keep all three in sync. Never emit a
   past event as upcoming.
-- CSP is strict. Any new third-party origin must be added to **both** `_headers`
-  and `vercel.json` or it is silently blocked.
+- CSP is strict (in `vercel.json`). Any new third-party origin must be added there
+  or it is silently blocked.
 - `.r` elements start at `opacity: 0` and are revealed by GSAP. Under
   `prefers-reduced-motion` that JS is skipped, so a CSS rule forces them visible.
   Don't remove it — without it, reduced-motion users see empty sections.

@@ -1,4 +1,4 @@
-// api/booking.js — replaces Netlify Forms, which has no Vercel equivalent.
+// api/booking.js — the booking form's mail sender (replaced Netlify Forms).
 //
 // Sends the booking inquiry straight to the band's own Gmail over Gmail's SMTP.
 // No third-party email service holds or relays the message.
