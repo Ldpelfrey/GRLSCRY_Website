@@ -159,13 +159,13 @@
       "ships_note": "Made to order — ships in 2–3 weeks",
       "sold_out": false,
       "stripe_payment_links": {
-        "XS": "",
-        "S": "",
-        "M": "",
-        "L": "",
-        "XL": "",
-        "2XL": "",
-        "3XL": ""
+        "XS": "https://buy.stripe.com/cNieVeex10BR5ERfVS2ZO00",
+        "S": "https://buy.stripe.com/14A14o74zgAPffrbFC2ZO01",
+        "M": "https://buy.stripe.com/3cI4gA0Gb0BRd7j4da2ZO02",
+        "L": "https://buy.stripe.com/8x200k60v70faZbcJG2ZO03",
+        "XL": "https://buy.stripe.com/6oU00k74z4S7gjvbFC2ZO04",
+        "2XL": "https://buy.stripe.com/fZu8wQ2Oj70f6IV4da2ZO05",
+        "3XL": "https://buy.stripe.com/5kQ4gA9cH0BR1oBbFC2ZO06"
       }
     }
   },
