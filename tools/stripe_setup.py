@@ -29,7 +29,7 @@ SIZES = content['sizes']
 PRICE_CENTS = int(round(float(content['price']) * 100))
 SHIP_CENTS = int(round(float(content['shipping']) * 100))
 NAME = 'GRLS CRY Boxy Tee'
-SHIP_NAME = 'Made to order, ships in 2–3 weeks'
+SHIP_NAME = 'Made to order'  # Stripe appends the delivery estimate itself
 THANKS = ("Thank you. Your GRLS CRY tee is made to order and ships in 2–3 weeks. "
           "Questions: reply to your receipt email.")
 
