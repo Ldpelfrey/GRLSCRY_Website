@@ -97,21 +97,23 @@ as an Instagram bio link.
 
 - **Product:** GRLS CRY boxy tee, $35 + $6 shipping, sizes XS–3XL at a flat
   price. Production cost $16.97 (US fulfilment), net ≈ $18.10.
-- **Checkout:** Stripe hosted, via `<stripe-buy-button>`. It **redirects** rather
-  than opening a modal — deliberate, a modal fights Lenis for scroll lock. Do not
-  replace it with an overlay cart.
+- **Checkout:** Stripe hosted, via a **per-size Payment Link** (plain `<a>` to
+  `https://buy.stripe.com/...`, same tab). No Stripe script, no publishable key. It
+  navigates rather than opening a modal, which is deliberate: a modal fights Lenis for
+  scroll lock. Do not replace it with an overlay cart.
 - **Fulfilment is manual.** Tapstitch has no public API. Orders are typed in by
   hand.
-- **One Stripe buy button per size**, all $35, each product named with its size
-  ("GRLS CRY Boxy Tee — M"). The size prints on the customer's receipt, and there
-  is no second size input to disagree with the page. `content.json` holds
-  `stripe_buy_button_ids: {size: id}`. A size with no id shows as "unavailable".
-  The button reads its attributes at mount, so it is rebuilt on every size change;
-  `client-reference-id` (`TEE-M`) repeats the size as a dashboard cross-check.
-  **Never add a Stripe size dropdown on top of this.**
-- **Not yet live.** The publishable key and all per-size ids are empty. With no
-  key or no ids, the section shows a disabled "Checkout opening soon" button.
-  Fill them in the admin panel's Shop card (one input per size).
+- **One payment link per size**, all $35, each product named with its size ("GRLS CRY
+  Boxy Tee — M"), so the size prints on the receipt. `content.json` holds
+  `stripe_payment_links: {size: url}`, and the site appends `?client_reference_id=TEE-M`
+  as a dashboard cross-check. Only `https://buy.stripe.com/...` URLs become an href. A
+  size with no link shows "unavailable". **Never add a Stripe size dropdown on top of this.**
+- **LIVE since 2026-09-25.** Stripe account "GRLSCRY" (renamed; the same account holds
+  Sleeper's *test-mode* "Trend Radar" product, while live mode is GRLS CRY only). $6 flat
+  shipping ("Made to order", 2–3 weeks), US addresses only, quantity 1–5.
+  `tools/stripe_setup.py test|live` (re)creates products, prices, the shipping rate and
+  links idempotently, using `STRIPE_{TEST,LIVE}_RESTRICTED_KEY` from the credentials file.
+  Stripe account review was still "in progress" on 2026-09-25.
 - **Mockups:** `images/tee-front.jpg` / `tee-back.jpg`, cut out of Luke's own
   `~/Pictures/Merch-Mockup-goodbadgirls.png` using its alpha channel, on 4:5
   `#1A1A1A` cards. ⚠️ The mockup puts the front print on the **left chest**, but
