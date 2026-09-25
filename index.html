@@ -2281,9 +2281,21 @@
       });
       v.preload = 'auto'; v.load();
       // play only while the hero is on screen
+      let onScreen = false;
+      const tryPlay = () => { const p = v.play(); if (p) p.catch(() => {}); };
       new IntersectionObserver(([e]) => {
-        if (e.isIntersecting) { const p = v.play(); if (p) p.catch(() => {}); } else v.pause();
+        onScreen = e.isIntersecting;
+        if (onScreen) tryPlay(); else v.pause();
       }, { threshold: 0 }).observe(v);
+      // iOS Low Power Mode (and some in-app browsers) refuse unprompted play();
+      // a tap is a user gesture, so retry on the first one until playback starts
+      const onGesture = () => { if (onScreen && v.paused) tryPlay(); };
+      window.addEventListener('touchend', onGesture, { passive: true });
+      window.addEventListener('click', onGesture);
+      v.addEventListener('playing', () => {
+        window.removeEventListener('touchend', onGesture);
+        window.removeEventListener('click', onGesture);
+      }, { once: true });
     })();
 
     /* ── SCROLL CINEMATICS ───────────────────────────────────── */
