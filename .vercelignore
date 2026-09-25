@@ -4,3 +4,6 @@ CLAUDE.md
 README.md
 netlify/
 _headers
+PROMPT-*.md
+images/brand/*-source.png
+images/brand/MANIFEST.md

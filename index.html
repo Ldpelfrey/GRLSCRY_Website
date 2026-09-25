@@ -308,21 +308,47 @@
     .ld { width: 6px; height: 6px; background: var(--sage); border-radius: 50%; animation: pulse 2.4s ease-in-out infinite; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
     .hn { position: relative; z-index: 2; opacity: 0; animation: su 1s var(--ease) .3s forwards; margin-bottom: 2px; }
-    .glitch { position: relative; display: inline-block; }
-    .glitch::before, .glitch::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; clip: rect(0,0,0,0); }
-    .glitch::before { left: 3px; text-shadow: -3px 0 var(--pink); animation: g1 6s infinite linear; }
-    .glitch::after  { left: -3px; text-shadow: 3px 0 var(--s3); animation: g2 6s infinite linear; }
-    @keyframes g1 {
-      0%,88%,100%{clip:rect(0,0,0,0)}
-      90%{clip:rect(20px,9999px,24px,0);transform:skew(.4deg)}
-      93%{clip:rect(58px,9999px,63px,0);transform:skew(-.3deg)}
-      96%{clip:rect(8px,9999px,12px,0);transform:skew(.7deg)}
+    /* ─── HERO PLATE (own live footage) + JELLY LOGO ─────────────── */
+    .hero-plate { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: var(--black); }
+    .hero-plate video { width: 100%; height: 100%; object-fit: cover; display: block; opacity: .5; }
+    .hero-plate::after {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 38% 58%, rgba(255,105,180,.12), transparent 70%),
+        linear-gradient(180deg, rgba(14,14,14,.6) 0%, rgba(14,14,14,.1) 30%, rgba(14,14,14,.55) 62%, var(--black) 100%);
     }
-    @keyframes g2 {
-      0%,89%,100%{clip:rect(0,0,0,0)}
-      91%{clip:rect(34px,9999px,39px,0);transform:skew(-.5deg)}
-      94%{clip:rect(74px,9999px,80px,0);transform:skew(.3deg)}
-      97%{clip:rect(5px,9999px,10px,0);transform:skew(-.8deg)}
+    .hero-logo-wrap { display: block; perspective: 1100px; margin: 0 0 10px -1.2%; will-change: transform, opacity, filter; }
+    .hero-logo {
+      position: relative; display: block;
+      width: clamp(300px, 60vw, 980px); aspect-ratio: 1800 / 977;
+      transform: rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg));
+      transform-style: preserve-3d;
+    }
+    .hero-logo-jelly { position: relative; display: block; width: 100%; height: 100%; transform-origin: 50% 88%; animation: jelly 5.5s ease-in-out 1.4s infinite; }
+    .hero-logo-jelly img {
+      width: 100%; height: 100%; object-fit: contain;
+      filter: drop-shadow(0 22px 44px rgba(255,105,180,.30)) drop-shadow(0 3px 2px rgba(0,0,0,.45));
+    }
+    /* specular sweep, clipped to the logo's own alpha */
+    .hero-logo-jelly::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      -webkit-mask: url(images/brand/grlscry-logo-900.webp) center / 100% 100% no-repeat;
+              mask: url(images/brand/grlscry-logo-900.webp) center / 100% 100% no-repeat;
+      background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,.5) 49%, transparent 60%);
+      background-size: 260% 100%; background-position: 135% 0;
+      mix-blend-mode: screen;
+      animation: sheen 7s ease-in-out 2s infinite;
+    }
+    @keyframes jelly { 0%,100% { transform: scale(1,1); } 42% { transform: scale(1.012,.986); } 58% { transform: scale(.994,1.01); } }
+    @keyframes sheen { 0% { background-position: 135% 0; } 30%,100% { background-position: -35% 0; } }
+    @media (max-width: 600px) {
+      .hero-logo { width: calc(100vw - 2 * var(--gutter)); }
+      /* the logo is taller than the old text H1: lift the pull-quote clear of the label */
+      #hero .h-ribbon { top: calc(var(--nav-h) + var(--ticker-h) + 28px); transform: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-logo-jelly, .hero-logo-jelly::after { animation: none !important; }
+      .hero-logo-jelly::after { display: none; }
     }
     .ht {
       font-family: var(--mono); font-size: clamp(12px,1.6vw,16px);
@@ -1182,8 +1208,7 @@
     }
     .p-close:hover { color: var(--white); }
     /* letter scatter support */
-    .gl-l { display: inline-block; }
-    .t-hero, .glitch { overflow: visible; }
+    .t-hero { overflow: visible; }
 
     /* ─── ARTIST PRESENCE ─────────────────────────────────── */
     #artist { position: relative; overflow: hidden; }
@@ -1362,6 +1387,13 @@
   <!-- ══════════════════════════════════════════════════════════════ -->
   <section id="hero" aria-label="Hero">
 
+    <!-- cinematic plate: GRLS CRY's own live-set footage. Sources are attached by JS
+         (size by viewport, skipped under reduced motion / Save-Data); the poster is the fallback. -->
+    <div class="hero-plate" aria-hidden="true">
+      <video id="hero-video" muted playsinline loop preload="none" tabindex="-1"
+             poster="images/hero/plate-poster.jpg" width="1600" height="900"></video>
+    </div>
+
     <!-- decorative asset — top right -->
     <picture><source srcset="CybersygilsimAsset.webp" type="image/webp"><img src="CybersygilsimAsset.jpg" class="deco-img hero-deco-tr" alt="" aria-hidden="true"></picture>
     <!-- decorative asset — bottom left -->
@@ -1376,7 +1408,16 @@
       <span class="t-label" id="c-hero-label">DJ / Producer — SCOTTSDALE, AZ</span>
     </div>
     <h1 class="t-hero hn">
-      <span class="glitch" data-text="GRLSCRY">GRLSCRY</span>
+      <span class="hero-logo-wrap">
+        <span class="hero-logo">
+          <span class="hero-logo-jelly">
+            <picture>
+              <source type="image/webp" srcset="images/brand/grlscry-logo-900.webp 900w, images/brand/grlscry-logo-1800.webp 1800w" sizes="(max-width: 600px) 92vw, 60vw">
+              <img src="images/brand/grlscry-logo-900.png" width="1800" height="977" alt="GRLSCRY" fetchpriority="high" decoding="async">
+            </picture>
+          </span>
+        </span>
+      </span>
     </h1>
     <p class="ht" id="c-hero-tagline">Dark · High Energy · Late Night</p>
 
@@ -2174,6 +2215,25 @@
       });
     }
 
+    /* ── HERO PLATE ──────────────────────────────────────────── */
+    (() => {
+      const v = document.getElementById('hero-video');
+      const saveData = navigator.connection && navigator.connection.saveData;
+      if (!v || reduceMotion || saveData) return;           // poster only
+      const small = window.matchMedia('(max-width: 767px)').matches;
+      const srcs = small
+        ? [['images/hero/plate-854.mp4', 'video/mp4']]
+        : [['images/hero/plate-1600.webm', 'video/webm'], ['images/hero/plate-1600.mp4', 'video/mp4']];
+      srcs.forEach(([src, type]) => {
+        const s = document.createElement('source'); s.src = src; s.type = type; v.appendChild(s);
+      });
+      v.preload = 'auto'; v.load();
+      // play only while the hero is on screen
+      new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) { const p = v.play(); if (p) p.catch(() => {}); } else v.pause();
+      }, { threshold: 0 }).observe(v);
+    })();
+
     /* ── SCROLL CINEMATICS ───────────────────────────────────── */
     if (!reduceMotion) {
 
@@ -2184,7 +2244,6 @@
       heroExit
         .to('.heb',          { y: -30,  opacity: 0, ease: 'power2.in' }, 0)
         .to('.h-ribbon',     { x: -80,  opacity: 0, ease: 'power2.in' }, 0)
-        .to('.t-hero',       { y: -80,  opacity: 0, ease: 'power2.in' }, 0)
         .to('.ht',           { y: -50,  opacity: 0, ease: 'power2.in' }, 0.05)
         .to('.h-ctx',        { y: -30,  opacity: 0, ease: 'power2.in' }, 0.08)
         .to('.hc',           { y: -40,  opacity: 0, ease: 'power2.in' }, 0.1)
@@ -2192,22 +2251,32 @@
         .to('.hero-deco-tr', { y: -140, opacity: 0 }, 0)
         .to('.hero-deco-bl', { y:  140, opacity: 0 }, 0);
 
-      // 2 — letter scatter on h1
-      const glitchEl = document.querySelector('.glitch');
-      if (glitchEl) {
-        const word  = glitchEl.textContent;
-        const rand  = n => (Math.random() - .5) * n;
-        const seeds = word.split('').map(() => ({ x: rand(900), y: rand(600), r: rand(220) }));
-        glitchEl.innerHTML = word.split('').map(c => `<span class="gl-l">${c}</span>`).join('');
-        gsap.to('.gl-l', {
-          x: i => seeds[i].x,
-          y: i => seeds[i].y,
-          rotation: i => seeds[i].r,
-          opacity: 0,
-          ease: 'power2.in',
-          stagger: { each: 0.05, from: 'center' },
-          scrollTrigger: { trigger: '#hero', start: 'center top', end: 'bottom -20%', scrub: 2 }
+      // 2 — logo fly-through: pushes toward the camera, tips back, blurs out
+      gsap.fromTo('.hero-logo-wrap',
+        { scale: 1, y: 0, rotationX: 0, opacity: 1, filter: 'blur(0px)' },
+        { scale: 1.9, y: -60, rotationX: 22, opacity: 0, filter: 'blur(10px)',
+          ease: 'power2.in', transformOrigin: '38% 60%',
+          scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.2 } });
+
+      // pointer tilt on the logo (fine pointers only)
+      const logo = document.querySelector('.hero-logo');
+      if (logo && window.matchMedia('(pointer: fine)').matches) {
+        const heroEl = document.getElementById('hero');
+        let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+        const tick = () => {
+          cx += (tx - cx) * .08; cy += (ty - cy) * .08;
+          logo.style.setProperty('--tx', cx.toFixed(2) + 'deg');
+          logo.style.setProperty('--ty', cy.toFixed(2) + 'deg');
+          raf = (Math.abs(tx - cx) + Math.abs(ty - cy) > .01) ? requestAnimationFrame(tick) : 0;
+        };
+        const kick = () => { if (!raf) raf = requestAnimationFrame(tick); };
+        heroEl.addEventListener('pointermove', e => {
+          const r = heroEl.getBoundingClientRect();
+          ty =  ((e.clientX - r.left) / r.width  - .5) * 14;
+          tx = -((e.clientY - r.top)  / r.height - .5) * 10;
+          kick();
         });
+        heroEl.addEventListener('pointerleave', () => { tx = 0; ty = 0; kick(); });
       }
 
       // 3 — decorative parallax
