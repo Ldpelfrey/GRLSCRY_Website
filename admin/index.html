@@ -162,6 +162,17 @@
     }
     .btn-add:hover { border-color: var(--sage); color: var(--sage); }
 
+    /* ── ORDERS ────────────────────────────────────────────── */
+    .orders-wrap { overflow-x: auto; }
+    table.orders { width: 100%; border-collapse: collapse; font-size: 11px; }
+    table.orders th { text-align: left; font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: var(--gray); padding: 6px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    table.orders td { padding: 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    table.orders input { background: var(--s2); border: 1px solid var(--border); color: var(--white); font-family: var(--mono); font-size: 11px; padding: 6px 8px; width: 150px; outline: none; }
+    table.orders input:focus { border-color: var(--sage); }
+    .btn-mini { background: none; border: 1px solid var(--border); color: var(--gray-lt); font-family: var(--mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; padding: 6px 10px; cursor: pointer; margin-left: 4px; }
+    .btn-mini:hover { border-color: var(--sage); color: var(--sage); }
+    .btn-mini:disabled { opacity: .5; cursor: not-allowed; }
+
     .btn-login, .btn-save {
       background: var(--sage); color: #1A1A1A; border: none;
       font-family: var(--mono); font-size: 10px; font-weight: 500;
@@ -389,6 +400,14 @@
       <div class="fg"><label>Copyright Line</label><input type="text" id="f-footer-copyright"></div>
     </div>
 
+    <!-- ORDERS ───────────────────────────────────────────── -->
+    <div class="admin-section">
+      <div class="section-title">Orders</div>
+      <button class="btn-add" id="btn-load-orders">Load orders</button>
+      <p id="orders-msg" class="hint"></p>
+      <div class="orders-wrap" id="orders-wrap"></div>
+    </div>
+
     <!-- spacer for sticky bar -->
     <div style="height:100px;"></div>
 
@@ -487,6 +506,7 @@
     $('panel').style.display = 'none';
     $('gate').style.display  = 'flex';
     $('pw-input').value = '';
+    $('orders-wrap').innerHTML = '';
     setStatus('');
   });
 
@@ -806,6 +826,81 @@
     } finally {
       btn.disabled    = false;
       btn.textContent = 'Save Changes → Publish';
+    }
+  });
+  /* ── ORDERS ────────────────────────────────────────────────
+     Loaded on demand. Orders live in Stripe; this only talks to /api/orders.
+  ─────────────────────────────────────────────────────────── */
+  async function ordersApi(body) {
+    if (!adminSecret) throw new Error('Session expired — log in again.');
+    const res = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-secret': adminSecret },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Server error ' + res.status);
+    return data;
+  }
+
+  function ordersMsg(msg, ok = true) {
+    const el = $('orders-msg');
+    el.style.color = ok ? 'var(--sage)' : 'var(--pink)';
+    el.textContent = msg;
+  }
+
+  async function loadOrders() {
+    const btn = $('btn-load-orders');
+    btn.disabled = true;
+    ordersMsg('Loading orders…');
+    try {
+      const { orders } = await ordersApi({ action: 'list' });
+      renderOrders(orders || []);
+      ordersMsg(`${(orders || []).length} paid orders (last 50 checkouts).`);
+    } catch (err) {
+      ordersMsg(`✗ ${err.message}`, false);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Reload orders';
+    }
+  }
+
+  function renderOrders(orders) {
+    if (!orders.length) { $('orders-wrap').innerHTML = ''; return; }
+    const rows = orders.map(o => `<tr data-pi="${esc(o.pi)}">
+      <td>${esc(o.order_ref)}</td>
+      <td>${esc(o.created ? new Date(o.created * 1000).toLocaleDateString() : '')}</td>
+      <td>${esc(o.size_qty)}</td>
+      <td>${esc([o.city, o.state].filter(Boolean).join(', '))}</td>
+      <td>${esc(o.status)}</td>
+      <td>${esc(o.tapstitch_order)}</td>
+      <td><input type="text" class="o-track" value="${esc(o.tracking)}" placeholder="tracking #">
+        <button class="btn-mini o-save">Save</button>${o.tracking ? '<button class="btn-mini o-resend">Resend</button>' : ''}</td>
+    </tr>`).join('');
+    $('orders-wrap').innerHTML = `<table class="orders"><thead><tr>
+      <th>Ref</th><th>Date</th><th>Size×Qty</th><th>City / State</th><th>Status</th><th>Tapstitch #</th><th>Tracking</th>
+      </tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  $('btn-load-orders').addEventListener('click', loadOrders);
+
+  $('orders-wrap').addEventListener('click', async e => {
+    const b = e.target.closest('.o-save, .o-resend');
+    if (!b) return;
+    const tr = b.closest('tr');
+    const pi = tr.dataset.pi;
+    const body = b.classList.contains('o-save')
+      ? { action: 'tracking', pi, tracking: tr.querySelector('.o-track').value.trim() }
+      : { action: 'resend', pi };
+    if (body.action === 'resend' && !confirm('Email the customer the shipping notice again?')) return;
+    b.disabled = true;
+    try {
+      const r = await ordersApi(body);
+      ordersMsg(r.emailed ? '✓ Saved, customer emailed.' : '✓ Saved (customer not emailed again).');
+      await loadOrders();
+    } catch (err) {
+      ordersMsg(`✗ ${err.message}`, false);
+      b.disabled = false;
     }
   });
 </script>
