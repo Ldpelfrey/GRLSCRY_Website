@@ -31,8 +31,9 @@ lighting, not built). Media provenance is in `images/brand/MANIFEST.md`.
 ## What it is
 
 One hand-written `index.html` (~2,780 lines) with all HTML, CSS, and JS inline.
-**No build step, no framework, no npm install, no bundler.** Edit the file, load
-it in a browser. Third-party code is CDN `<script>` tags only.
+**No build step, no framework, no bundler.** Edit the file, load it in a browser.
+The only npm use is the `api/` functions' deps (`nodemailer`, `stripe`, `imapflow`)
+and `npm test` (node:test, no framework). Third-party code is CDN `<script>` tags only.
 
 ## File layout
 
@@ -43,6 +44,11 @@ it in a browser. Third-party code is CDN `<script>` tags only.
 | `admin/index.html` | Password-gated panel that edits `content.json` and publishes it. |
 | `api/save-content.js` | Vercel function: commits `content.json` to GitHub. |
 | `api/booking.js` | Vercel function: sends booking-form mail via nodemailer. |
+| `api/stripe-webhook.js` | Paid order → fulfilment card mailed to Luke, PaymentIntent metadata `NEW`. Refund/dispute alerts. |
+| `api/orders.js` | Signed "Mark submitted" page (Luke pastes the Tapstitch order #) + admin list/tracking/resend. |
+| `api/cron-fulfilment.js` | Daily 15:00 UTC: reads Tapstitch mail over IMAP, emails customers tracking once, digest to Luke. |
+| `api/_lib/` | Shared mail, auth, signed links, Stripe client, Tapstitch parser. Not routable. |
+| `tests/` | `npm test`. Fixtures use fake names only (the repo is public). |
 | `vercel.json` | Security headers + CSP. The only place the CSP lives. |
 | `.vercelignore` | What deploys leave out (`CLAUDE.md`, `README.md`, prompts, `tools/`, the logo source PNG). `.gitignore` does not control deploys. |
 | `images/` | Photography, OG cover, tee mockups. |
@@ -72,10 +78,15 @@ Set on whichever host is live:
 |---|---|---|
 | `ADMIN_SECRET` | `save-content` | Endpoint 500s; admin cannot log in. |
 | `GITHUB_TOKEN` | `save-content` | Login works, publishing 500s. |
-| `GMAIL_USER` / `GMAIL_APP_PASSWORD` | `api/booking.js` | Booking form errors. |
+| `GMAIL_USER` / `GMAIL_APP_PASSWORD` | booking, orders, cron | Booking form errors; no order mail; cron can't read Tapstitch mail. |
+| `STRIPE_SECRET_KEY` | webhook, orders, cron | Restricted key: Checkout Sessions Read + Payment Intents Write. Missing → 500s, Stripe retries the webhook. |
+| `STRIPE_WEBHOOK_SECRET` | `api/stripe-webhook.js` | `whsec_…` of the webhook endpoint. Missing → 500. |
+| `ORDERS_LINK_SECRET` | webhook, orders | Signs the "Mark submitted" link. Missing → webhook 500s. |
+| `CRON_SECRET` | `api/cron-fulfilment.js` | Vercel sends it as a Bearer token. Missing → cron 500s. |
+| `BOOKING_TO` (optional) | booking + all order mail to Luke | Defaults to `GMAIL_USER`. |
 
-All five are set on Vercel Production, and the admin save path was tested end to end
-on 2026-09-25.
+The first five were set on Vercel Production on 2026-09-25. The four order vars
+are NOT set yet (see Shop → Order automation).
 
 ## Sections
 
@@ -96,8 +107,18 @@ as an Instagram bio link.
   `https://buy.stripe.com/...`, same tab). No Stripe script, no publishable key. It
   navigates rather than opening a modal, which is deliberate: a modal fights Lenis for
   scroll lock. Do not replace it with an overlay cart.
-- **Fulfilment is manual.** Tapstitch has no public API. Orders are typed in by
-  hand.
+- **Fulfilment: one manual step.** Tapstitch has no public API, so Luke types each
+  order in by hand from the fulfilment card. Everything around that is automated
+  (branch `orders-automation`, NOT deployed as of 2026-10-02):
+  paid → `[GC ORDER]` card email → Luke places it in Tapstitch → opens the card's
+  signed link and pastes the Tapstitch order number (`SUBMITTED`) → daily cron reads
+  Tapstitch's shipment email, matches **on the Tapstitch order number only** (their
+  emails carry no customer name or carrier), sets `SHIPPED`, emails the customer a
+  17track link once (`shipped_mail_at`), then `DELIVERED`. Unmatched, ambiguous or
+  size-mismatched emails never reach a customer; they go in Luke's `[GC DIGEST]`.
+  Order state lives only in PaymentIntent metadata (`api/_lib/stripe.js` header);
+  never write customer data to a file. Tapstitch mail goes to ldpelfrey@gmail.com,
+  so a Gmail filter must forward `from:notify.tapstitch.com` to GRLSCRYOfficial.
 - **One payment link per size**, all $35, each product named with its size ("GRLS CRY
   Boxy Tee — M"), so the size prints on the receipt. `content.json` holds
   `stripe_payment_links: {size: url}`, and the site appends `?client_reference_id=TEE-M`
