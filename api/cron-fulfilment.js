@@ -4,11 +4,16 @@
 // Idempotent over the 7-day mail window via PaymentIntent metadata.
 
 const { getStripe } = require('./_lib/stripe');
+const { timingSafeEqual } = require('./_lib/auth');
 const { sendMail: realSend } = require('./_lib/mail');
 const { shipAndNotify, replyTo } = require('./_lib/ship-mail');
 const { parseTapstitch, sizeQtyToLines, sameLines } = require('./_lib/tapstitch-mail');
 
 const DAY = 86400000;
+const HOUR = 3600000;
+
+// Only tee Payment Link sessions are orders (the account holds other products).
+const isTee = s => Boolean((s.metadata && s.metadata.grlscry_sku) || /^TEE-/.test(s.client_reference_id || ''));
 
 // ── default mail source: Gmail IMAP ─────────────────────────────────────────
 function findPart(node, type) {
@@ -73,7 +78,8 @@ async function run({ fetchMail, stripe, sendMail, now = new Date() }) {
     if (hits.length > 1) { sum.ambiguous++; digest.ambiguous.push(`Tapstitch ${p.order} (${p.kind}): ${hits.length} orders share this number`); continue; }
 
     const pi = hits[0].id;
-    const meta = hits[0].metadata || {};
+    // Search results lag behind writes; re-read so shipped_mail_at is current.
+    const meta = (await stripe.paymentIntents.retrieve(pi)).metadata || {};
     if (p.lines.length && !sameLines(p.lines, sizeQtyToLines(meta.size_qty))) {
       sum.mismatch++;
       digest.mismatch.push(`${meta.order_ref} (Tapstitch ${p.order}, ${p.kind}): ordered ${meta.size_qty}, Tapstitch email says ${p.lines.map(l => `${l.size}×${l.qty}`).join(', ')}`);
@@ -106,10 +112,13 @@ async function run({ fetchMail, stripe, sendMail, now = new Date() }) {
     limit: 100, created: { gte: Math.floor((now.getTime() - 30 * DAY) / 1000) }, expand: ['data.payment_intent'],
   });
   for (const s of sessions.data || []) {
-    if (s.payment_status !== 'paid') continue;
+    if (s.payment_status !== 'paid' || !isTee(s)) continue;
     const m = (s.payment_intent && s.payment_intent.metadata) || {};
     const age = now.getTime() - s.created * 1000;
-    if (m.fulfil_status === 'NEW' && age > DAY) {
+    if (!m.fulfil_status && age > HOUR) {
+      // The webhook never processed this order, so Luke never got a card.
+      sum.stale++; digest.stale.push(`Paid ${new Date(s.created * 1000).toISOString().slice(0, 10)} but no fulfilment card was sent (webhook failed). Check Stripe session ${s.id}`);
+    } else if (m.fulfil_status === 'NEW' && age > DAY) {
       sum.stale++; digest.stale.push(`${m.order_ref}: still NEW after ${Math.floor(age / DAY)}d, not yet in Tapstitch`);
     } else if (m.fulfil_status === 'SUBMITTED' && !m.tracking && age > 7 * DAY) {
       sum.stale++; digest.stale.push(`${m.order_ref}: SUBMITTED ${Math.floor(age / DAY)}d ago, no tracking yet (Tapstitch ${m.tapstitch_order || '?'})`);
@@ -134,7 +143,7 @@ async function run({ fetchMail, stripe, sendMail, now = new Date() }) {
 async function handler(req, res) {
   const secret = process.env.CRON_SECRET;
   if (!secret) return res.status(500).json({ error: 'CRON_SECRET is not set' });
-  if ((req.headers || {}).authorization !== `Bearer ${secret}`) return res.status(401).json({ error: 'Unauthorized' });
+  if (!timingSafeEqual((req.headers || {}).authorization || '', `Bearer ${secret}`)) return res.status(401).json({ error: 'Unauthorized' });
   try {
     const summary = await run({ fetchMail: imapFetchMail, stripe: getStripe(), sendMail: realSend, now: new Date() });
     return res.status(200).json(summary);

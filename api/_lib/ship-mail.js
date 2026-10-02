@@ -39,10 +39,12 @@ async function customerFor(stripe, pi) {
 // meta = current PI metadata. Returns { sent: boolean, reason? }.
 async function shipAndNotify({ stripe, sendMail, pi, meta, tracking, extra = {}, force = false }) {
   const send = sendMail || realMail.sendMail;
+  const already = meta.shipped_mail_at && meta.tracking === tracking;
   const update = { tracking, ...extra };
   if (meta.fulfil_status !== 'DELIVERED') update.fulfil_status = 'SHIPPED';
   await stripe.paymentIntents.update(pi, { metadata: update });
-  if (meta.shipped_mail_at && !force) return { sent: false, reason: 'already-sent' };
+  // A corrected tracking number is worth a second email; the same one is not.
+  if (already && !force) return { sent: false, reason: 'already-sent' };
   const { name, email } = await customerFor(stripe, pi);
   if (!email) return { sent: false, reason: 'no-email' };
   const { subject, text } = shippingEmail({ order_ref: meta.order_ref, size_qty: meta.size_qty, tracking, name });

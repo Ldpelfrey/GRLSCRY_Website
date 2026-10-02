@@ -22,6 +22,7 @@ function fakeStripe() {
         const n = /'(\d+)'/.exec(query)[1];
         return { data: Object.values(pis).filter(p => p.metadata.tapstitch_order === n) };
       },
+      retrieve: async id => pis[id],
       update: async (id, { metadata }) => { Object.assign(pis[id].metadata, metadata); return pis[id]; },
     },
     checkout: { sessions: { list: async args => {
@@ -112,10 +113,10 @@ test('confirmed sets cost once; delivered sets DELIVERED', async () => {
 test('stale NEW (>24h) and stale SUBMITTED without tracking (>7d) → digest', async () => {
   const t = Math.floor(NOW.getTime() / 1000);
   sessions = [
-    { payment_status: 'paid', created: t - 2 * 86400, payment_intent: { metadata: { fulfil_status: 'NEW', order_ref: 'GC-OLD-NEW1' } } },
-    { payment_status: 'paid', created: t - 3600, payment_intent: { metadata: { fulfil_status: 'NEW', order_ref: 'GC-FRESH-1' } } },
-    { payment_status: 'paid', created: t - 9 * 86400, payment_intent: { metadata: { fulfil_status: 'SUBMITTED', order_ref: 'GC-OLD-SUB1' } } },
-    { payment_status: 'paid', created: t - 9 * 86400, payment_intent: { metadata: { fulfil_status: 'SUBMITTED', tracking: 'YT1', order_ref: 'GC-OK-SUB2' } } },
+    { metadata: { grlscry_sku: 'TEE-M' }, payment_status: 'paid', created: t - 2 * 86400, payment_intent: { metadata: { fulfil_status: 'NEW', order_ref: 'GC-OLD-NEW1' } } },
+    { metadata: { grlscry_sku: 'TEE-M' }, payment_status: 'paid', created: t - 3600, payment_intent: { metadata: { fulfil_status: 'NEW', order_ref: 'GC-FRESH-1' } } },
+    { metadata: { grlscry_sku: 'TEE-M' }, payment_status: 'paid', created: t - 9 * 86400, payment_intent: { metadata: { fulfil_status: 'SUBMITTED', order_ref: 'GC-OLD-SUB1' } } },
+    { metadata: { grlscry_sku: 'TEE-M' }, payment_status: 'paid', created: t - 9 * 86400, payment_intent: { metadata: { fulfil_status: 'SUBMITTED', tracking: 'YT1', order_ref: 'GC-OK-SUB2' } } },
   ];
   const s = await go([]);
   assert.equal(s.stale, 2);
@@ -123,6 +124,19 @@ test('stale NEW (>24h) and stale SUBMITTED without tracking (>7d) → digest', a
   assert.match(sent[0].text, /GC-OLD-NEW1/);
   assert.match(sent[0].text, /GC-OLD-SUB1/);
   assert.ok(!/GC-FRESH-1|GC-OK-SUB2/.test(sent[0].text));
+});
+
+test('paid tee with no fulfil_status after 1h → digest; non-tee and fresh ones ignored', async () => {
+  const t = Math.floor(NOW.getTime() / 1000);
+  sessions = [
+    { id: 'cs_lost', metadata: { grlscry_sku: 'TEE-L' }, payment_status: 'paid', created: t - 2 * 3600, payment_intent: { metadata: {} } },
+    { id: 'cs_justnow', metadata: { grlscry_sku: 'TEE-L' }, payment_status: 'paid', created: t - 600, payment_intent: { metadata: {} } },
+    { id: 'cs_other', metadata: {}, payment_status: 'paid', created: t - 5 * 86400, payment_intent: { metadata: {} } },
+  ];
+  const s = await go([]);
+  assert.equal(s.stale, 1);
+  assert.match(sent[0].text, /cs_lost/);
+  assert.ok(!/cs_justnow|cs_other/.test(sent[0].text));
 });
 
 test('nothing to report → no digest', async () => {

@@ -131,6 +131,14 @@ test('size falls back to client_reference_id when metadata missing', async () =>
   assert.ok(!sent[0].text.startsWith('SIZE CHECK'));
 });
 
+test('paid session that is not a tee (no grlscry_sku, no TEE- ref) → 200, no card', async () => {
+  session.metadata = {};
+  session.client_reference_id = null;
+  const r = await run(paidEvent());
+  assert.equal(r.code, 200);
+  assert.equal(sent.length, 0);
+});
+
 test('charge.refunded → 1 alert mail with order_ref from PI', async () => {
   piMeta = { order_ref: 'GC-260921-WXYZ' };
   const r = await run({ id: 'evt_2', type: 'charge.refunded', data: { object: fx('webhook-refund') } });

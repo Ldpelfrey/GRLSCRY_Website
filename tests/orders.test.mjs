@@ -134,6 +134,14 @@ test('tracking → one customer mail + shipped_mail_at; second call → no secon
   assert.equal(sent.length, 1);
 });
 
+test('corrected tracking number → customer gets the new one', async () => {
+  const send = tracking => call({ method: 'POST', headers: admin, body: JSON.stringify({ action: 'tracking', pi: PI, tracking }) });
+  await send('YT0000000000000001');
+  await send('YT0000000000000002');
+  assert.equal(sent.length, 2);
+  assert.match(sent[1].text, /YT0000000000000002/);
+});
+
 test('tracking validation + resend', async () => {
   let r = await call({ method: 'POST', headers: admin, body: { action: 'tracking', pi: PI, tracking: 'x y' } });
   assert.equal(r.code, 400);

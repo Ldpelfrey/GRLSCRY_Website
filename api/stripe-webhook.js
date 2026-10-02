@@ -91,6 +91,10 @@ function buildCard(session) {
 
 async function newOrder(stripe, sessionId) {
   const session = await stripe.checkout.sessions.retrieve(sessionId, { expand: ['line_items', 'payment_intent'] });
+  // The Stripe account also holds non-tee products; only tee Payment Links are orders.
+  if (!((session.metadata && session.metadata.grlscry_sku) || /^TEE-/.test(session.client_reference_id || ''))) {
+    return { ignored: 'not a tee order' };
+  }
   const pi = session.payment_intent;
   if (!pi || typeof pi !== 'object') throw new Error('payment_intent not expanded');
   if (pi.metadata && pi.metadata.fulfil_status) return { duplicate: true };
