@@ -95,7 +95,9 @@ async function adminList(stripe) {
     const p = s.payment_intent && typeof s.payment_intent === 'object' ? s.payment_intent : {};
     const m = p.metadata || {};
     const cd = s.customer_details || {};
-    const addr = (s.shipping_details && s.shipping_details.address) || cd.address || {};
+    // API versions from 2025-03 move shipping under collected_information.
+    const ship = (s.collected_information && s.collected_information.shipping_details) || s.shipping_details || {};
+    const addr = ship.address || cd.address || {};
     return {
       pi: p.id || (typeof s.payment_intent === 'string' ? s.payment_intent : ''),
       created: s.created, order_ref: m.order_ref || '', size_qty: m.size_qty || '',

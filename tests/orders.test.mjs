@@ -25,7 +25,9 @@ function fakeStripe() {
     checkout: { sessions: {
       list: async args => {
         const s = { id: 'cs_1', created: 1790000000, payment_status: 'paid', payment_intent: pis[PI],
-          customer_details: { name: 'Test Person', email: 'buyer@example.com', address: { city: 'Testville', state: 'AZ' } } };
+          customer_details: { name: 'Test Person', email: 'buyer@example.com', address: { city: 'Testville', state: 'AZ' } },
+          // Current API shape: shipping lives here and must win over the billing address.
+          collected_information: { shipping_details: { name: 'Test Person', address: { city: 'Shipville', state: 'CA' } } } };
         return { data: [s, { ...s, id: 'cs_2', payment_status: 'unpaid' }] };
       },
     } },
@@ -112,7 +114,7 @@ test('list → paid sessions only with the documented fields', async () => {
   assert.equal(r.code, 200);
   assert.equal(r.body.orders.length, 1);
   assert.deepEqual(r.body.orders[0], { pi: PI, created: 1790000000, order_ref: 'GC-261001-ABCD', size_qty: 'M×2',
-    name: 'Test Person', city: 'Testville', state: 'AZ', status: 'NEW', tapstitch_order: '', tracking: '', email: 'buyer@example.com' });
+    name: 'Test Person', city: 'Shipville', state: 'CA', status: 'NEW', tapstitch_order: '', tracking: '', email: 'buyer@example.com' });
 });
 
 test('tracking → one customer mail + shipped_mail_at; second call → no second mail', async () => {
