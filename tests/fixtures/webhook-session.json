@@ -1,0 +1,18 @@
+{
+  "id": "cs_test_a1B2c3",
+  "object": "checkout.session",
+  "created": 1790000000,
+  "payment_status": "paid",
+  "amount_total": 4100,
+  "client_reference_id": "TEE-M",
+  "metadata": { "size": "M" },
+  "customer_details": { "name": "Test Buyer", "email": "buyer@example.com", "phone": "+15555550100" },
+  "collected_information": {
+    "shipping_details": {
+      "name": "Test Buyer",
+      "address": { "line1": "1 Test St", "line2": null, "city": "Phoenix", "state": "AZ", "postal_code": "85001", "country": "US" }
+    }
+  },
+  "line_items": { "data": [ { "quantity": 1, "description": "GRLS CRY Black Boxy Tee — M" } ] },
+  "payment_intent": { "id": "pi_3TestAbCdWxyz", "metadata": {} }
+}
