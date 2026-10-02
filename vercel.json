@@ -2,6 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "crons": [{ "path": "/api/cron-fulfilment", "schedule": "0 15 * * *" }],
   "headers": [
     {
       "source": "/(.*)",

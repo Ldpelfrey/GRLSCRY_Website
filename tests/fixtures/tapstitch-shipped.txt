@@ -1,0 +1,5 @@
+Subject: A shipment from order #1000000000000000001 is on the way
+
+Order number: | 1000000000000000001 |
+Tracking number: | YT0000000000000001 |
+Classic Loose Boxy Tee Black / M | x1 |

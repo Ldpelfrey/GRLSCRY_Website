@@ -1,0 +1,11 @@
+Subject: Order #1000000000000000001 confirmed
+
+Thanks for your order.
+Order number: 1000000000000000001
+Order date: Oct 1, 2026
+
+Classic Loose Boxy Tee Black / XL x2 $30.96 $31.94
+
+Production cost $61.92
+Shipping $9.00
+Total USD 163.44
