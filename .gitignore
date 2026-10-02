@@ -1,2 +1,4 @@
 .vercel
 tools/stripe-links-*.json
+node_modules/
+tools/ORDERS-SPIKE.md

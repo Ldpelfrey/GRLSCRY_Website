@@ -2,8 +2,13 @@
   "name": "grlscry-site",
   "private": true,
   "version": "1.0.0",
-  "description": "GRLSCRY — DJ portfolio and booking site. Static page plus two Vercel serverless functions.",
+  "description": "GRLSCRY \u2014 DJ portfolio and booking site. Static page plus two Vercel serverless functions.",
   "dependencies": {
-    "nodemailer": "^6.9.14"
+    "imapflow": "^2.2.1",
+    "nodemailer": "^6.9.14",
+    "stripe": "^23.0.0"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
   }
 }

@@ -14,10 +14,9 @@
 // silently accepting inquiries that go nowhere. A booking form that appears
 // to work while discarding submissions is worse than one that visibly errors.
 
-const nodemailer = require('nodemailer');
+const { sendMail, mailConfigured } = require('./_lib/mail');
 
 const MAX_FIELD = 5000;
-let transport;
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -52,28 +51,17 @@ module.exports = async function handler(req, res) {
     return res.status(413).json({ error: 'That message is too long.' });
   }
 
-  const user = process.env.GMAIL_USER;
-  const pass = process.env.GMAIL_APP_PASSWORD;
-  if (!user || !pass) {
+  if (!mailConfigured()) {
     console.error('booking: GMAIL_USER or GMAIL_APP_PASSWORD is not set');
     return res.status(500).json({
       error: 'Booking is temporarily unavailable. Please email us directly.',
     });
   }
-  const to = process.env.BOOKING_TO || user;
+  const to = process.env.BOOKING_TO || process.env.GMAIL_USER;
 
   try {
-    // Reuse the transport across warm invocations.
-    transport = transport || nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: { user, pass },
-    });
-
-    await transport.sendMail({
-      // From must be the authenticated account or Gmail rewrites/rejects it.
-      from: `"GRLSCRY Site" <${user}>`,
+    await sendMail({
+      fromName: 'GRLSCRY Site',
       to,
       replyTo: `"${name.replace(/"/g, '')}" <${email}>`,
       subject: `Booking inquiry — ${name}${type ? ` (${type})` : ''}`,
