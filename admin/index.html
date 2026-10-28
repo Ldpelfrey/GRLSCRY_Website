@@ -294,6 +294,13 @@
       <div class="fg"><label>Inspiration Block</label><textarea id="f-inspiration" class="tall"></textarea></div>
     </div>
 
+    <!-- LINKS ────────────────────────────────────────────── -->
+    <div class="admin-section">
+      <div class="section-title">Links (grlscry.com/links)</div>
+      <div id="f-links-container"></div>
+      <button class="btn-add" id="btn-add-link">+ Add Link</button>
+    </div>
+
     <!-- MUSIC ────────────────────────────────────────────── -->
     <div class="admin-section">
       <div class="section-title">Music / Tracks</div>
@@ -416,6 +423,7 @@
 
   let trackSeq = 0;
   let eventSeq = 0;
+  let linkSeq = 0;
 
   /* ── UTIL ──────────────────────────────────────────────── */
   const $   = id  => document.getElementById(id);
@@ -538,6 +546,10 @@
     $('f-tracks-container').innerHTML = '';
     (c.tracks || []).forEach(t => addTrack(t));
 
+    linkSeq = 0;
+    $('f-links-container').innerHTML = '';
+    (c.links || []).forEach(l => addLink(l));
+
     eventSeq = 0;
     $('f-events-container').innerHTML = '';
     (c.events || []).forEach(e => addEvent(e));
@@ -638,6 +650,7 @@
           <select class="e-status">
             <option value="live"${status==='live'?' selected':''}>● Confirmed</option>
             <option value="tbd"${status==='tbd'?' selected':''}>○ TBA</option>
+            <option value="past"${status==='past'?' selected':''}>◌ Played</option>
           </select>
         </div>
         <div class="fg"><label>Date</label>
@@ -660,6 +673,35 @@
           <input type="text" class="e-note" placeholder="Set Recording Coming Soon" value="${esc(d.note||'')}"></div>
         <div class="fg"><label>Link URL <span style="color:var(--gray);font-weight:300">(optional)</span></label>
           <input type="text" class="e-link" placeholder="https:// or #contact" value="${esc(d.link||'')}"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Link Text <span style="color:var(--gray);font-weight:300">(optional — default "Info")</span></label>
+          <input type="text" class="e-link-text" placeholder="Watch Set" value="${esc(d.link_text||'')}"></div>
+      </div>`;
+    wrap.appendChild(card);
+  }
+
+  /* ── LINKS ─────────────────────────────────────────────── */
+  /* The first link is the big featured card at the top of /links. */
+  function addLink(d = {}) {
+    const n = ++linkSeq;
+    const wrap = $('f-links-container');
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-num">Link ${n}${n === 1 ? ' — featured' : ''}</div>
+      <button class="btn-remove" onclick="rmCard(this)">× Remove</button>
+      <div class="fr">
+        <div class="fg"><label>Title</label>
+          <input type="text" class="l-title" value="${esc(d.title||'')}"></div>
+        <div class="fg"><label>Subtitle <span style="color:var(--gray);font-weight:300">(optional)</span></label>
+          <input type="text" class="l-sub" value="${esc(d.subtitle||'')}"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>URL</label>
+          <input type="text" class="l-url" placeholder="https:// or #shop" value="${esc(d.url||'')}"></div>
+        <div class="fg"><label>Image <span style="color:var(--gray);font-weight:300">(featured link only)</span></label>
+          <input type="text" class="l-img" placeholder="images/links/… or https://" value="${esc(d.image||'')}"></div>
       </div>`;
     wrap.appendChild(card);
   }
@@ -668,6 +710,7 @@
 
   $('btn-add-track').addEventListener('click', () => addTrack());
   $('btn-add-event').addEventListener('click', () => addEvent());
+  $('btn-add-link').addEventListener('click', () => addLink());
 
   /* ── SHOP: one Stripe payment link per size ────────────── */
   function renderBuyIds(sizes, ids) {
@@ -707,6 +750,7 @@
     const events = Array.from(document.querySelectorAll('#f-events-container .card')).map(c => {
       const note = (c.querySelector('.e-note')?.value || '').trim();
       const link = (c.querySelector('.e-link')?.value || '').trim();
+      const link_text = (c.querySelector('.e-link-text')?.value || '').trim();
       const full_venue = (c.querySelector('.e-full-venue')?.value || '').trim();
       const ev = {
         date:       (c.querySelector('.e-date')?.value     || '').trim(),
@@ -718,8 +762,21 @@
       if (full_venue) ev.full_venue = full_venue;
       if (note)       ev.note       = note;
       if (link)       ev.link       = link;
+      if (link_text)  ev.link_text  = link_text;
       return ev;
     });
+
+    const links = Array.from(document.querySelectorAll('#f-links-container .card')).map(c => {
+      const l = {
+        title: (c.querySelector('.l-title')?.value || '').trim(),
+        url:   (c.querySelector('.l-url')?.value   || '').trim(),
+      };
+      const subtitle = (c.querySelector('.l-sub')?.value || '').trim();
+      const image    = (c.querySelector('.l-img')?.value || '').trim();
+      if (subtitle) l.subtitle = subtitle;
+      if (image)    l.image    = image;
+      return l;
+    }).filter(l => l.title && l.url);
 
     const influences = val('f-influences').split(',').map(s => s.trim()).filter(Boolean);
 
@@ -736,6 +793,7 @@
         tools:       val('f-tools'),
         inspiration: val('f-inspiration')
       },
+      links,
       tracks,
       events,
       contact: {

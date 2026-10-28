@@ -68,8 +68,8 @@
       },
       {
         "@type": "MusicEvent",
-        "name": "GRLSCRY at Almost Famous / Old Town Clubs",
-        "startDate": "2026-08",
+        "name": "GRLSCRY at Almost Famous",
+        "startDate": "2026-08-29",
         "eventStatus": "https://schema.org/EventScheduled",
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
         "performer": { "@id": "https://grlscry.com/#artist" },
@@ -86,8 +86,8 @@
       },
       {
         "@type": "MusicEvent",
-        "name": "GRLSCRY — Electric Sanctuary Live Recording",
-        "startDate": "2026-09",
+        "name": "GRLSCRY at Electric Sanctuary",
+        "startDate": "2026-09-19",
         "eventStatus": "https://schema.org/EventScheduled",
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
         "performer": { "@id": "https://grlscry.com/#artist" },
@@ -625,6 +625,30 @@
     @media (max-width: 640px) { .don-grid { grid-template-columns: 1fr; } }
 
     /* ─── EVENTS ─────────────────────────────────────────────────── */
+    /* ─── LINKS (/links = the Instagram bio link) ───────────────── */
+    #links { position: relative; z-index: 2; padding: clamp(72px,9vw,112px) var(--gutter); background: var(--black); border-top: 1px solid var(--border); scroll-margin-top: 0; }
+    .lk-grid { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(0,1fr); gap: clamp(24px,4vw,48px); align-items: start; }
+    .lk-feat { display: block; color: var(--white); }
+    .lk-feat-img { position: relative; display: block; aspect-ratio: 16/9; overflow: hidden; background: var(--s1); border: 1px solid var(--border); }
+    .lk-feat-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
+    .lk-feat:hover .lk-feat-img img { transform: scale(1.03); }
+    .lk-play { position: absolute; left: 14px; bottom: 14px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px 8px 10px; background: var(--sage); color: #1F1F1F; font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; }
+    .lk-play::before { content: ""; width: 0; height: 0; border-left: 8px solid currentColor; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+    .lk-feat-t { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding-top: 18px; }
+    .lk-feat-title { display: block; font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: clamp(22px,2.8vw,34px); line-height: 1.02; text-transform: uppercase; letter-spacing: .02em; text-wrap: balance; }
+    .lk-sub { display: block; margin-top: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--gray-lt); }
+    .lk-go { flex-shrink: 0; color: var(--sage); font-size: 20px; transition: transform .25s var(--ease); }
+    .lk-feat:hover .lk-go, .lk-row:hover .lk-go { transform: translate(3px,-3px); }
+    .lk-list { border-top: 1px solid var(--border); }
+    .lk-row { display: grid; grid-template-columns: 34px minmax(0,1fr) 24px; align-items: center; gap: 14px; min-height: 64px; padding: 12px 6px; border-bottom: 1px solid var(--border); color: var(--white); transition: background .2s; }
+    .lk-row:hover { background: #1b1b1b; }
+    .lk-n { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; color: var(--sage-dim); }
+    .lk-row-title { display: block; font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 17px; line-height: 1.1; text-transform: uppercase; letter-spacing: .04em; }
+    .lk-row .lk-sub { margin-top: 4px; font-size: 10px; color: var(--gray); }
+    .lk-row .lk-go { font-size: 16px; }
+    @media (max-width: 760px) {
+      .lk-grid { grid-template-columns: 1fr; }
+    }
     #events { position: relative; z-index: 2; padding: clamp(80px,11vw,130px) var(--gutter); background: var(--s2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     /* Fixed layout so the upcoming and played tables share column edges. */
     .evt { width: 100%; border-collapse: collapse; table-layout: fixed; }
@@ -1497,6 +1521,33 @@
 
   </section>
 
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- LINKS — grlscry.com/links redirects here; it is the IG bio link. -->
+  <!-- First item in content.json "links" is the featured card.        -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section id="links" aria-labelledby="links-h">
+    <div class="w">
+      <div class="ew">
+        <span class="el"></span>
+        <span class="t-label">Links</span>
+      </div>
+      <h2 class="t-sec" id="links-h" style="margin-bottom:36px;">Watch / Listen / Book</h2>
+      <div class="lk-grid" id="c-links">
+        <a class="lk-feat" href="https://www.youtube.com/watch?v=33oo3iiBxF8" target="_blank" rel="noopener noreferrer">
+          <span class="lk-feat-img"><img src="images/links/electric-sanctuary-0919.webp" width="1280" height="720" alt="GRLSCRY behind the decks at Electric Sanctuary"><span class="lk-play">Watch</span></span>
+          <span class="lk-feat-t"><span><span class="lk-feat-title">Electric Sanctuary — Full Set</span><span class="lk-sub">Live in Scottsdale · 09.19.26 · Watch on YouTube</span></span><span class="lk-go" aria-hidden="true">↗</span></span>
+        </a>
+        <nav class="lk-list" aria-label="Links">
+          <a class="lk-row" href="https://soundcloud.com/grlscry" target="_blank" rel="noopener noreferrer"><span class="lk-n">01</span><span><span class="lk-row-title">Mixes</span><span class="lk-sub">SoundCloud</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="#shop"><span class="lk-n">02</span><span><span class="lk-row-title">Boxy Tee</span><span class="lk-sub">Merch</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="#contact"><span class="lk-n">03</span><span><span class="lk-row-title">Book a Set</span><span class="lk-sub">Clubs, events, corporate</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="https://instagram.com/grlscryofficial" target="_blank" rel="noopener noreferrer"><span class="lk-n">04</span><span><span class="lk-row-title">Instagram</span><span class="lk-sub">@grlscryofficial</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="https://x.com/grlscryofficial" target="_blank" rel="noopener noreferrer"><span class="lk-n">05</span><span><span class="lk-row-title">X</span><span class="lk-sub">@grlscryofficial</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+        </nav>
+      </div>
+    </div>
+  </section>
+
   <div class="ornament-row" aria-hidden="true">
     <div class="ornament-line"></div>
     <span class="ornament-text">◆</span>
@@ -1596,19 +1647,11 @@
         <tbody id="c-events-tbody">
           <tr>
             <td class="e-dot"><span class="e-status tbd" title="TBA"></span></td>
-            <td class="ed">August</td>
-            <td class="en">Almost Famous / Old Town Clubs</td>
-            <td>Scottsdale, AZ</td>
-            <td>DJ Set — House</td>
-            <td><span class="tba">Booking Open</span></td>
-          </tr>
-          <tr>
-            <td class="e-dot"><span class="e-status live" title="Confirmed"></span></td>
-            <td class="ed">September</td>
-            <td class="en">Electric Sanctuary Live Recording</td>
-            <td>Scottsdale, AZ</td>
-            <td>DJ Set — House</td>
-            <td><span class="tba">Booking Open</span></td>
+            <td class="ed">TBA</td>
+            <td class="en">Next dates announced soon</td>
+            <td>Phoenix / Scottsdale</td>
+            <td>DJ Set</td>
+            <td><a href="#contact" class="da">Booking Open ↗</a></td>
           </tr>
         </tbody>
       </table>
@@ -1627,11 +1670,19 @@
           <tbody id="c-past-tbody">
             <tr>
               <td class="e-dot"><span class="e-status past" title="Played"></span></td>
-              <td class="ed">Jun 18</td>
-              <td class="en">thirds.</td>
-              <td>Mesa, AZ</td>
-              <td>DJ Set — All Genres</td>
-              <td><span class="tba">Set Recording Coming Soon</span></td>
+              <td class="ed">Sep 19</td>
+              <td class="en">Electric Sanctuary</td>
+              <td>Scottsdale, AZ</td>
+              <td>DJ Set — House</td>
+              <td><a href="https://www.youtube.com/watch?v=33oo3iiBxF8" class="da" target="_blank" rel="noopener">Watch Set ↗</a></td>
+            </tr>
+            <tr>
+              <td class="e-dot"><span class="e-status past" title="Played"></span></td>
+              <td class="ed">Aug 29</td>
+              <td class="en">Almost Famous</td>
+              <td>Scottsdale, AZ</td>
+              <td>DJ Set — House</td>
+              <td></td>
             </tr>
             <tr>
               <td class="e-dot"><span class="e-status past" title="Played"></span></td>
@@ -1640,6 +1691,14 @@
               <td>Phoenix, AZ</td>
               <td>DJ Set — All Genres</td>
               <td></td>
+            </tr>
+            <tr>
+              <td class="e-dot"><span class="e-status past" title="Played"></span></td>
+              <td class="ed">Jun 18</td>
+              <td class="en">thirds.</td>
+              <td>Mesa, AZ</td>
+              <td>DJ Set — All Genres</td>
+              <td><span class="tba">Set Recording Coming Soon</span></td>
             </tr>
           </tbody>
         </table>
@@ -2223,6 +2282,19 @@
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add(time => { lenis.raf(time * 1000); });
     gsap.ticker.lagSmoothing(0);
+
+    /* Landing on /links (→ /#links): the browser jumps before fonts, the hero
+       video and content.json settle, so re-align a few times until the visitor
+       takes over. Any input cancels it. */
+    if (location.hash === '#links') {
+      let mine = true; const off = () => { mine = false; };
+      ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach(t => addEventListener(t, off, { once: true, passive: true, capture: true }));
+      /* The nav and ticker are fixed, so stop below them (less some of the section's own padding). */
+      const bar = document.querySelector('.status-bar');
+      const settle = () => { const t = document.getElementById('links'); if (!mine || !t) return;
+        lenis.scrollTo(t, { immediate: true, force: true, offset: 32 - (bar ? bar.offsetTop + bar.offsetHeight : 0) }); };
+      settle(); addEventListener('load', settle); [300, 900, 2600].forEach(ms => setTimeout(settle, ms));
+    }
 
     /* ── SCROLL: progress + nav hide/show + back-to-top ─────── */
     const prog = document.getElementById('progress');
@@ -2829,7 +2901,7 @@
             var dot = '<td class="e-dot"><span class="e-status ' + safeStatus + '" title="' + esc(dotTitle) + '"></span></td>';
             var href = safeUrl(ev.link);
             var linkCell = href
-              ? '<a href="' + href + '" class="da" rel="noopener">Info ↗</a>'
+              ? '<a href="' + href + '" class="da"' + (/^https?:/i.test(ev.link) ? ' target="_blank"' : '') + ' rel="noopener">' + esc(ev.link_text || 'Info') + ' ↗</a>'
               : ev.note
                 ? '<span class="tba">' + esc(ev.note) + '</span>'
                 : isPast ? '' : '<span class="tba">Booking Open</span>';
@@ -2841,6 +2913,8 @@
           var played   = c.events.filter(function(ev) { return (ev.status || 'tbd') === 'past'; });
 
           var tbody = el('c-events-tbody');
+          /* Nothing announced: one TBA row, never an empty table. */
+          if (!upcoming.length) upcoming = [{ date: 'TBA', venue: 'Next dates announced soon', location: 'Phoenix / Scottsdale', type: 'DJ Set', status: 'tbd', link: '#contact', link_text: 'Booking Open' }];
           if (tbody) tbody.innerHTML = upcoming.map(rowHtml).join('');
 
           var pastBody  = el('c-past-tbody');
@@ -2849,6 +2923,9 @@
           // Hide the whole block rather than leave a stranded heading.
           if (pastBlock) pastBlock.style.display = played.length ? '' : 'none';
         }
+
+        /* Links — first item is the featured card (16:9 cover). */
+        if (Array.isArray(c.links)) renderLinks(c.links);
 
         /* Contact */
         if (c.contact) {
@@ -2909,6 +2986,29 @@
       var pol = el('shop-policies');
       if (pol) pol.style.display = 'none';
       /* The section just changed height — every trigger below it moved. */
+      refreshTriggers();
+    }
+
+    function renderLinks(list) {
+      var host = el('c-links'), sec = el('links');
+      if (!host || !sec) return;
+      var items = list.filter(function(it) { return it && it.title && safeUrl(it.url); });
+      if (!items.length) { sec.style.display = 'none'; refreshTriggers(); return; }
+      var attrs = function(u) {
+        return 'href="' + safeUrl(u) + '"' + (/^https?:/i.test(String(u).trim()) ? ' target="_blank" rel="noopener noreferrer"' : '');
+      };
+      var sub = function(it) { return it.subtitle ? '<span class="lk-sub">' + esc(it.subtitle) + '</span>' : ''; };
+      var go = '<span class="lk-go" aria-hidden="true">↗</span>';
+      var f = items[0], img = safeAsset(f.image);
+      var feat = '<a class="lk-feat" ' + attrs(f.url) + '>' +
+        (img ? '<span class="lk-feat-img"><img src="' + esc(img) + '" width="1280" height="720" alt="' + esc(f.title) + '">' +
+          (/youtu\.?be/i.test(f.url) ? '<span class="lk-play">Watch</span>' : '') + '</span>' : '') +
+        '<span class="lk-feat-t"><span><span class="lk-feat-title">' + esc(f.title) + '</span>' + sub(f) + '</span>' + go + '</span></a>';
+      var rows = items.slice(1).map(function(it, i) {
+        return '<a class="lk-row" ' + attrs(it.url) + '><span class="lk-n">' + String(i + 1).padStart(2, '0') + '</span>' +
+          '<span><span class="lk-row-title">' + esc(it.title) + '</span>' + sub(it) + '</span>' + go + '</a>';
+      }).join('');
+      host.innerHTML = feat + (rows ? '<nav class="lk-list" aria-label="Links">' + rows + '</nav>' : '');
       refreshTriggers();
     }
 

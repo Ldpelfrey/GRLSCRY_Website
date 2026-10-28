@@ -47,6 +47,39 @@
     "tools": "Ableton Live 12 · Serum 2 · Pioneer DDJ-400 · Pioneer DDJ-GRV6 · CDJ 30000 · CDJ 20000 · DJM · A-Series",
     "inspiration": "GRLSCRY pulls from the real late-night underbelly: blacked-out warehouses, bass that hits your chest, feral crowds moving like tomorrow's cancelled. Sweat, smoke, glances that stick under dim strobes. Built by people who already own the room. Beats land with quiet empathy, natural charisma, subtle edge."
   },
+  "links": [
+    {
+      "title": "Electric Sanctuary — Full Set",
+      "subtitle": "Live in Scottsdale · 09.19.26 · Watch on YouTube",
+      "url": "https://www.youtube.com/watch?v=33oo3iiBxF8",
+      "image": "images/links/electric-sanctuary-0919.webp"
+    },
+    {
+      "title": "Mixes",
+      "subtitle": "SoundCloud",
+      "url": "https://soundcloud.com/grlscry"
+    },
+    {
+      "title": "Boxy Tee",
+      "subtitle": "Merch",
+      "url": "#shop"
+    },
+    {
+      "title": "Book a Set",
+      "subtitle": "Clubs, events, corporate",
+      "url": "#contact"
+    },
+    {
+      "title": "Instagram",
+      "subtitle": "@grlscryofficial",
+      "url": "https://instagram.com/grlscryofficial"
+    },
+    {
+      "title": "X",
+      "subtitle": "@grlscryofficial",
+      "url": "https://x.com/grlscryofficial"
+    }
+  ],
   "tracks": [
     {
       "number": "01",
@@ -91,13 +124,22 @@
   ],
   "events": [
     {
-      "date": "Jun 18",
-      "venue": "thirds.",
-      "location": "Mesa, AZ",
-      "type": "DJ Set — All Genres",
+      "date": "Sep 19",
+      "venue": "Electric Sanctuary",
+      "location": "Scottsdale, AZ",
+      "type": "DJ Set — House",
       "status": "past",
-      "full_venue": "YZ's Karaoke Bar",
-      "note": "Set Recording Coming Soon"
+      "full_venue": "Electric Sanctuary",
+      "link": "https://www.youtube.com/watch?v=33oo3iiBxF8",
+      "link_text": "Watch Set"
+    },
+    {
+      "date": "Aug 29",
+      "venue": "Almost Famous",
+      "location": "Scottsdale, AZ",
+      "type": "DJ Set — House",
+      "status": "past",
+      "full_venue": "Old Town Scottsdale"
     },
     {
       "date": "Jul 25",
@@ -108,20 +150,13 @@
       "full_venue": "VIP Event Center"
     },
     {
-      "date": "August",
-      "venue": "Almost Famous / Old Town Clubs",
-      "location": "Scottsdale, AZ",
-      "type": "DJ Set — House",
-      "status": "tbd",
-      "full_venue": "Old Town Scottsdale"
-    },
-    {
-      "date": "September",
-      "venue": "Electric Sanctuary Live Recording",
-      "location": "Scottsdale, AZ",
-      "type": "DJ Set — House",
-      "status": "live",
-      "full_venue": "Electric Sanctuary"
+      "date": "Jun 18",
+      "venue": "thirds.",
+      "location": "Mesa, AZ",
+      "type": "DJ Set — All Genres",
+      "status": "past",
+      "full_venue": "YZ's Karaoke Bar",
+      "note": "Set Recording Coming Soon"
     }
   ],
   "contact": {
