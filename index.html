@@ -684,6 +684,20 @@
     .lk-row-title { display: block; font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: 17px; line-height: 1.1; text-transform: uppercase; letter-spacing: .04em; }
     .lk-row .lk-sub { margin-top: 4px; font-size: 10px; color: var(--gray); }
     .lk-row .lk-go { font-size: 16px; }
+    /* Ticketed upcoming shows sit above everything else in /links: one tap to buy. */
+    .tx { margin-bottom: clamp(44px,6vw,72px); }
+    .tx-h { display: block; margin-bottom: 14px; font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--sage); }
+    .tx-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 12px; }
+    .tx-row { display: grid; grid-template-columns: 52px minmax(0,1fr) auto; align-items: center; gap: 16px; padding: 16px 16px 16px 18px; border: 1px solid var(--sage-dim); background: #151515; color: var(--white); transition: border-color .25s var(--ease), background .25s var(--ease); }
+    .tx-row:hover { border-color: var(--sage); background: #1b1b1b; }
+    .tx-d { font-family: var(--mono); font-size: 12px; line-height: 1.25; letter-spacing: .1em; text-transform: uppercase; color: var(--sage); }
+    .tx-v { display: block; font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: 20px; line-height: 1.05; text-transform: uppercase; }
+    .tx-row .lk-sub { margin-top: 6px; font-size: 10px; }
+    @media (max-width: 560px) {
+      .tx-row { grid-template-columns: minmax(0,1fr) auto; row-gap: 8px; }
+      .tx-d { grid-column: 1 / -1; }
+    }
+    .tx-b { padding: 11px 14px; background: var(--sage); color: var(--black); font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
     @media (max-width: 760px) {
       .lk-grid { grid-template-columns: 1fr; }
     }
@@ -1546,7 +1560,7 @@
     <p class="h-ctx">Scottsdale, AZ · House · Multi-Genre · 2026</p>
 
     <div class="hc">
-      <a href="#music"   class="btn bs">Stream Now</a>
+      <a href="#links"   class="btn bs" id="hero-cta">Get Tickets</a>
       <a href="#contact" class="btn bo">Book a Set</a>
     </div>
 
@@ -1565,6 +1579,13 @@
   <!-- ══════════════════════════════════════════════════════════════ -->
   <section id="links" aria-labelledby="links-h">
     <div class="w">
+      <div class="tx" id="c-tix">
+        <span class="tx-h">Next Up · Tickets</span>
+        <div class="tx-list">
+          <a class="tx-row" href="https://posh.vip/f/f0df0?t=sundownpromo-dj" target="_blank" rel="noopener noreferrer"><span class="tx-d">Oct 31</span><span><span class="tx-v">The Archives</span><span class="lk-sub">Scottsdale, AZ · Halloween After Dark · 12–1 AM</span></span><span class="tx-b">Tickets ↗</span></a>
+          <a class="tx-row" href="https://thedropphx.com/events/just-the-afters-10-31" target="_blank" rel="noopener noreferrer"><span class="tx-d">Oct 31</span><span><span class="tx-v">The Drop PHX</span><span class="lk-sub">Phoenix, AZ · Just The Afters · 3–4 AM</span></span><span class="tx-b">Tickets ↗</span></a>
+        </div>
+      </div>
       <div class="ew">
         <span class="el"></span>
         <span class="t-label">Links</span>
@@ -1577,7 +1598,7 @@
         </a>
         <nav class="lk-list" aria-label="Links">
           <a class="lk-row" href="https://soundcloud.com/grlscry" target="_blank" rel="noopener noreferrer"><span class="lk-n">01</span><span><span class="lk-row-title">Mixes</span><span class="lk-sub">SoundCloud</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
-          <a class="lk-row" href="#shop"><span class="lk-n">02</span><span><span class="lk-row-title">Boxy Tee</span><span class="lk-sub">Merch</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="#shop"><span class="lk-n">02</span><span><span class="lk-row-title">GRLS CRY Merch</span><span class="lk-sub">Shop</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
           <a class="lk-row" href="#contact"><span class="lk-n">03</span><span><span class="lk-row-title">Book a Set</span><span class="lk-sub">Clubs, events, corporate</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
           <a class="lk-row" href="https://instagram.com/grlscryofficial" target="_blank" rel="noopener noreferrer"><span class="lk-n">04</span><span><span class="lk-row-title">Instagram</span><span class="lk-sub">@grlscryofficial</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
           <a class="lk-row" href="https://x.com/grlscryofficial" target="_blank" rel="noopener noreferrer"><span class="lk-n">05</span><span><span class="lk-row-title">X</span><span class="lk-sub">@grlscryofficial</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
@@ -2903,11 +2924,11 @@
       });
     });
 
-    /* ── hero "Stream Now" ── */
-    var streamNow = document.querySelector('a.btn.bs[href="#music"]');
+    /* ── hero "Stream Now" (renderTix turns it into "Get Tickets" while shows are on sale) ── */
+    var streamNow = document.getElementById('hero-cta');
     if (streamNow) {
       streamNow.addEventListener('click', function() {
-        setTimeout(function() { loadTrack(0, true); }, 600);
+        if (streamNow.getAttribute('href') === '#music') setTimeout(function() { loadTrack(0, true); }, 600);
       });
     }
   })();
@@ -3052,6 +3073,7 @@
 
         /* Links — first item is the featured card (16:9 cover). */
         if (Array.isArray(c.links)) renderLinks(c.links);
+        renderTix(Array.isArray(c.events) ? c.events : []);
 
         /* Contact */
         if (c.contact) {
@@ -3112,6 +3134,24 @@
       var pol = el('shop-policies');
       if (pol) pol.style.display = 'none';
       /* The section just changed height — every trigger below it moved. */
+      refreshTriggers();
+    }
+
+    /* Upcoming shows with a ticket URL go to the top of /links, and the hero's
+       first button points there. No ticketed shows: strip hidden, button streams. */
+    function renderTix(events) {
+      var host = el('c-tix'), cta = el('hero-cta');
+      var tix = events.filter(function(ev) { return ev && ev.status !== 'past' && /^https?:/i.test(String(ev.link || '').trim()) && safeUrl(ev.link); });
+      if (cta) { cta.textContent = tix.length ? 'Get Tickets' : 'Stream Now'; cta.setAttribute('href', tix.length ? '#links' : '#music'); }
+      if (!host) return;
+      if (!tix.length) { host.style.display = 'none'; refreshTriggers(); return; }
+      host.style.display = '';
+      host.querySelector('.tx-list').innerHTML = tix.map(function(ev) {
+        var sub = [ev.location, ev.type].filter(Boolean).map(esc).join(' · ');
+        return '<a class="tx-row" href="' + safeUrl(ev.link) + '" target="_blank" rel="noopener noreferrer"><span class="tx-d">' + esc(ev.date) + '</span>' +
+          '<span><span class="tx-v">' + esc(ev.venue) + '</span>' + (sub ? '<span class="lk-sub">' + sub + '</span>' : '') + '</span>' +
+          '<span class="tx-b">' + esc(ev.link_text || 'Tickets') + ' ↗</span></a>';
+      }).join('');
       refreshTriggers();
     }
 
