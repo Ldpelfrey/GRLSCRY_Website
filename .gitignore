@@ -1,2 +1,6 @@
 .vercel
 tools/stripe-links-*.json
+node_modules/
+tools/ORDERS-SPIKE.md
+tools/print_orders.py
+tools/ig-set-dates-*.tsv

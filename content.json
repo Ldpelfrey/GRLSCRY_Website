@@ -3,7 +3,7 @@
     "title": "GRLSCRY — House / SCOTTSDALE, AZ",
     "description": "GRLSCRY — DJ / Producer. Dark. High Energy. Late Night. PHX, AZ. House & Multi-Genre."
   },
-  "ticker": "SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · HOUSE · MULTI-GENRE · DARK HIGH ENERGY · LATE NIGHT · KARAMBA NIGHTCLUB · BAR SMITH · MAYA DAY+NIGHTCLUB · WASTED GRAIN · VALLEY BAR · AFTER12 · RIOT HOUSE · LUXX · LOS ANGELES · EXCHANGE LA · SOUND NIGHTCLUB · AVALON HOLLYWOOD · MIAMI · CLUB SPACE · E11EVEN · LIV · NYC · BROOKLYN MIRAGE · PUBLIC RECORDS · NOWADAYS · ELSEWHERE · LONDON · FABRIC · MINISTRY OF SOUND · EGG LONDON · CORSICA STUDIOS · MANCHESTER · THE WHITE HOTEL · SOUP KITCHEN · BERLIN · BERGHAIN · TRESOR · WATERGATE · SISYPHOS · DOCUMENT DON'T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ",
+  "ticker": "SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · HOUSE · MULTI-GENRE · DARK HIGH ENERGY · LATE NIGHT · ELECTRIC SANCTUARY · ALMOST FAMOUS · SUNBAR TEMPE · RIOT HOUSE · AFTER12 · MOGFEST · YZ KARAOKE CAFE · THE ENCLAVE · THIRDS. · DOCUMENT DON'T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ",
   "hero": {
     "pullquote": "\"he's got that raw bad boy attitude... just need to tame it\"",
     "label": "DJ / Producer — SCOTTSDALE, AZ",
@@ -124,10 +124,52 @@
   ],
   "events": [
     {
+      "date": "Oct 31",
+      "venue": "The Archives",
+      "location": "Scottsdale, AZ",
+      "type": "Halloween After Dark · 12–1 AM",
+      "status": "live",
+      "full_venue": "The Archives, 7332 E Earll Dr",
+      "link": "https://posh.vip/f/f0df0?t=sundownpromo-dj",
+      "link_text": "Tickets"
+    },
+    {
+      "date": "Oct 31",
+      "venue": "The Drop PHX",
+      "location": "Phoenix, AZ",
+      "type": "Just The Afters · 3–4 AM",
+      "status": "live",
+      "full_venue": "The Drop PHX, 4700 N 12th St",
+      "link": "https://thedropphx.com/events/just-the-afters-10-31",
+      "link_text": "Tickets"
+    },
+    {
+      "date": "Oct 17",
+      "venue": "YZ Karaoke Cafe",
+      "location": "Mesa, AZ",
+      "type": "Good Vibes Only Vol. 2",
+      "status": "past"
+    },
+    {
+      "date": "Oct 9",
+      "venue": "Sunbar",
+      "location": "Tempe, AZ",
+      "type": "Support for Flava D",
+      "status": "past",
+      "full_venue": "Sunbar Patio"
+    },
+    {
+      "date": "Oct 3",
+      "venue": "IDK Afters",
+      "location": "Arizona",
+      "type": "Afters · 4–5 AM",
+      "status": "past"
+    },
+    {
       "date": "Sep 19",
       "venue": "Electric Sanctuary",
       "location": "Scottsdale, AZ",
-      "type": "DJ Set — House",
+      "type": "Private Event — House",
       "status": "past",
       "full_venue": "Electric Sanctuary",
       "link": "https://www.youtube.com/watch?v=33oo3iiBxF8",
@@ -142,12 +184,41 @@
       "full_venue": "Old Town Scottsdale"
     },
     {
+      "date": "Aug 28",
+      "venue": "Sunbar",
+      "location": "Tempe, AZ",
+      "type": "b2b DeathBeat",
+      "status": "past",
+      "full_venue": "Sunbar Patio"
+    },
+    {
+      "date": "Aug 20",
+      "venue": "Almost Famous",
+      "location": "Scottsdale, AZ",
+      "type": "Mattilo re-opening · b2b TESSLA",
+      "status": "past"
+    },
+    {
       "date": "Jul 25",
       "venue": "MogFest",
       "location": "Phoenix, AZ",
       "type": "DJ Set — All Genres",
       "status": "past",
       "full_venue": "VIP Event Center"
+    },
+    {
+      "date": "Jul 24",
+      "venue": "The Enclave",
+      "location": "Arizona",
+      "type": "DJ Set",
+      "status": "past"
+    },
+    {
+      "date": "Jul 24",
+      "venue": "IDK Afters",
+      "location": "Arizona",
+      "type": "Private Afters · 1–2 AM",
+      "status": "past"
     },
     {
       "date": "Jun 18",
@@ -157,6 +228,28 @@
       "status": "past",
       "full_venue": "YZ's Karaoke Bar",
       "note": "Set Recording Coming Soon"
+    },
+    {
+      "date": "May 14",
+      "venue": "Riot House",
+      "location": "Scottsdale, AZ",
+      "type": "Sundown Promo · Crowd Control",
+      "status": "past"
+    },
+    {
+      "date": "May 1",
+      "venue": "MogFest: Ascension",
+      "location": "Phoenix, AZ",
+      "type": "b2b DrawFour · Sold Out",
+      "status": "past",
+      "full_venue": "Omega Strong Gym"
+    },
+    {
+      "date": "Mar 20",
+      "venue": "After12",
+      "location": "Arizona",
+      "type": "DJ Set",
+      "status": "past"
     }
   ],
   "contact": {
