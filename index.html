@@ -1439,6 +1439,38 @@
       .p-wv, .p-progress, .p-close { display: none; }
     }
 
+    /* ─── MOBILE PASS (2026-10-28) ──────────────────────────────── */
+    @media (max-width: 600px) {
+      /* Shows: one compact card per row (date | venue + details | link) instead of six stacked cells. */
+      .evt, .evt tbody { display: block; }
+      .evt tbody tr { display: grid; grid-template-columns: 12px 56px minmax(0,1fr); column-gap: 12px; align-items: start; padding: 14px 0; }
+      .evt td { padding: 0 !important; background: none !important; line-height: 1.45; }
+      .evt td:nth-child(n) { width: auto; }
+      .evt .e-dot { grid-row: 1 / span 3; padding-top: 4px !important; }
+      .evt .ed { grid-column: 2; grid-row: 1 / span 3; color: var(--white); }
+      .evt td:nth-child(3) { grid-column: 3; font-size: 14px; }
+      .evt td:nth-child(4), .evt td:nth-child(5) { grid-column: 3; font-size: 11px; color: var(--gray); }
+      .evt td:nth-child(6) { grid-column: 3; padding-top: 8px !important; }
+      .evt td:nth-child(6):empty { display: none; }
+      .evt .da { min-height: 40px; padding: 0 14px; border: 1px solid rgba(215,239,194,.3); font-size: 10px; }
+      .evt tbody tr:hover td { padding-left: 0 !important; }
+      .tba { font-size: 9px; }
+      .past-block { margin-top: 40px; }
+      /* Footer links: 44px rows to tap. */
+      .foot-nav-col { gap: 0; }
+      .foot-nav-col a, .foot-socials a { padding: 11px 0; }
+      .hs { display: none; }
+    }
+    @media (max-width: 900px) {
+      /* Lift back-to-top clear of the sticky CTA bar. */
+      .btt { bottom: 80px; right: 16px; }
+    }
+    .cs-label, .cs-sc { font-size: 10px; }
+    .cs-meta, .cs-time, .cs-dur, .cl-m, .cl-d { font-size: 10px; }
+    .mob-book-row { position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 700; display: none; gap: 8px; pointer-events: none; }
+    .mob-book-row .mob-book { position: static; flex: 1; pointer-events: auto; }
+    .mob-book.alt { background: var(--black); color: var(--sage); border: 1px solid var(--sage); }
+    @media (max-width: 900px) { .mob-book-row { display: flex; } }
   </style>
 </head>
 <body>
@@ -2175,7 +2207,10 @@
 
   </main>
 
-  <a href="#contact" class="mob-book" id="mob-book">Book a Set</a>
+  <div class="mob-book-row">
+    <a href="#links" class="mob-book" id="mob-tix">Get Tickets</a>
+    <a href="#contact" class="mob-book alt" id="mob-book">Book a Set</a>
+  </div>
 
   <!-- FOOTER -->
   <footer>
@@ -2308,13 +2343,13 @@
        Shows once the hero is out of view, hides again over the contact
        section so it never sits on top of the form it links to. */
     (function() {
-      const cta = document.getElementById('mob-book');
+      const cta = document.getElementById('mob-book'), tix = document.getElementById('mob-tix');
       const hero = document.getElementById('hero');
       const contact = document.getElementById('contact');
       if (!cta || !hero || !contact) return;
 
       let pastHero = false, atContact = false;
-      const sync = () => cta.classList.toggle('on', pastHero && !atContact);
+      const sync = () => [cta, tix].forEach(b => b && b.classList.toggle('on', pastHero && !atContact));
 
       new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; sync(); },
         { threshold: 0 }).observe(hero);
@@ -3143,6 +3178,9 @@
       var host = el('c-tix'), cta = el('hero-cta');
       var tix = events.filter(function(ev) { return ev && ev.status !== 'past' && /^https?:/i.test(String(ev.link || '').trim()) && safeUrl(ev.link); });
       if (cta) { cta.textContent = tix.length ? 'Get Tickets' : 'Stream Now'; cta.setAttribute('href', tix.length ? '#links' : '#music'); }
+      var mt = el('mob-tix'), mb = el('mob-book');
+      if (mt) mt.style.display = tix.length ? '' : 'none';
+      if (mb) mb.classList.toggle('alt', !!tix.length);
       if (!host) return;
       if (!tix.length) { host.style.display = 'none'; refreshTriggers(); return; }
       host.style.display = '';
