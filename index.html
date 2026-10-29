@@ -362,7 +362,8 @@
     .hcut { position: absolute; inset: 0; visibility: hidden; overflow: hidden; }
     .hcut.on { visibility: visible; }
     .hcut.on .hz { animation: hz-settle 1.2s cubic-bezier(.16,1,.3,1) both; }
-    .hz { position: absolute; inset: 0; }
+    .hz { position: absolute; inset: 0; will-change: transform; }
+    #hero.cutting .hn, #hero.cutting .hero-plate { visibility: hidden; }  /* covered: don't paint the 3D logo or plate */
     @keyframes hz-settle { from { transform: scale(1.06); } to { transform: scale(1); } }
     .hcut .ph { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .hmark { display: block; aspect-ratio: 900 / 353; background: #f2e3c8;
@@ -375,7 +376,7 @@
     .hc-photo .hmark { width: min(22vw, 300px); filter: drop-shadow(0 6px 30px rgba(0,0,0,.45)); }
     .hc-photo.tiny .hmark { width: min(12vw, 150px); }
     .hc-torn { background: #2a1f17; }
-    .hc-torn svg { position: absolute; left: -8%; top: 46%; width: 140%; transform: translateY(-50%); }
+    .hc-torn img { position: absolute; left: -8%; top: 46%; width: 140%; transform: translateY(-50%); }
     .hc-paper { background: #ece0c9; }
     .hc-paper .lock { position: absolute; left: 8%; right: 8%; top: 46%; transform: translateY(-50%); display: flex; justify-content: space-between; align-items: center; }
     .hc-paper .hmark { width: min(20vw, 260px); background: var(--black); }
@@ -392,11 +393,11 @@
       .hc-split .l { inset: 0 0 50% 0; } .hc-split .r { inset: 50% 0 0 0; }
       .hc-split .hmark { width: 82vw; }
       .hc-photo .hmark { width: 46vw; } .hc-photo.tiny .hmark { width: 28vw; }
-      .hc-torn svg { width: 230%; left: -20%; }
+      .hc-torn img { width: 230%; left: -20%; }
       .hc-paper .lock { flex-direction: column; gap: 22px; }
       .hc-paper .hmark { width: 54vw; }
       .hc-collage .fill { width: 92vw; }
-      .hctr { top: 33%; } .hc-torn svg { top: 34%; } .hc-paper .lock { top: 34%; }
+      .hctr { top: 33%; } .hc-torn img { top: 34%; } .hc-paper .lock { top: 34%; }
     }
     .hero-plate { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: var(--black); }
     .hero-plate video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity 1s ease; }
@@ -424,9 +425,8 @@
       content: ''; position: absolute; inset: 0; pointer-events: none;
       -webkit-mask: url(images/brand/grlscry-logo-900.webp) center / 100% 100% no-repeat;
               mask: url(images/brand/grlscry-logo-900.webp) center / 100% 100% no-repeat;
-      background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,.5) 49%, transparent 60%);
+      background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,.32) 49%, transparent 60%);
       background-size: 260% 100%; background-position: 135% 0;
-      mix-blend-mode: screen;
       animation: sheen 7s ease-in-out 2s infinite;
     }
     /* 3D pieces: the logo's 4 alpha-connected parts (GR, LS, CR, Y), built by
@@ -447,8 +447,8 @@
     .lp-exit, .lp-move, .lp-body { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: calc(var(--cx) * 1%) calc(var(--cy) * 1%); }
     .lp-body { transform-origin: calc(var(--cx) * 1%) calc(var(--bot) * 1%); animation: jelly 5.5s ease-in-out infinite; animation-delay: var(--d, 0s); }
     .lp-body img { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .lp-face { filter: drop-shadow(0 22px 44px rgba(255,105,180,.30)) drop-shadow(0 3px 2px rgba(0,0,0,.45)); }
-    .lp-ext { filter: brightness(.5) saturate(1.35); }
+    .lp-face { filter: drop-shadow(0 22px 44px rgba(255,105,180,.30)) drop-shadow(0 3px 2px rgba(0,0,0,.45)); will-change: transform; }
+    .lp-ext { filter: brightness(.5) saturate(1.35); will-change: transform; }
     .lp-body::after {
       content: ''; position: absolute; inset: 0; pointer-events: none;
       -webkit-mask: var(--m) center / 100% 100% no-repeat;
@@ -1454,13 +1454,17 @@
     .asm { position: relative; z-index: 2; height: clamp(620px, 100vh, 920px); overflow: hidden; background: #0e0e0e; }
     .asm-stage { position: absolute; inset: 0; perspective: 1400px; }
     .asm-card { position: absolute; left: 0; top: 0; aspect-ratio: 4/5; border-radius: 18px; cursor: pointer;
-      transform-style: preserve-3d; will-change: transform; padding: 0; border: 0; background: none; }
+      transform-style: preserve-3d; padding: 0;  /* no will-change: a permanent layer at 1x got re-rastered at 3x on every open/close */ border: 0; background: none; }
     .asm-in { display: block; width: 100%; height: 100%; border-radius: inherit; overflow: hidden; background: #1a1a1a;
-      box-shadow: 0 24px 60px rgba(0,0,0,.55); transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
+      box-shadow: 0 10px 26px rgba(0,0,0,.5); transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
     .asm-in img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .asm-card:hover .asm-in, .asm-card:focus-visible .asm-in { transform: scale(1.06) translateZ(0); box-shadow: 0 34px 80px rgba(0,0,0,.7); }
+    .asm-card:hover .asm-in, .asm-card:focus-visible .asm-in { transform: scale(1.06) translateZ(0); box-shadow: 0 16px 36px rgba(0,0,0,.6); }
+    .asm.is-open .asm-card:not(.on) .asm-in, .asm.settling .asm-in { box-shadow: none; }  /* shadows only on cards at rest */
     .asm-card:focus-visible { outline: 2px solid var(--a, #c8f0b0); outline-offset: 4px; }
     .asm.is-open .asm-card.on .asm-in { transform: none; }
+    .asm-veil { position: absolute; inset: 0; z-index: 400; pointer-events: none; opacity: 0; visibility: hidden; transition: none;
+      -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); background: rgba(14,14,14,.35); }
+    .asm.is-open .asm-veil { opacity: 1; visibility: visible; transition: opacity .4s ease .75s, visibility 0s .75s; }  /* fades in once the cards have stopped; vanishes at once on close */
     .asm-hint { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 3; margin: 0;
       font: 500 10px/1 var(--mono, monospace); letter-spacing: .24em; text-transform: uppercase; color: rgba(242,227,200,.55); pointer-events: none; transition: opacity .4s; }
     .asm.is-open .asm-hint { opacity: 0; }
@@ -1598,15 +1602,7 @@
       <div class="hcut hc-split"><div class="hz"><div class="l"><img class="ph" data-src="images/assembly/s15.webp" alt=""></div><div class="r"></div><span class="hmark hctr"></span></div></div>
       <div class="hcut hc-photo"><div class="hz"><img class="ph" data-src="images/reel/sunbar-oct9-w.webp" alt=""><span class="hmark hctr"></span></div></div>
       <div class="hcut hc-torn"><div class="hz">
-        <svg viewBox="0 0 900 353"><filter id="hc-torn" x="-5%" y="-5%" width="110%" height="110%">
-          <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="4" seed="7" result="t"/>
-          <feDisplacementMap in="SourceGraphic" in2="t" scale="14" xChannelSelector="R" yChannelSelector="G" result="d"/>
-          <feTurbulence type="fractalNoise" baseFrequency=".6 .08" numOctaves="2" seed="3" result="fib"/>
-          <feColorMatrix in="fib" values="0 0 0 0 .95  0 0 0 0 .89  0 0 0 0 .78  0 0 0 -1.4 1.25" result="paper"/>
-          <feComposite in="paper" in2="d" operator="in" result="pp"/>
-          <feFlood flood-color="#f2e3c8"/><feComposite in2="d" operator="in" result="base"/>
-          <feMerge><feMergeNode in="base"/><feMergeNode in="pp"/></feMerge>
-        </filter><image href="images/brand/mark-flat.png" width="900" height="353" filter="url(#hc-torn)"/></svg></div></div>
+        <img src="images/brand/mark-torn.webp" alt="" decoding="async"></div></div>
       <div class="hcut hc-photo tiny"><div class="hz"><img class="ph" data-src="images/reel/enclave-w.webp" alt=""><span class="hmark hctr"></span></div></div>
       <div class="hcut hc-paper"><div class="hz"><div class="lock"><span class="hmark"></span><span>DJ / Producer · Scottsdale, AZ</span></div></div></div>
       <div class="hcut hc-collage"><div class="hz"><div class="fill hctr"><img data-src="images/assembly/s02.webp" alt=""><img data-src="images/assembly/s16.webp" alt=""><img data-src="images/assembly/s09.webp" alt=""><img data-src="images/assembly/s19.webp" alt=""><img data-src="images/assembly/s05.webp" alt=""><img data-src="images/assembly/s17.webp" alt=""><img data-src="images/assembly/s13.webp" alt=""><img data-src="images/assembly/s01.webp" alt=""><img data-src="images/assembly/s18.webp" alt=""><img data-src="images/assembly/s11.webp" alt=""><img data-src="images/assembly/s14.webp" alt=""><img data-src="images/assembly/s15.webp" alt=""><img data-src="images/assembly/s07.webp" alt=""><img data-src="images/assembly/s12.webp" alt=""></div></div></div>
@@ -2141,7 +2137,7 @@
   </section>
 
   <section class="asm" id="asm" aria-label="Photos of GRLS CRY">
-    <div class="asm-stage" id="asm-stage"></div>
+    <div class="asm-stage" id="asm-stage"><div class="asm-veil" aria-hidden="true"></div></div>
     <p class="asm-hint">Tap a photo</p>
   </section>
 
@@ -2459,7 +2455,7 @@
       document.addEventListener('visibilitychange', kick);
       setTimeout(() => {
         const tall = window.matchMedia('(max-width: 700px)').matches;  // phones get the 4:5 crops
-        box.querySelectorAll('img[data-src]').forEach(im => { im.src = tall ? im.dataset.src.replace('-w.webp', '-t.webp') : im.dataset.src; im.removeAttribute('data-src'); });
+        box.querySelectorAll('img[data-src]').forEach(im => { im.src = tall ? im.dataset.src.replace('-w.webp', '-t.webp') : im.dataset.src; im.removeAttribute('data-src'); im.decode && im.decode().catch(() => {}); });  // decode ahead so the first cut doesn't hitch
         t = setTimeout(run, 2000);                             // first cut ~3.2 s in, after the pieces land
       }, 1200);
     })();
@@ -2516,23 +2512,24 @@
       }
       function home(dur) {
         cards.forEach((c, i) => { const s = slots[i]; if (!s) return;
-          gsap.to(c, { x: s.x, y: s.y, z: 0, rotation: s.r, scale: 1, opacity: 1, filter: 'blur(0px)', duration: dur, ease: 'expo.out', overwrite: true }); });
+          gsap.to(c, { x: s.x, y: s.y, z: 0, rotation: s.r, scale: 1, opacity: 1, duration: dur, ease: 'expo.out', overwrite: true }); });
       }
       function focus(i) {
         const W = stage.clientWidth, H = stage.clientHeight, s = slots[i];
         const tw = Math.min(W * .62, H * .72 * .8), sc = tw / s.w;
         open = i; box.classList.add('is-open'); cards.forEach(c => c.classList.toggle('on', c === cards[i]));
-        cards[i].style.zIndex = 500;
-        gsap.to(cards[i], { x: W / 2 - s.w / 2, y: H / 2 - s.w * .625, z: 0, rotation: 0, scale: sc, opacity: 1, filter: 'blur(0px)',
+        cards[i].style.zIndex = 500;  // above .asm-veil (400)
+        gsap.to(cards[i], { x: W / 2 - s.w / 2, y: H / 2 - s.w * .625, z: 0, rotation: 0, scale: sc, opacity: 1,
           duration: still ? 0 : 1.1, ease: 'expo.inOut', overwrite: true });
         cards.forEach((c, j) => { const t = slots[j]; if (j === i || !t) return;
           const dx = t.x + t.w / 2 - W / 2, dy = t.y + t.w * .625 - H / 2, d = Math.hypot(dx, dy) || 1;
           const push = Math.max(W, H) * .32;
-          gsap.to(c, { x: t.x + dx / d * push, y: t.y + dy / d * push * .7, z: -260, opacity: .45, filter: 'blur(7px)',
+          gsap.to(c, { x: t.x + dx / d * push, y: t.y + dy / d * push * .7, z: -260, opacity: .5,
             duration: still ? 0 : 1.1, ease: 'expo.inOut', overwrite: true }); });
       }
       function close() {
         if (open < 0) return; const s = slots[open]; cards[open].style.zIndex = s ? s.z : 1;
+        box.classList.add('settling'); clearTimeout(box._st); box._st = setTimeout(() => box.classList.remove('settling'), 1000);
         open = -1; box.classList.remove('is-open'); cards.forEach(c => c.classList.remove('on')); home(still ? 0 : 1);
       }
       cards.forEach((c, i) => c.addEventListener('click', e => { e.stopPropagation(); open === i ? close() : focus(i); }));
@@ -2548,11 +2545,11 @@
         const W = stage.clientWidth, H = stage.clientHeight;
         cards.forEach((c, i) => { const s = slots[i]; if (!s) return;
           gsap.set(c, { x: W / 2 + (rnd(i + 3) - .5) * W * 1.4 - s.w / 2, y: H / 2 + (rnd(i + 11) - .5) * H * 1.2, z: -2400 - rnd(i + 5) * 1600,
-            rotation: (rnd(i + 2) - .5) * 40, opacity: 0, filter: 'blur(14px)' }); });
+            rotation: (rnd(i + 2) - .5) * 40, opacity: 0 }); });
         ScrollTrigger.create({ trigger: box, start: 'top 70%', once: true, onEnter: () => {
           assembled = true;
           cards.forEach((c, i) => { const s = slots[i]; if (!s) return;
-            gsap.to(c, { x: s.x, y: s.y, z: 0, rotation: s.r, opacity: 1, filter: 'blur(0px)', duration: 1.6, delay: i * .045, ease: 'expo.out' }); });
+            gsap.to(c, { x: s.x, y: s.y, z: 0, rotation: s.r, opacity: 1, duration: 1.6, delay: i * .045, ease: 'expo.out' }); });
         } });
       }
       let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => {
@@ -3448,7 +3445,7 @@
         var f = p - Math.floor(p); if (f < .001 || f > .999) return;
         var t = dir > 0 ? (f > .22 ? Math.ceil(p) : Math.floor(p)) : (f < .78 ? Math.floor(p) : Math.ceil(p));
         var y = st.start + (t / (n - 1)) * (st.end - st.start);
-        if (window.lenis) window.lenis.scrollTo(y, { duration: .9 }); else window.scrollTo({ top: y, behavior: 'smooth' });
+        if (window.lenis) window.lenis.scrollTo(y, { duration: .55, easing: t => 1 - Math.pow(1 - t, 3) }); else window.scrollTo({ top: y, behavior: 'smooth' });
       });
       refreshTriggers();
     }
