@@ -2364,6 +2364,12 @@
     /* ── ARTIST LOOP: plays only while on screen; reduced motion keeps the poster. ── */
     (function() {
       const v = document.getElementById('fr-loop'), sec = document.getElementById('artist');
+      // phones get the 9:16 cut; the 16:9 one cropped to a tall screen is mostly wall
+      if (v && window.matchMedia('(max-width: 768px)').matches) {
+        v.poster = 'images/frames/artist-loop-m-poster.jpg';
+        v.querySelectorAll('source').forEach(s => { s.src = s.getAttribute('src').replace('artist-loop.', 'artist-loop-m.'); });
+        v.load();
+      }
       if (!v || !sec || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       new IntersectionObserver(([e]) => {
         if (e.isIntersecting) { v.preload = 'auto'; v.play().catch(() => {}); } else v.pause();
