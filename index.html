@@ -355,6 +355,49 @@
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
     .hn { position: relative; z-index: 2; opacity: 0; animation: su 1s var(--ease) .3s forwards; margin-bottom: 2px; }
     /* ─── HERO PLATE (own live footage) + JELLY LOGO ─────────────── */
+    /* ── HERO CUTS (prototype B, picked 2026-10-29): after the jelly-logo intro, the hero cuts through
+       brand treatments (split, photo + mark, torn-paper mark, tiny mark, paper lockup, collage mark) and
+       back to the jelly plate. Label and buttons stay above the cuts. ── */
+    .hero-cuts { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+    .hcut { position: absolute; inset: 0; visibility: hidden; overflow: hidden; }
+    .hcut.on { visibility: visible; }
+    .hcut.on .hz { animation: hz-settle 1.2s cubic-bezier(.16,1,.3,1) both; }
+    .hz { position: absolute; inset: 0; }
+    @keyframes hz-settle { from { transform: scale(1.06); } to { transform: scale(1); } }
+    .hcut .ph { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hmark { display: block; aspect-ratio: 900 / 353; background: #f2e3c8;
+      -webkit-mask: url(images/brand/mark-flat.png) center / contain no-repeat; mask: url(images/brand/mark-flat.png) center / contain no-repeat; }
+    .hctr { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); }
+    .hc-split .l { position: absolute; inset: 0 50% 0 0; }
+    .hc-split .r { position: absolute; inset: 0 0 0 50%; background: #f2e3c8; }
+    .hc-split .r::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 9%; background: var(--sage); }
+    .hc-split .hmark { width: min(46vw, 640px); mix-blend-mode: difference; }
+    .hc-photo .hmark { width: min(22vw, 300px); filter: drop-shadow(0 6px 30px rgba(0,0,0,.45)); }
+    .hc-photo.tiny .hmark { width: min(12vw, 150px); }
+    .hc-torn { background: #2a1f17; }
+    .hc-torn svg { position: absolute; left: -8%; top: 46%; width: 140%; transform: translateY(-50%); }
+    .hc-paper { background: #ece0c9; }
+    .hc-paper .lock { position: absolute; left: 8%; right: 8%; top: 46%; transform: translateY(-50%); display: flex; justify-content: space-between; align-items: center; }
+    .hc-paper .hmark { width: min(20vw, 260px); background: var(--black); }
+    .hc-paper .lock span { font: 600 clamp(10px, 1vw, 13px)/1 var(--mono); letter-spacing: .3em; text-transform: uppercase; color: var(--black); }
+    .hc-collage { background: #f6f1e7; }
+    .hc-collage .fill { width: min(78vw, 1100px); aspect-ratio: 900 / 353; display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: repeat(2, 1fr);
+      -webkit-mask: url(images/brand/mark-flat.png) center / contain no-repeat; mask: url(images/brand/mark-flat.png) center / contain no-repeat; }
+    .hc-collage .fill img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hc-collage .fill img:nth-child(3n) { filter: grayscale(1) contrast(1.2); }
+    #hero .heb, #hero .hc { z-index: 4; }
+    #hero.cutting .heb { background: rgba(14,14,14,.62); padding: 8px 12px; align-self: flex-start; }
+    #hero.cutting .hc .bo { background: rgba(14,14,14,.62); }
+    @media (max-width: 700px) {
+      .hc-split .l { inset: 0 0 50% 0; } .hc-split .r { inset: 50% 0 0 0; }
+      .hc-split .hmark { width: 82vw; }
+      .hc-photo .hmark { width: 46vw; } .hc-photo.tiny .hmark { width: 28vw; }
+      .hc-torn svg { width: 230%; left: -20%; }
+      .hc-paper .lock { flex-direction: column; gap: 22px; }
+      .hc-paper .hmark { width: 54vw; }
+      .hc-collage .fill { width: 92vw; }
+      .hctr { top: 33%; } .hc-torn svg { top: 34%; } .hc-paper .lock { top: 34%; }
+    }
     .hero-plate { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: var(--black); }
     .hero-plate video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity 1s ease; }
     .hero-plate video.on { opacity: .5; }
@@ -1551,6 +1594,23 @@
              poster="images/hero/plate-poster.jpg" width="1600" height="900"></video>
     </div>
 
+    <div class="hero-cuts" id="hero-cuts" aria-hidden="true">
+      <div class="hcut hc-split"><div class="hz"><div class="l"><img class="ph" data-src="images/assembly/s15.webp" alt=""></div><div class="r"></div><span class="hmark hctr"></span></div></div>
+      <div class="hcut hc-photo"><div class="hz"><img class="ph" data-src="images/reel/sunbar-oct9-w.webp" alt=""><span class="hmark hctr"></span></div></div>
+      <div class="hcut hc-torn"><div class="hz">
+        <svg viewBox="0 0 900 353"><filter id="hc-torn" x="-5%" y="-5%" width="110%" height="110%">
+          <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="4" seed="7" result="t"/>
+          <feDisplacementMap in="SourceGraphic" in2="t" scale="14" xChannelSelector="R" yChannelSelector="G" result="d"/>
+          <feTurbulence type="fractalNoise" baseFrequency=".6 .08" numOctaves="2" seed="3" result="fib"/>
+          <feColorMatrix in="fib" values="0 0 0 0 .95  0 0 0 0 .89  0 0 0 0 .78  0 0 0 -1.4 1.25" result="paper"/>
+          <feComposite in="paper" in2="d" operator="in" result="pp"/>
+          <feFlood flood-color="#f2e3c8"/><feComposite in2="d" operator="in" result="base"/>
+          <feMerge><feMergeNode in="base"/><feMergeNode in="pp"/></feMerge>
+        </filter><image href="images/brand/mark-flat.png" width="900" height="353" filter="url(#hc-torn)"/></svg></div></div>
+      <div class="hcut hc-photo tiny"><div class="hz"><img class="ph" data-src="images/reel/enclave-w.webp" alt=""><span class="hmark hctr"></span></div></div>
+      <div class="hcut hc-paper"><div class="hz"><div class="lock"><span class="hmark"></span><span>DJ / Producer · Scottsdale, AZ</span></div></div></div>
+      <div class="hcut hc-collage"><div class="hz"><div class="fill hctr"><img data-src="images/assembly/s02.webp" alt=""><img data-src="images/assembly/s16.webp" alt=""><img data-src="images/assembly/s09.webp" alt=""><img data-src="images/assembly/s19.webp" alt=""><img data-src="images/assembly/s05.webp" alt=""><img data-src="images/assembly/s17.webp" alt=""><img data-src="images/assembly/s13.webp" alt=""><img data-src="images/assembly/s01.webp" alt=""><img data-src="images/assembly/s18.webp" alt=""><img data-src="images/assembly/s11.webp" alt=""><img data-src="images/assembly/s14.webp" alt=""><img data-src="images/assembly/s15.webp" alt=""><img data-src="images/assembly/s07.webp" alt=""><img data-src="images/assembly/s12.webp" alt=""></div></div></div>
+    </div>
     <!-- decorative asset — top right -->
     <picture><source srcset="CybersygilsimAsset.webp" type="image/webp"><img src="CybersygilsimAsset.jpg" class="deco-img hero-deco-tr" alt="" aria-hidden="true"></picture>
     <!-- decorative asset — bottom left -->
@@ -2378,6 +2438,30 @@
         { threshold: 0 }).observe(hero);
       new IntersectionObserver(([e]) => { atContact = e.isIntersecting; sync(); },
         { threshold: 0 }).observe(contact);
+    })();
+
+    /* ── HERO CUTS: jelly plate (2.8 s) → five treatments (1.4 s each) → back. Starts after the logo intro,
+       pauses off-screen / in hidden tabs, off under reduced motion. ── */
+    (function() {
+      const hero = document.getElementById('hero'), box = document.getElementById('hero-cuts');
+      if (!hero || !box || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const cuts = [...box.querySelectorAll('.hcut')];
+      let i = -1, t = null, visible = true;
+      const step = () => {
+        i = i + 1 >= cuts.length ? -1 : i + 1;                 // -1 = the jelly plate shows through
+        cuts.forEach((c, j) => c.classList.toggle('on', j === i));
+        hero.classList.toggle('cutting', i >= 0);
+        t = setTimeout(run, i < 0 ? 2800 : 1400);
+      };
+      const run = () => { t = null; if (visible && !document.hidden) step(); };
+      const kick = () => { if (!t && visible && !document.hidden) t = setTimeout(run, 400); };
+      new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) kick(); }, { threshold: .3 }).observe(hero);
+      document.addEventListener('visibilitychange', kick);
+      setTimeout(() => {
+        const tall = window.matchMedia('(max-width: 700px)').matches;  // phones get the 4:5 crops
+        box.querySelectorAll('img[data-src]').forEach(im => { im.src = tall ? im.dataset.src.replace('-w.webp', '-t.webp') : im.dataset.src; im.removeAttribute('data-src'); });
+        t = setTimeout(run, 2000);                             // first cut ~3.2 s in, after the pieces land
+      }, 1200);
     })();
 
     /* ── ARTIST LOOP: plays only while on screen; reduced motion keeps the poster. ── */
