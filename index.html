@@ -1259,7 +1259,7 @@
     footer > *:not(.foot-wm) { position: relative; z-index: 1; }
 
     /* ─── EVENTS SECTION OVERFLOW FIX ───────────────────────────── */
-    #events { overflow: hidden; }
+    #events { overflow: clip; } /* clip, not hidden: hidden would break the reel's sticky pin */
 
 
     /* Released single, links out to Spotify (no embed: keeps the CSP closed). */
@@ -1339,21 +1339,6 @@
       background: #1c1611;
       will-change: transform;
     }
-    .strip-artist-decks {
-      background-image: url('images/artist-decks.jpg');
-      background-image: -webkit-image-set(url('images/artist-decks.webp') type('image/webp'), url('images/artist-decks.jpg') type('image/jpeg'));
-      background-image: image-set(url('images/artist-decks.webp') type('image/webp'), url('images/artist-decks.jpg') type('image/jpeg'));
-    }
-    .strip-artist-night {
-      background-image: url('images/artist-night.jpg');
-      background-image: -webkit-image-set(url('images/artist-night.webp') type('image/webp'), url('images/artist-night.jpg') type('image/jpeg'));
-      background-image: image-set(url('images/artist-night.webp') type('image/webp'), url('images/artist-night.jpg') type('image/jpeg'));
-    }
-    .strip-artist-live {
-      background-image: url('images/artist-live.jpg');
-      background-image: -webkit-image-set(url('images/artist-live.webp') type('image/webp'), url('images/artist-live.jpg') type('image/jpeg'));
-      background-image: image-set(url('images/artist-live.webp') type('image/webp'), url('images/artist-live.jpg') type('image/jpeg'));
-    }
     .art-veil {
       position: absolute; inset: 0;
       background: linear-gradient(
@@ -1385,25 +1370,58 @@
       font-weight: 300;
     }
     .art-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
-    /* photo strip */
-    .art-strip {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      height: clamp(260px, 32vw, 420px); gap: 2px;
-      position: relative; z-index: 2;
+    /* ── SHOWS REEL: one full-frame panel per show, scrolled like film; short pulls spring back ── */
+    .reel { position: relative; margin: calc(-1 * clamp(80px,11vw,130px)) calc(-1 * var(--gutter)) clamp(64px,9vw,110px); }
+    .reel-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+    .reel-frame { position: absolute; top: 118px; left: 3vw; right: 3vw; bottom: 3vh; border-radius: 22px; overflow: hidden; background: #0b0b0b; }
+    .rp { position: absolute; inset: 0; will-change: transform; transform: translateY(100%); }
+    .rp:first-child { transform: none; }
+    .rp-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    .rp::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(to top, rgba(8,8,8,.88) 0%, rgba(8,8,8,.25) 45%, rgba(8,8,8,.15) 70%, rgba(8,8,8,.55) 100%); }
+    .rp-shade { position: absolute; inset: 0; background: #000; opacity: 0; z-index: 2; pointer-events: none; }
+    .rp-top, .rp-bot { position: absolute; left: clamp(20px,4vw,64px); right: clamp(20px,4vw,64px); z-index: 1; color: #f2e3c8; }
+    .rp-top { top: clamp(20px,4vh,44px); display: flex; justify-content: space-between; align-items: flex-start; }
+    .rp-bot { bottom: clamp(24px,5vh,56px); display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; }
+    .rp-tag { font: 500 10px/1.6 var(--mono); letter-spacing: .24em; text-transform: uppercase; opacity: .8; }
+    .rp-tag b { display: block; font-weight: 600; font-size: 13px; letter-spacing: .12em; opacity: 1; }
+    .rp-n { font: 500 10px/1 var(--mono); letter-spacing: .24em; opacity: .7; }
+    .rp-eye { font: 500 10px/1 var(--mono); letter-spacing: .24em; text-transform: uppercase; opacity: .75; margin: 0 0 14px; }
+    .rp-title { font-family: var(--poster); font-stretch: 125%; font-weight: 800; text-transform: uppercase;
+      font-size: clamp(40px, 7.4vw, 120px); line-height: .9; letter-spacing: -.01em; margin: 0; max-width: 11ch; }
+    .rp-meta { margin: 18px 0 0; font: 500 10px/1.8 var(--mono); letter-spacing: .2em; text-transform: uppercase; }
+    .rp-meta span { opacity: .55; margin-right: 10px; }
+    .rp-cta { flex-shrink: 0; display: inline-flex; align-items: center; gap: 14px; padding: 16px 26px; border-radius: 999px;
+      border: 1px solid rgba(242,227,200,.55); color: #f2e3c8; text-decoration: none; font: 600 11px/1 var(--mono); letter-spacing: .22em; text-transform: uppercase;
+      transition: background .3s, color .3s; }
+    .rp-cta:hover { background: #f2e3c8; color: #0e0e0e; }
+    .reel-dots { position: absolute; right: calc(3vw - 22px); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 3; }
+    .reel-dots i { width: 4px; height: 4px; border-radius: 50%; background: rgba(242,227,200,.3); transition: background .3s, transform .3s; }
+    .reel-dots i.on { background: #f2e3c8; transform: scale(1.6); }
+    @media (max-width: 768px) {
+      .reel-frame { top: 116px; left: 12px; right: 12px; bottom: 96px; border-radius: 18px; }
+      .rp-bot { flex-direction: column; align-items: flex-start; }
+      .rp-title { font-size: clamp(32px, 10vw, 56px); }
+      .reel-dots { right: 3px; }
     }
-    .art-strip-img {
-      background-size: cover; background-position: center 20%;
-      overflow: hidden; position: relative;
-      filter: grayscale(30%) brightness(.85);
-      transition: filter .6s var(--ease), transform .6s var(--ease);
-    }
-    .art-strip-img::after {
-      content: ''; position: absolute; inset: 0;
-      background: rgba(14,14,14,.35);
-      transition: background .6s;
-    }
-    .art-strip-img:hover { filter: grayscale(0) brightness(1); }
-    .art-strip-img:hover::after { background: rgba(14,14,14,.1); }
+    .reel.static .reel-pin { position: relative; height: auto; }
+    .reel.static .reel-frame { position: relative; inset: auto; height: 80vh; margin: 0 3vw 16px; top: 0; }
+    .reel.static .rp { transform: none; }
+    /* ── ASSEMBLY: photo cards fly in from depth into two clusters; a click dollies one to centre ── */
+    .asm { position: relative; z-index: 2; height: clamp(620px, 100vh, 920px); overflow: hidden; background: #0e0e0e; }
+    .asm-stage { position: absolute; inset: 0; perspective: 1400px; }
+    .asm-card { position: absolute; left: 0; top: 0; aspect-ratio: 4/5; border-radius: 18px; cursor: pointer;
+      transform-style: preserve-3d; will-change: transform; padding: 0; border: 0; background: none; }
+    .asm-in { display: block; width: 100%; height: 100%; border-radius: inherit; overflow: hidden; background: #1a1a1a;
+      box-shadow: 0 24px 60px rgba(0,0,0,.55); transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
+    .asm-in img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .asm-card:hover .asm-in, .asm-card:focus-visible .asm-in { transform: scale(1.06) translateZ(0); box-shadow: 0 34px 80px rgba(0,0,0,.7); }
+    .asm-card:focus-visible { outline: 2px solid var(--a, #c8f0b0); outline-offset: 4px; }
+    .asm.is-open .asm-card.on .asm-in { transform: none; }
+    .asm-hint { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 3; margin: 0;
+      font: 500 10px/1 var(--mono, monospace); letter-spacing: .24em; text-transform: uppercase; color: rgba(242,227,200,.55); pointer-events: none; transition: opacity .4s; }
+    .asm.is-open .asm-hint { opacity: 0; }
+
     @media (max-width: 768px) {
       .art-hero { grid-template-columns: 1fr; }
       .art-text {
@@ -1418,8 +1436,6 @@
           rgba(14,14,14,1) 100%
         );
       }
-      .art-strip { grid-template-columns: 1fr 1fr; height: 220px; }
-      .art-strip-img:last-child { display: none; }
     }
     @media (max-width: 640px) {
       #player { grid-template-columns: 1fr auto; padding: 0 16px; gap: 16px; }
@@ -1714,6 +1730,9 @@
   <!-- EVENTS -->
   <!-- ══════════════════════════════════════════════════════════════ -->
   <section id="events" aria-labelledby="events-h">
+    <div class="reel" id="reel" aria-label="Featured shows" hidden>
+      <div class="reel-pin"><div class="reel-frame" id="reel-frame"></div><div class="reel-dots" id="reel-dots" aria-hidden="true"></div></div>
+    </div>
     <div class="w">
       <div class="ew r">
         <span class="el"></span>
@@ -2059,11 +2078,11 @@
         </div>
       </div>
     </div>
-    <div class="art-strip">
-      <div class="art-strip-img strip-artist-decks" style="background-position:center 10%"></div>
-      <div class="art-strip-img strip-artist-night" style="background-position:center 15%"></div>
-      <div class="art-strip-img strip-artist-live" style="background-position:center 30%"></div>
-    </div>
+  </section>
+
+  <section class="asm" id="asm" aria-label="Photos of GRLS CRY">
+    <div class="asm-stage" id="asm-stage"></div>
+    <p class="asm-hint">Tap a photo</p>
   </section>
 
   <div class="ornament-row" aria-hidden="true">
@@ -2376,6 +2395,86 @@
       }, { threshold: .1 }).observe(sec);
     })();
 
+    /* ── ASSEMBLY: 19 cards fly in from depth into two loose clusters (one on phones). Clicking a card
+       dollies it to centre while the rest scatter outward and blur; click again, click away or Esc to put it back. ── */
+    (function() {
+      const box = document.getElementById('asm'), stage = document.getElementById('asm-stage');
+      if (!box || !stage) return;
+      const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const N = 19, cards = [];
+      // interleave the KRIS stills (1-14) with the site photos (15-19) so neither clump is one colour
+      const ORDER = [1,15,9,2,16,12,3,17,10,4,18,13,5,19,11,6,14,7,8];
+      // offsets in card widths from a cluster centre (y is down); authored, not random, so the clumps read composed
+      const A = [[-1.15,-1.35],[-.05,-1.5],[.95,-1.05],[-.6,-.2],[.45,-.1],[-1.35,.85],[-.25,.95],[.85,1.05],[-.8,1.95],[.3,2.0]];
+      const B = [[-.9,-1.3],[.2,-1.45],[1.15,-.95],[-.35,-.25],[.75,.05],[-1.2,.8],[-.05,1.0],[1.05,1.15],[-.45,2.0]];
+      const M = [[-1.1,-1.6],[0,-1.75],[1.05,-1.45],[-.55,-.55],[.55,-.45],[-1.15,.55],[0,.55],[1.1,.65],[-.55,1.6],[.6,1.7],[-1.05,2.6],[.25,2.75]];
+      const rnd = i => { const x = Math.sin(i * 91.37) * 43758.5453; return x - Math.floor(x); };
+      for (let i = 0; i < N; i++) {
+        const b = document.createElement('button');
+        b.className = 'asm-card'; b.type = 'button'; b.setAttribute('aria-label', 'Open photo ' + (i + 1));
+        b.innerHTML = '<span class="asm-in"><img data-src="images/assembly/s' + String(ORDER[i]).padStart(2, '0') + '.webp" alt="" decoding="async"></span>';
+        stage.appendChild(b); cards.push(b);
+      }
+      let slots = [], open = -1, assembled = false;
+      function layout() {
+        const W = stage.clientWidth, H = stage.clientHeight, phone = W < 700;
+        const w = phone ? Math.min(W / 4.1, H / 6.4) : Math.min(W * .1, H / 6);
+        slots = cards.map((c, i) => {
+          let o, cx, cy = H * .56;
+          if (phone) { o = M[i]; cx = W / 2; cy = H * .48; }
+          else if (i < A.length) { o = A[i]; cx = W * .33; }
+          else { o = B[i - A.length]; cx = W * .67; }
+          if (!o) return null;                        // phones show 12 of 19
+          const k = .86 + rnd(i) * .3;                // size varies so some read near, some far
+          return { x: cx + o[0] * w * 1.12 - w * k / 2, y: cy + (o[1] - .3) * w * 1.08 - w * k * .625, w: w * k, r: (rnd(i + 7) - .5) * 7, z: Math.round(k * 100) };
+        });
+        cards.forEach((c, i) => { const s = slots[i]; c.style.display = s ? '' : 'none'; if (s) { c.style.width = s.w + 'px'; c.style.zIndex = s.z; } });
+      }
+      function home(dur) {
+        cards.forEach((c, i) => { const s = slots[i]; if (!s) return;
+          gsap.to(c, { x: s.x, y: s.y, z: 0, rotation: s.r, scale: 1, opacity: 1, filter: 'blur(0px)', duration: dur, ease: 'expo.out', overwrite: true }); });
+      }
+      function focus(i) {
+        const W = stage.clientWidth, H = stage.clientHeight, s = slots[i];
+        const tw = Math.min(W * .62, H * .72 * .8), sc = tw / s.w;
+        open = i; box.classList.add('is-open'); cards.forEach(c => c.classList.toggle('on', c === cards[i]));
+        cards[i].style.zIndex = 500;
+        gsap.to(cards[i], { x: W / 2 - s.w / 2, y: H / 2 - s.w * .625, z: 0, rotation: 0, scale: sc, opacity: 1, filter: 'blur(0px)',
+          duration: still ? 0 : 1.1, ease: 'expo.inOut', overwrite: true });
+        cards.forEach((c, j) => { const t = slots[j]; if (j === i || !t) return;
+          const dx = t.x + t.w / 2 - W / 2, dy = t.y + t.w * .625 - H / 2, d = Math.hypot(dx, dy) || 1;
+          const push = Math.max(W, H) * .32;
+          gsap.to(c, { x: t.x + dx / d * push, y: t.y + dy / d * push * .7, z: -260, opacity: .45, filter: 'blur(7px)',
+            duration: still ? 0 : 1.1, ease: 'expo.inOut', overwrite: true }); });
+      }
+      function close() {
+        if (open < 0) return; const s = slots[open]; cards[open].style.zIndex = s ? s.z : 1;
+        open = -1; box.classList.remove('is-open'); cards.forEach(c => c.classList.remove('on')); home(still ? 0 : 1);
+      }
+      cards.forEach((c, i) => c.addEventListener('click', e => { e.stopPropagation(); open === i ? close() : focus(i); }));
+      box.addEventListener('click', close);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+      // cards parked deep in z read as offscreen to lazy loading, so fetch them all as the section nears
+      const load = () => stage.querySelectorAll('img[data-src]').forEach(im => { im.src = im.dataset.src; im.removeAttribute('data-src'); });
+      ScrollTrigger.create({ trigger: box, start: 'top 250%', once: true, onEnter: load });
+      layout();
+      if (still) { home(0); assembled = true; }
+      else {
+        // start scattered deep in space, out of focus
+        const W = stage.clientWidth, H = stage.clientHeight;
+        cards.forEach((c, i) => { const s = slots[i]; if (!s) return;
+          gsap.set(c, { x: W / 2 + (rnd(i + 3) - .5) * W * 1.4 - s.w / 2, y: H / 2 + (rnd(i + 11) - .5) * H * 1.2, z: -2400 - rnd(i + 5) * 1600,
+            rotation: (rnd(i + 2) - .5) * 40, opacity: 0, filter: 'blur(14px)' }); });
+        ScrollTrigger.create({ trigger: box, start: 'top 70%', once: true, onEnter: () => {
+          assembled = true;
+          cards.forEach((c, i) => { const s = slots[i]; if (!s) return;
+            gsap.to(c, { x: s.x, y: s.y, z: 0, rotation: s.r, opacity: 1, filter: 'blur(0px)', duration: 1.6, delay: i * .045, ease: 'expo.out' }); });
+        } });
+      }
+      let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => {
+        layout(); if (open >= 0) focus(open); else if (assembled) home(0); }, 150); });
+    })();
+
     /* ── STATUS BAR ─────────────────────────────────────────────── */
     (function() {
       const m = document.getElementById('marquee');
@@ -2480,6 +2579,7 @@
       smooth: true, mouseMultiplier: 1,
       smoothTouch: false, touchMultiplier: 2,
     });
+    window.lenis = lenis;
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add(time => { lenis.raf(time * 1000); });
     gsap.ticker.lagSmoothing(0);
@@ -3128,6 +3228,7 @@
         /* Links — first item is the featured card (16:9 cover). */
         if (Array.isArray(c.links)) renderLinks(c.links);
         renderTix(Array.isArray(c.events) ? c.events : []);
+        renderReel(Array.isArray(c.events) ? c.events : []);
 
         /* Contact */
         if (c.contact) {
@@ -3209,6 +3310,62 @@
           '<span><span class="tx-v">' + esc(ev.venue) + '</span>' + (sub ? '<span class="lk-sub">' + sub + '</span>' : '') + '</span>' +
           '<span class="tx-b">' + esc(ev.link_text || 'Tickets') + ' ↗</span></a>';
       }).join('');
+      refreshTriggers();
+    }
+
+    /* Shows reel: every upcoming show, then past shows we have footage of. Images keyed by "date|venue". */
+    var REEL_IMG = { 'Oct 9|Sunbar': 'sunbar-oct9', 'Aug 28|Sunbar': 'sunbar-aug28', 'Jul 24|The Enclave': 'enclave' };
+    var REEL_UP = ['up1', 'up2'];
+    function renderReel(events) {
+      var box = el('reel'), frame = el('reel-frame'), dots = el('reel-dots');
+      if (!box || box.dataset.built) return;
+      var up = events.filter(function(ev) { return ev && ev.status !== 'past'; });
+      var past = events.filter(function(ev) { return ev && ev.status === 'past' && REEL_IMG[ev.date + '|' + ev.venue]; });
+      var list = up.concat(past);
+      if (!list.length) return;
+      box.dataset.built = '1';
+      var year = String(new Date().getFullYear()), tall = window.matchMedia('(max-width: 768px)').matches ? 't' : 'w';
+      frame.innerHTML = list.map(function(ev, i) {
+        var isUp = ev.status !== 'past', key = REEL_IMG[ev.date + '|' + ev.venue] || REEL_UP[i % REEL_UP.length];
+        var link = isUp && /^https?:/i.test(String(ev.link || '').trim()) ? safeUrl(ev.link) : '';
+        return '<article class="rp">' +
+          '<img class="rp-img" src="images/reel/' + key + '-' + tall + '.webp" alt="" ' + (i > 1 ? 'loading="lazy" ' : '') + 'decoding="async">' +
+          '<div class="rp-top"><p class="rp-tag"><b>' + esc(ev.date) + '</b>' + year + ' · ' + (isUp ? 'Upcoming' : 'Played') + '</p>' +
+          '<span class="rp-n">' + String(i + 1).padStart(2, '0') + ' / ' + String(list.length).padStart(2, '0') + '</span></div>' +
+          '<div class="rp-bot"><div>' + (ev.type ? '<p class="rp-eye">' + esc(ev.type) + '</p>' : '') +
+          '<h3 class="rp-title">' + esc(ev.venue) + '</h3>' +
+          '<p class="rp-meta"><span>Date</span>' + esc(ev.date) + ' &nbsp; <span>City</span>' + esc(ev.location || '') + '</p></div>' +
+          (link ? '<a class="rp-cta" href="' + link + '" target="_blank" rel="noopener noreferrer">' + esc(ev.link_text || 'Tickets') + ' <span aria-hidden="true">→</span></a>' : '') +
+          '</div><div class="rp-shade"></div></article>';
+      }).join('');
+      dots.innerHTML = list.map(function() { return '<i></i>'; }).join('');
+      box.hidden = false;
+      var n = list.length, panels = frame.querySelectorAll('.rp'), dd = dots.querySelectorAll('i');
+      if (n < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches || !window.ScrollTrigger) {
+        box.classList.add('static'); refreshTriggers(); return;
+      }
+      box.style.height = (n * 100) + 'vh';
+      var p = 0, dir = 1;
+      function draw() {
+        panels.forEach(function(pn, i) {
+          var l = p - i, sh = pn.querySelector('.rp-shade');
+          if (l < -1) { pn.style.transform = 'translateY(100%)'; sh.style.opacity = 0; }
+          else if (l < 0) { pn.style.transform = 'translateY(' + (-l * 100) + '%)'; sh.style.opacity = 0; }
+          else { var k = Math.min(1, l); pn.style.transform = 'translateY(' + (-k * 14) + '%) scale(' + (1 - k * .08) + ')'; sh.style.opacity = k * .7; }
+        });
+        var on = Math.round(p); dd.forEach(function(d, i) { d.classList.toggle('on', i === on); });
+      }
+      var st = ScrollTrigger.create({ trigger: box, start: 'top top', end: 'bottom bottom',
+        onUpdate: function(self) { p = self.progress * (n - 1); dir = self.direction; draw(); } });
+      draw();
+      // snap like a film reel: past ~22% of a frame advances, anything shorter springs back
+      ScrollTrigger.addEventListener('scrollEnd', function() {
+        if (!st.isActive) return;
+        var f = p - Math.floor(p); if (f < .001 || f > .999) return;
+        var t = dir > 0 ? (f > .22 ? Math.ceil(p) : Math.floor(p)) : (f < .78 ? Math.floor(p) : Math.ceil(p));
+        var y = st.start + (t / (n - 1)) * (st.end - st.start);
+        if (window.lenis) window.lenis.scrollTo(y, { duration: .9 }); else window.scrollTo({ top: y, behavior: 'smooth' });
+      });
       refreshTriggers();
     }
 
