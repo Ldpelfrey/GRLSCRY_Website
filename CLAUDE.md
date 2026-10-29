@@ -3,7 +3,7 @@
 DJ portfolio, booking, and merch site for GRLS CRY (Scottsdale, AZ). Live at
 **https://grlscry.com**.
 
-## Current state (2026-09-25): LIVE ON VERCEL, cutover complete
+## Current state (2026-10-29): LIVE ON VERCEL (cutover 2026-09-25)
 
 `grlscry.com` and `www.grlscry.com` are served by **Vercel** project `grlscry-site`
 (linked locally via `.vercel/`). DNS is **Vercel DNS** (`ns1/ns2.vercel-dns.com`, set at
@@ -79,8 +79,24 @@ on 2026-09-25.
 
 ## Sections
 
-Hero → About → Shows (`#events`) → Sound (`#music`) → Artist → **Shop** →
+Hero → Links → About → Shows (`#events`) → Sound (`#music`) → Artist → Photos (`#asm`) → **Shop** →
 Book (`#contact`) → Footer.
+
+Added 2026-10-28/29 (all live):
+- **Hero cuts** (`#hero-cuts`): after the jelly-logo intro the hero cuts through 5 brand treatments
+  (1.4 s each) and back to the plate (2.8 s). Ref: recent.design Olivir; Luke picked prototype B
+  (`proto/hero.html?v=a|b`, local only, in `.vercelignore`). Torn mark is baked (`images/brand/mark-torn.webp`).
+- **Shows reel** (top of `#events`): sticky full-frame panels built from `content.json` events — every
+  upcoming show, then past shows listed in `REEL_IMG` ("date|venue" → `images/reel/<key>-{w,t}.webp`).
+  `#events` must stay `overflow: clip` (`hidden` breaks the sticky pin). Snap = scrollEnd + `lenis.scrollTo`.
+- **Artist loop** (`.art-bg` video): rendered by `~/Movies/GRLSCRY-Brand-Frames/montage.py` (+ `mobile`
+  for the 9:16 phone cut). 1.4x, no pixel holds.
+- **Photos / Assembly** (`#asm`): 19 cards (`images/assembly/`) fly in, click dollies one to centre.
+
+Performance rules learned 2026-10-29 (hero was ~6 fps): no CSS `filter` on anything that animates
+unless it sits in its own layer; no `mix-blend-mode` inside the 3D logo; no live SVG turbulence (bake it);
+no `filter: blur` tweens on many cards (one backdrop veil instead); no permanent `will-change` on cards
+that scale 3x. Measure with a rAF frame-time script before/after, not by eye.
 
 Note the ids do not match the labels: Shows is `#events`, Sound is `#music`,
 Book is `#contact`.
