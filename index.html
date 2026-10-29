@@ -56,7 +56,8 @@
         "sameAs": [
           "https://instagram.com/grlscryofficial",
           "https://x.com/grlscryofficial",
-          "https://soundcloud.com/grlscry"
+          "https://soundcloud.com/grlscry",
+          "https://open.spotify.com/artist/1yVmbRlDZ81b0sUvDTEpDJ"
         ]
       },
       {
@@ -1260,15 +1261,16 @@
     /* ─── EVENTS SECTION OVERFLOW FIX ───────────────────────────── */
     #events { overflow: hidden; }
 
-    /* ─── SPOTIFY PLACEHOLDER UPGRADE ───────────────────────────── */
-    .sp-soon {
-      padding: 28px; display: flex; align-items: center; gap: 20px;
-      border: 1px solid rgba(215,239,194,.06); border-left: 2px solid rgba(215,239,194,.12);
-      background: rgba(215,239,194,.015); margin-bottom: 3px;
-    }
-    .sp-soon-num { font-family: var(--poster); font-stretch: 125%; font-weight: 800; font-size: 21px; color: rgba(215,239,194,.15); min-width: 38px; }
-    .sp-soon-label { font-size: 11px; color: var(--gray); letter-spacing: .12em; text-transform: uppercase; }
-    .sp-soon-tag { font-size: 8px; letter-spacing: .18em; text-transform: uppercase; color: rgba(215,239,194,.25); padding: 3px 8px; border: 1px solid rgba(215,239,194,.1); }
+
+    /* Released single, links out to Spotify (no embed: keeps the CSP closed). */
+    .sp-rel { display: grid; grid-template-columns: 72px minmax(0,1fr) auto; align-items: center; gap: 18px; padding: 16px 20px 16px 16px; margin-bottom: 3px; border: 1px solid var(--border); border-left: 2px solid var(--sage); background: rgba(215,239,194,.03); color: var(--white); transition: background .2s, border-color .2s; }
+    .sp-rel:hover { background: rgba(215,239,194,.06); border-color: var(--sage); }
+    .sp-rel img { width: 72px; height: 72px; object-fit: cover; display: block; }
+    .sp-rel-k { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--sage); }
+    .sp-rel-n { display: block; margin-top: 6px; font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: 20px; line-height: 1.05; text-transform: uppercase; }
+    .sp-rel-m { display: block; margin-top: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; color: var(--gray); }
+    .sp-rel-go { padding: 11px 14px; background: var(--sage); color: var(--black); font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+    @media (max-width: 480px) { .sp-rel { grid-template-columns: 64px minmax(0,1fr); } .sp-rel img { width: 64px; height: 64px; } .sp-rel-go { grid-column: 1 / -1; text-align: center; } }
 
     /* ─── STICKY AUDIO PLAYER ─────────────────────────────────── */
     #player {
@@ -1629,11 +1631,12 @@
           <span class="lk-feat-t"><span><span class="lk-feat-title">Electric Sanctuary — Full Set</span><span class="lk-sub">Live in Scottsdale · 09.19.26 · Watch on YouTube</span></span><span class="lk-go" aria-hidden="true">↗</span></span>
         </a>
         <nav class="lk-list" aria-label="Links">
-          <a class="lk-row" href="https://soundcloud.com/grlscry" target="_blank" rel="noopener noreferrer"><span class="lk-n">01</span><span><span class="lk-row-title">Mixes</span><span class="lk-sub">SoundCloud</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
-          <a class="lk-row" href="#shop"><span class="lk-n">02</span><span><span class="lk-row-title">GRLS CRY Merch</span><span class="lk-sub">Shop</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
-          <a class="lk-row" href="#contact"><span class="lk-n">03</span><span><span class="lk-row-title">Book a Set</span><span class="lk-sub">Clubs, events, corporate</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
-          <a class="lk-row" href="https://instagram.com/grlscryofficial" target="_blank" rel="noopener noreferrer"><span class="lk-n">04</span><span><span class="lk-row-title">Instagram</span><span class="lk-sub">@grlscryofficial</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
-          <a class="lk-row" href="https://x.com/grlscryofficial" target="_blank" rel="noopener noreferrer"><span class="lk-n">05</span><span><span class="lk-row-title">X</span><span class="lk-sub">@grlscryofficial</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="https://open.spotify.com/track/2mWxcSRTxTvGnNydabD5PV" target="_blank" rel="noopener noreferrer"><span class="lk-n">01</span><span><span class="lk-row-title">Bass is Pumpin</span><span class="lk-sub">New single · Spotify</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="https://soundcloud.com/grlscry" target="_blank" rel="noopener noreferrer"><span class="lk-n">02</span><span><span class="lk-row-title">Mixes</span><span class="lk-sub">SoundCloud</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="#shop"><span class="lk-n">03</span><span><span class="lk-row-title">GRLS CRY Merch</span><span class="lk-sub">Shop</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="#contact"><span class="lk-n">04</span><span><span class="lk-row-title">Book a Set</span><span class="lk-sub">Clubs, events, corporate</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="https://instagram.com/grlscryofficial" target="_blank" rel="noopener noreferrer"><span class="lk-n">05</span><span><span class="lk-row-title">Instagram</span><span class="lk-sub">@grlscryofficial</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="https://x.com/grlscryofficial" target="_blank" rel="noopener noreferrer"><span class="lk-n">06</span><span><span class="lk-row-title">X</span><span class="lk-sub">@grlscryofficial</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
         </nav>
       </div>
     </div>
@@ -2003,15 +2006,16 @@
 
       </div><!-- /.crate -->
 
-      <!-- Spotify placeholder -->
-      <div class="sp-soon r d2">
-        <span class="sp-soon-num">SP</span>
-        <div class="ti">
-          <div class="tt" style="color:var(--gray);">Spotify</div>
-          <div class="tm">Releasing when music goes live</div>
-        </div>
-        <span class="sp-soon-tag">Coming Soon</span>
-      </div>
+      <!-- Spotify release -->
+      <a class="sp-rel r d2" href="https://open.spotify.com/track/2mWxcSRTxTvGnNydabD5PV" target="_blank" rel="noopener noreferrer">
+        <img src="images/music/bass-is-pumpin.webp" width="320" height="320" alt="Bass is Pumpin cover art" loading="lazy">
+        <span class="sp-rel-t">
+          <span class="sp-rel-k">Out now · Spotify</span>
+          <span class="sp-rel-n">Bass is Pumpin</span>
+          <span class="sp-rel-m">GRLS CRY · Single · Sept 2026</span>
+        </span>
+        <span class="sp-rel-go">Listen ↗</span>
+      </a>
 
       <!-- ── Give Back ── -->
       <div style="margin-top:56px;" class="r d3">
@@ -2225,6 +2229,7 @@
           <a href="https://instagram.com/grlscryofficial" target="_blank" rel="noopener">Instagram</a>
           <a href="https://x.com/grlscryofficial" target="_blank" rel="noopener">X / Twitter</a>
           <a href="https://soundcloud.com/grlscry" target="_blank" rel="noopener">SoundCloud</a>
+          <a href="https://open.spotify.com/artist/1yVmbRlDZ81b0sUvDTEpDJ" target="_blank" rel="noopener">Spotify</a>
         </nav>
       </div>
       <div>
