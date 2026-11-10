@@ -176,6 +176,11 @@ the booking form and admin publishing will fail locally, which is expected.
 - Event data is duplicated in three places: the JSON-LD block in `<head>`, the
   hardcoded Shows table, and `content.json`. Keep all three in sync. Never emit a
   past event as upcoming.
+- Crate player tracks live in two places: `content.json` `tracks` (what the admin panel edits; the page applies it
+  through `window.crateSetTracks`) and the built-in `TRACKS` array in the player script (fallback until the fetch
+  lands). Keep them identical. Order = SoundCloud plays, most first, as of 2026-11-10 (all 26 public uploads; the list
+  scrolls inside the player, `data-lenis-prevent`). Refresh counts with
+  `yt-dlp -J --skip-download https://soundcloud.com/grlscry/tracks` (`view_count` per entry).
 - CSP is strict (in `vercel.json`). Any new third-party origin must be added there
   or it is silently blocked.
 - `.r` elements start at `opacity: 0` and are revealed by GSAP. Under

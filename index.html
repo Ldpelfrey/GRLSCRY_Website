@@ -664,6 +664,8 @@
     /* ── list panel ── */
     .cl { background: var(--s2); display: flex; flex-direction: column; border-right: 1px solid var(--border); }
     .cl-row { display: flex; align-items: center; gap: 13px; padding: 13px 17px; border-bottom: 1px solid var(--border); cursor: pointer; position: relative; transition: background .2s; overflow: hidden; }
+    .cl-scroll { position: relative; flex: 1 1 auto; min-height: 340px; }  /* the list never sets the crate's height: the stage does */
+    .cl-list { position: absolute; inset: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(215,239,194,.28) transparent; }
     .cl-row:last-of-type { border-bottom: none; }
     .cl-row::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--sage); transform: scaleY(0); transform-origin: bottom; transition: transform .35s var(--ease); }
     .cl-row.active::before { transform: scaleY(1); transform-origin: top; }
@@ -2043,68 +2045,20 @@
 
         <!-- Track List -->
         <div class="cl">
-          <div class="cl-row active" data-track="0">
-            <span class="cl-n">01</span>
-            <div class="cl-thumb"><img src="https://i1.sndcdn.com/artworks-VwLdZ445YkCh2tww-YtDhRw-t500x500.png" alt="" loading="lazy"></div>
-            <div class="cl-i">
-              <div class="cl-t">GOLDRUSH DJ COMPETITION 2026</div>
-              <div class="cl-m">Competition Set · 2026</div>
-            </div>
-            <span class="cl-d">38:05</span>
-            <button class="cl-play" aria-label="Play track 1">▶</button>
-          </div>
-          <div class="cl-row" data-track="1">
-            <span class="cl-n">02</span>
-            <div class="cl-thumb"><img src="https://i1.sndcdn.com/artworks-hq9Hjze6OPcL0FyQ-f1jwuQ-t500x500.jpg" alt="" loading="lazy"></div>
-            <div class="cl-i">
-              <div class="cl-t">thirds. test</div>
-              <div class="cl-m">Live Mix · 2026</div>
-            </div>
-            <span class="cl-d">1:00:11</span>
-            <button class="cl-play" aria-label="Play track 2">▶</button>
-          </div>
-          <div class="cl-row" data-track="2">
-            <span class="cl-n">03</span>
-            <div class="cl-thumb"><img src="https://i1.sndcdn.com/artworks-kY4htW0JmaqgrCM6-jeg7dQ-t500x500.jpg" alt="" loading="lazy"></div>
-            <div class="cl-i">
-              <div class="cl-t">Perc Popper vs Say My Name</div>
-              <div class="cl-m">Edit · 2026</div>
-            </div>
-            <span class="cl-d">4:38</span>
-            <button class="cl-play" aria-label="Play track 3">▶</button>
-          </div>
-          <div class="cl-row" data-track="3">
-            <span class="cl-n">04</span>
-            <div class="cl-thumb"><img src="https://i1.sndcdn.com/artworks-jsTBS8YBu3MzaOw7-cdfF2Q-t500x500.jpg" alt="" loading="lazy"></div>
-            <div class="cl-i">
-              <div class="cl-t">RIOT HOUSE — TEST</div>
-              <div class="cl-m">Live Mix · 2026</div>
-            </div>
-            <span class="cl-d">48:23</span>
-            <button class="cl-play" aria-label="Play track 4">▶</button>
-          </div>
-          <div class="cl-row" data-track="4">
-            <span class="cl-n">05</span>
-            <div class="cl-thumb"><img src="https://i1.sndcdn.com/artworks-pFonN0jQLyXQPSw9-flvvFg-t500x500.png" alt="" loading="lazy"></div>
-            <div class="cl-i">
-              <div class="cl-t">GRLS CRY — After12 (Full Set)</div>
-              <div class="cl-m">Full Set · 2026</div>
-            </div>
-            <span class="cl-d">1:00:30</span>
-            <button class="cl-play" aria-label="Play track 5">▶</button>
-          </div>
+          <!-- Rows are built by the player script from TRACKS (most played first); the list scrolls inside the player. -->
+          <div class="cl-scroll"><div class="cl-list" id="cl-list" data-lenis-prevent tabindex="0" aria-label="Tracks, most played first"></div></div>
           <a href="https://soundcloud.com/grlscry" target="_blank" rel="noopener" class="cl-sc-link">◆ All tracks on SoundCloud ↗</a>
         </div>
 
         <!-- Stage -->
         <div class="cs">
           <div class="cs-art">
-            <img id="cs-img" src="https://i1.sndcdn.com/artworks-VwLdZ445YkCh2tww-YtDhRw-t500x500.png" alt="Active track artwork">
+            <img id="cs-img" src="https://i1.sndcdn.com/artworks-VwLdZ445YkCh2tww-YtDhRw-t500x500.jpg" alt="Active track artwork">
             <div class="cs-art-veil"></div>
           </div>
           <div class="cs-body">
             <div class="cs-wv" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
-            <span class="cs-label" id="cs-n">TRACK 01 / 05</span>
+            <span class="cs-label" id="cs-n">TRACK 01 / 26</span>
             <h3 class="cs-title" id="cs-title">GOLDRUSH DJ COMPETITION 2026</h3>
             <div class="cs-meta" id="cs-meta">Competition Set · 2026</div>
             <div class="cs-controls">
@@ -3013,11 +2967,32 @@
   <script>
   (function() {
     var TRACKS = [
-      { num:'01', title:'GOLDRUSH DJ COMPETITION 2026', meta:'Competition Set · 2026', dur:'38:05', art:'https://i1.sndcdn.com/artworks-VwLdZ445YkCh2tww-YtDhRw-t500x500.png', url:'https://soundcloud.com/grlscry/goldrushcomp' },
-      { num:'02', title:'thirds. test',                  meta:'Live Mix · 2026',        dur:'1:00:11', art:'https://i1.sndcdn.com/artworks-hq9Hjze6OPcL0FyQ-f1jwuQ-t500x500.jpg',  url:'https://soundcloud.com/grlscry/thirdstest' },
-      { num:'03', title:'Perc Popper vs Say My Name',   meta:'Edit · 2026',            dur:'4:38',    art:'https://i1.sndcdn.com/artworks-kY4htW0JmaqgrCM6-jeg7dQ-t500x500.jpg',  url:'https://soundcloud.com/grlscry/saymynamevspercpopper' },
-      { num:'04', title:'RIOT HOUSE — TEST',             meta:'Live Mix · 2026',        dur:'48:23',   art:'https://i1.sndcdn.com/artworks-jsTBS8YBu3MzaOw7-cdfF2Q-t500x500.jpg',  url:'https://soundcloud.com/grlscry/riothousetest' },
-      { num:'05', title:'GRLS CRY — After12 (Full Set)',meta:'Full Set · 2026',        dur:'1:00:30', art:'https://i1.sndcdn.com/artworks-pFonN0jQLyXQPSw9-flvvFg-t500x500.png', url:'https://soundcloud.com/grlscry/after12test' }
+      { num:"01", title:"GOLDRUSH DJ COMPETITION 2026", meta:"Competition Set · 2026", dur:"38:05", art:"https://i1.sndcdn.com/artworks-VwLdZ445YkCh2tww-YtDhRw-t500x500.jpg", url:"https://soundcloud.com/grlscry/goldrushcomp" },
+      { num:"02", title:"Marsolo - Spaceship (GRLS CRY FLIP)", meta:"Flip · 2026", dur:"6:08", art:"https://i1.sndcdn.com/artworks-vXE9FLxWudQ5awvz-2Ry8Rg-t500x500.jpg", url:"https://soundcloud.com/grlscry/marsolo-spaceship-grls-cry-flip" },
+      { num:"03", title:"Perc Popper vs Say My Name", meta:"Edit · 2026", dur:"4:38", art:"https://i1.sndcdn.com/artworks-jatNN5nh7L2jzM6j-hkSOTg-t500x500.jpg", url:"https://soundcloud.com/grlscry/saymynamevspercpopper" },
+      { num:"04", title:"HOUSE PARTY (REMIX)", meta:"Remix · 2026", dur:"2:56", art:"https://i1.sndcdn.com/artworks-YClclpzyyCQ0GaGF-RhJDFQ-t500x500.jpg", url:"https://soundcloud.com/grlscry/house-prty-remix" },
+      { num:"05", title:"Room Shake vs Space Jam (GRLS CRY Edit)", meta:"Edit · 2026", dur:"1:53", art:"https://i1.sndcdn.com/artworks-3KmyWW5ZzLODKzu1-Pla4wQ-t500x500.jpg", url:"https://soundcloud.com/grlscry/rooomshakevsspacejam" },
+      { num:"06", title:"StaySolidRocky - Party Girl (GRLS CRY Remix)", meta:"Remix · 2026", dur:"5:28", art:"https://i1.sndcdn.com/artworks-ihI0ArdMMunyj2e5-umAEyA-t500x500.jpg", url:"https://soundcloud.com/grlscry/party-girl-remix-grls-cry" },
+      { num:"07", title:"Max Vol x GRLS CRY - Rebirth?", meta:"Collab · 2026", dur:"3:15", art:"https://i1.sndcdn.com/artworks-CVnIx25CtbyDxJM2-XO7OhA-t500x500.jpg", url:"https://soundcloud.com/grlscry/max-vol-x-grls-cry-rebirth-wav" },
+      { num:"08", title:"Partiboi69, Kettama - Pumpin (GRLS CRY REMIX)", meta:"Remix · 2026", dur:"5:46", art:"https://i1.sndcdn.com/artworks-lZA6Wb7DTCsdHjoI-xA6Z5g-t500x500.jpg", url:"https://soundcloud.com/grlscry/pumpin" },
+      { num:"09", title:"GRLS CRY — After12 (Full Set)", meta:"Full Set · 2026", dur:"1:00:30", art:"https://i1.sndcdn.com/artworks-pFonN0jQLyXQPSw9-flvvFg-t500x500.jpg", url:"https://soundcloud.com/grlscry/after12test" },
+      { num:"10", title:"SYSTEM OVERLOAD SUBMISSION", meta:"Submission Mix · 2025", dur:"31:55", art:"https://i1.sndcdn.com/artworks-fUKgy0ottOr1hk0r-ViuJxA-t500x500.jpg", url:"https://soundcloud.com/grlscry/system-overload-submission" },
+      { num:"11", title:"GRLS CRY - Tech House Mix Vol. 1 | DJ PROMO", meta:"Promo Mix · 2026", dur:"56:42", art:"https://i1.sndcdn.com/artworks-D7zImviMl244orFE-JuiDww-t500x500.jpg", url:"https://soundcloud.com/grlscry/grlscry-techhousemixvol1-djpromo" },
+      { num:"12", title:"I THINK - GRLS CRY", meta:"Original · 2025", dur:"2:57", art:"https://i1.sndcdn.com/artworks-6njuWWxz7Ie6eLY0-iEe8sw-t500x500.jpg", url:"https://soundcloud.com/grlscry/i-think" },
+      { num:"13", title:"Ball Knowledge Vol. 2", meta:"Mix · 2026", dur:"1:00:39", art:"https://i1.sndcdn.com/artworks-43WZKzieeziEX2SF-HO1QdA-t500x500.jpg", url:"https://soundcloud.com/grlscry/ball-knowledge-vol-2" },
+      { num:"14", title:"Ball Knowledge - Vol 1", meta:"Mix · 2026", dur:"1:26:46", art:"https://i1.sndcdn.com/artworks-6wJNMKbeJwI5geVg-XtN0nA-t500x500.jpg", url:"https://soundcloud.com/grlscry/ballknowledgevol1" },
+      { num:"15", title:"thirds. Live Set", meta:"Live Set · 2026", dur:"57:15", art:"https://i1.sndcdn.com/artworks-uycMSIbmjOQ6n0F6-DZ9E5w-t500x500.jpg", url:"https://soundcloud.com/grlscry/thirds-live-set" },
+      { num:"16", title:"BADMON RUDE BOY SOUND BOY SELECTA - VOL1", meta:"Mix · 2026", dur:"47:53", art:"https://i1.sndcdn.com/artworks-ZDnixYRUw6xr7gu4-BeLhOA-t500x500.jpg", url:"https://soundcloud.com/grlscry/badmon-rude-boy-sound-boy" },
+      { num:"17", title:"thirds. test", meta:"Live Mix · 2026", dur:"1:00:11", art:"https://i1.sndcdn.com/artworks-hq9Hjze6OPcL0FyQ-f1jwuQ-t500x500.jpg", url:"https://soundcloud.com/grlscry/thirdstest" },
+      { num:"18", title:"Mess (Dub)", meta:"Dub · 2026", dur:"4:55", art:"https://i1.sndcdn.com/artworks-MWmiOfZiHsjH6xul-VOFfCQ-t500x500.jpg", url:"https://soundcloud.com/grlscry/mess" },
+      { num:"19", title:"Bass is Pumpin", meta:"Track · 2026", dur:"5:18", art:"https://i1.sndcdn.com/artworks-GK76TgJ6DgQPNG61-EnkMCA-t500x500.jpg", url:"https://soundcloud.com/grlscry/bass-is-pumpin" },
+      { num:"20", title:"UP&UP DJ COMPETITION MIX | GRLS CRY", meta:"Competition Set · 2026", dur:"30:21", art:"https://i1.sndcdn.com/artworks-zQgeOjyXHX2Dr4yt-fyaGPw-t500x500.jpg", url:"https://soundcloud.com/grlscry/upupcompgrlscry" },
+      { num:"21", title:"Forgiveness (Dub)", meta:"Dub · 2026", dur:"4:55", art:"https://i1.sndcdn.com/artworks-UNnAKEYSUoiRYe8g-ezjiVA-t500x500.jpg", url:"https://soundcloud.com/grlscry/forgiveness" },
+      { num:"22", title:"WIDE AWAKE (GRLS CRY SUNSET MIX) - PITCHED - DL FOR OG", meta:"Remix · 2026", dur:"9:59", art:"https://i1.sndcdn.com/artworks-tVwQDMALlvIzjTqP-QMu5uA-t500x500.jpg", url:"https://soundcloud.com/grlscry/wide-awake-grls-cry-sunset-1" },
+      { num:"23", title:"IDK Afters Set - 07.24.2026", meta:"Live Set · 2026", dur:"21:52", art:"https://i1.sndcdn.com/artworks-PyDAx6acGHw5Oe4n-dmIyxw-t500x500.jpg", url:"https://soundcloud.com/grlscry/idk-afters-set" },
+      { num:"24", title:"RIOT HOUSE — TEST", meta:"Live Mix · 2026", dur:"48:23", art:"https://i1.sndcdn.com/artworks-jsTBS8YBu3MzaOw7-cdfF2Q-t500x500.jpg", url:"https://soundcloud.com/grlscry/riothousetest" },
+      { num:"25", title:"not for human consumption", meta:"Mix · 2026", dur:"50:00", art:"https://i1.sndcdn.com/artworks-ExQy0fJNVUO7ZPBz-cB7n0A-t500x500.jpg", url:"https://soundcloud.com/grlscry/not-for-human-consumption" },
+      { num:"26", title:"Ball Knowledge Vol 3", meta:"Mix · 2026", dur:"36:49", art:"https://i1.sndcdn.com/artworks-sCmlEY6kYCaCk03d-g4y1vQ-t500x500.jpg", url:"https://soundcloud.com/grlscry/ball-knowledge-vol-3" }
     ];
 
     var cur = 0, playing = false, ready = false, dur = 0, widget;
@@ -3050,6 +3025,35 @@
     var csPrevBtn = document.getElementById('cs-prev');
     var csNextBtn = document.getElementById('cs-next');
     var csScLink  = document.getElementById('cs-sc-link');
+    var listEl    = document.getElementById('cl-list');
+
+    /* Rows come from TRACKS. Text goes in through textContent, so titles need no escaping. */
+    function buildRows() {
+      if (!listEl) return;
+      listEl.textContent = '';
+      TRACKS.forEach(function(t, i) {
+        var row = document.createElement('div');
+        row.className = 'cl-row' + (i === cur ? ' active' : '');
+        row.dataset.track = i;
+        row.innerHTML = '<span class="cl-n"></span><div class="cl-thumb"><img alt="" loading="lazy" width="42" height="42"></div>' +
+          '<div class="cl-i"><div class="cl-t"></div><div class="cl-m"></div></div><span class="cl-d"></span><button class="cl-play" type="button">▶</button>';
+        row.querySelector('.cl-n').textContent = t.num;
+        row.querySelector('.cl-t').textContent = t.title;
+        row.querySelector('.cl-m').textContent = t.meta;
+        row.querySelector('.cl-d').textContent = t.dur;
+        if (t.art) row.querySelector('img').src = t.art.replace('t500x500', 'large');   // 100 px is plenty for a 42 px thumb
+        row.querySelector('.cl-play').setAttribute('aria-label', 'Play ' + t.title);
+        listEl.appendChild(row);
+      });
+    }
+    /* Keep the active row in view by moving the list only; scrollIntoView would also move the page. */
+    function revealRow(i) {
+      var row = listEl && listEl.children[i];
+      if (!row) return;
+      var top = row.offsetTop, bot = top + row.offsetHeight;
+      if (top < listEl.scrollTop) listEl.scrollTop = top;
+      else if (bot > listEl.scrollTop + listEl.clientHeight) listEl.scrollTop = bot - listEl.clientHeight;
+    }
 
     function fmt(ms) {
       var s = Math.floor(ms / 1000);
@@ -3063,7 +3067,7 @@
       metaEl.textContent  = t.meta;
       numEl.textContent   = t.num;
       /* stage label, title, meta */
-      if (csNumEl)   csNumEl.textContent   = 'TRACK ' + t.num + ' / 0' + TRACKS.length;
+      if (csNumEl)   csNumEl.textContent   = 'TRACK ' + t.num + ' / ' + ('0' + TRACKS.length).slice(-2);
       if (csTitleEl) csTitleEl.textContent = t.title;
       if (csMetaEl)  csMetaEl.textContent  = t.meta;
       if (csDurEl)   csDurEl.textContent   = t.dur;
@@ -3083,6 +3087,7 @@
         var btn = row.querySelector('.cl-play');
         if (btn) btn.textContent = (isActive && playing) ? '⏸' : '▶';
       });
+      revealRow(i);
     }
 
     function setPlayState(p) {
@@ -3194,19 +3199,34 @@
       widget.seekTo(((e.clientX - rect.left) / rect.width) * dur);
     });
 
-    /* ── track list row / play button clicks ── */
-    document.querySelectorAll('.cl-row').forEach(function(row) {
-      row.addEventListener('click', function() {
-        loadTrack(parseInt(row.dataset.track, 10), true);
-      });
-      var btn = row.querySelector('.cl-play');
-      if (btn) btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        var idx = parseInt(row.dataset.track, 10);
-        if (idx === cur && playerEl.classList.contains('open')) { togglePlay(); }
-        else { loadTrack(idx, true); }
-      });
+    /* ── track list row / play button clicks (delegated: rows are rebuilt when content.json loads) ── */
+    buildRows();
+    if (listEl) listEl.addEventListener('click', function(e) {
+      var row = e.target.closest('.cl-row');
+      if (!row) return;
+      var idx = parseInt(row.dataset.track, 10);
+      if (e.target.closest('.cl-play') && idx === cur && playerEl.classList.contains('open')) togglePlay();
+      else loadTrack(idx, true);
     });
+
+    /* content.json "tracks" (the admin panel's list) replaces the built-in list once it loads. */
+    window.crateSetTracks = function(list) {
+      var next = (Array.isArray(list) ? list : []).map(function(t) {
+        var url = String(t && t.soundcloud_url || '').trim(), art = String(t && t.artwork || '').trim();
+        return { title: String(t && t.title || '').trim(), meta: String(t && t.meta || ''), dur: String(t && t.dur || ''),
+          art: /^https:\/\/[a-z0-9-]+\.sndcdn\.com\/[\w.\/-]+$/i.test(art) ? art : '',
+          url: /^https:\/\/soundcloud\.com\/[\w.\/-]+$/i.test(url) ? url : '' };
+      }).filter(function(t) { return t.title && t.url; });
+      if (!next.length) return;
+      next.forEach(function(t, i) { t.num = ('0' + (i + 1)).slice(-2); });
+      var same = next.length === TRACKS.length && next.every(function(t, i) {
+        var o = TRACKS[i]; return t.url === o.url && t.title === o.title && t.meta === o.meta && t.dur === o.dur && t.art === o.art; });
+      if (same) return;
+      var was = TRACKS[cur] && TRACKS[cur].url, keep = 0;
+      next.forEach(function(t, i) { if (t.url === was) keep = i; });
+      TRACKS = next; cur = keep;
+      buildRows(); setTrackInfo(cur);
+    };
 
     /* ── hero "Stream Now" (renderTix turns it into "Get Tickets" while shows are on sale) ── */
     var streamNow = document.getElementById('hero-cta');
@@ -3298,26 +3318,8 @@
           }
         }
 
-        /* Tracks */
-        if (c.tracks && c.tracks.length) {
-          c.tracks.forEach(function(track, i) {
-            var n = i + 1;
-            setText('c-track-' + n + '-title',    track.title);
-            setText('c-track-' + n + '-meta',     track.meta);
-            setText('c-track-' + n + '-platform', track.platform);
-            var iframe = el('c-track-' + n + '-iframe');
-            if (iframe && track.soundcloud_embed && iframe.src !== track.soundcloud_embed) {
-              iframe.src = track.soundcloud_embed;
-            }
-            var scProfile = el('c-track-' + n + '-sc-profile');
-            if (scProfile && track.soundcloud_profile_url) scProfile.href = safeUrl(track.soundcloud_profile_url);
-            var scTrack = el('c-track-' + n + '-sc-track');
-            if (scTrack && track.soundcloud_track_url) {
-              scTrack.href = safeUrl(track.soundcloud_track_url);
-              if (track.soundcloud_track_title) scTrack.textContent = track.soundcloud_track_title;
-            }
-          });
-        }
+        /* Tracks: the crate player takes its list from content.json */
+        if (window.crateSetTracks) window.crateSetTracks(c.tracks);
 
         /* Events — upcoming and played render into separate tables.
            A played set must never show "Booking Open". */
