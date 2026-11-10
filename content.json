@@ -129,24 +129,38 @@
   ],
   "events": [
     {
+      "date": "Nov 21",
+      "venue": "Nightshift",
+      "location": "Phoenix, AZ",
+      "type": "market price. (b3b w/ 300nightclub + DrawFour)",
+      "status": "live",
+      "full_venue": "The Fillmore, 2130 W Fillmore St",
+      "link": "https://posh.vip/e/nightshift-featuring-usaybflow",
+      "link_text": "Tickets",
+      "flyer": "images/flyers/nightshift-nov21.jpg"
+    },
+    {
+      "date": "Nov 8",
+      "venue": "Sunbar",
+      "location": "Tempe, AZ",
+      "type": "DJ Set · 7:30 PM",
+      "status": "past"
+    },
+    {
       "date": "Oct 31",
       "venue": "The Archives",
       "location": "Scottsdale, AZ",
       "type": "Halloween After Dark · 12–1 AM",
-      "status": "live",
-      "full_venue": "The Archives, 7332 E Earll Dr",
-      "link": "https://posh.vip/f/f0df0?t=sundownpromo-dj",
-      "link_text": "Tickets"
+      "status": "past",
+      "full_venue": "The Archives, 7332 E Earll Dr"
     },
     {
       "date": "Oct 31",
       "venue": "The Drop PHX",
       "location": "Phoenix, AZ",
       "type": "Just The Afters · 3–4 AM",
-      "status": "live",
-      "full_venue": "The Drop PHX, 4700 N 12th St",
-      "link": "https://thedropphx.com/events/just-the-afters-10-31",
-      "link_text": "Tickets"
+      "status": "past",
+      "full_venue": "The Drop PHX, 4700 N 12th St"
     },
     {
       "date": "Oct 17",

@@ -89,6 +89,8 @@ Added 2026-10-28/29 (all live):
 - **Shows reel** (top of `#events`): sticky full-frame panels built from `content.json` events — every
   upcoming show, then past shows listed in `REEL_IMG` ("date|venue" → `images/reel/<key>-{w,t}.webp`).
   `#events` must stay `overflow: clip` (`hidden` breaks the sticky pin). Snap = scrollEnd + `lenis.scrollTo`.
+  An upcoming event with a `flyer` path (`images/flyers/…`, editable in admin) shows the flyer as a card on its
+  panel; click opens the full image. Past events ignore `flyer`.
 - **Artist loop** (`.art-bg` video): rendered by `~/Movies/GRLSCRY-Brand-Frames/montage.py` (+ `mobile`
   for the 9:16 phone cut). 1.4x, no pixel holds.
 - **Photos / Assembly** (`#asm`): 19 cards (`images/assembly/`) fly in, click dollies one to centre.

@@ -140,6 +140,33 @@
             "addressCountry": "US"
           }
         }
+      },
+      {
+        "@type": "MusicEvent",
+        "name": "GRLSCRY at Nightshift",
+        "startDate": "2026-11-21T22:00-07:00",
+        "endDate": "2026-11-22T04:00-07:00",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "image": "https://grlscry.com/images/flyers/nightshift-nov21.jpg",
+        "performer": { "@id": "https://grlscry.com/#artist" },
+        "offers": {
+          "@type": "Offer",
+          "url": "https://posh.vip/e/nightshift-featuring-usaybflow",
+          "availability": "https://schema.org/InStock"
+        },
+        "location": {
+          "@type": "Place",
+          "name": "The Fillmore",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "2130 W Fillmore St",
+            "addressLocality": "Phoenix",
+            "addressRegion": "AZ",
+            "postalCode": "85009",
+            "addressCountry": "US"
+          }
+        }
       }
     ]
   }
@@ -1438,12 +1465,19 @@
       border: 1px solid rgba(242,227,200,.55); color: #f2e3c8; text-decoration: none; font: 600 11px/1 var(--mono); letter-spacing: .22em; text-transform: uppercase;
       transition: background .3s, color .3s; }
     .rp-cta:hover { background: #f2e3c8; color: #0e0e0e; }
+    /* Flyer on an upcoming panel (event "flyer" in content.json): right of the copy on desktop, above it on phones. */
+    .rp-flyer { position: absolute; right: 0; bottom: 78px; width: 40%; height: calc(100svh - 118px - 3vh - 230px); max-height: 520px;
+      display: flex; justify-content: flex-end; align-items: flex-end; pointer-events: none; }
+    .rp-flyer img { display: block; max-width: 100%; max-height: 100%; border-radius: 10px; box-shadow: 0 24px 60px rgba(0,0,0,.55); pointer-events: auto; }
+    .rp.has-flyer .rp-title { font-size: clamp(36px, 5.6vw, 92px); }
     .reel-dots { position: absolute; right: calc(3vw - 22px); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 3; }
     .reel-dots i { width: 4px; height: 4px; border-radius: 50%; background: rgba(242,227,200,.3); transition: background .3s, transform .3s; }
     .reel-dots i.on { background: #f2e3c8; transform: scale(1.6); }
     @media (max-width: 768px) {
       .reel-frame { top: 116px; left: 12px; right: 12px; bottom: 96px; border-radius: 18px; }
       .rp-bot { flex-direction: column; align-items: flex-start; }
+      .rp.has-flyer .rp-bot { top: 68px; justify-content: flex-end; gap: 18px; }
+      .rp-flyer { position: static; flex: 1 1 0; min-height: 0; width: 100%; height: auto; max-height: none; justify-content: flex-start; }
       .rp-title { font-size: clamp(32px, 10vw, 56px); }
       .reel-dots { right: 3px; }
     }
@@ -1681,8 +1715,7 @@
       <div class="tx" id="c-tix">
         <span class="tx-h">Next Up · Tickets</span>
         <div class="tx-list">
-          <a class="tx-row" href="https://posh.vip/f/f0df0?t=sundownpromo-dj" target="_blank" rel="noopener noreferrer"><span class="tx-d">Oct 31</span><span><span class="tx-v">The Archives</span><span class="lk-sub">Scottsdale, AZ · Halloween After Dark · 12–1 AM</span></span><span class="tx-b">Tickets ↗</span></a>
-          <a class="tx-row" href="https://thedropphx.com/events/just-the-afters-10-31" target="_blank" rel="noopener noreferrer"><span class="tx-d">Oct 31</span><span><span class="tx-v">The Drop PHX</span><span class="lk-sub">Phoenix, AZ · Just The Afters · 3–4 AM</span></span><span class="tx-b">Tickets ↗</span></a>
+          <a class="tx-row" href="https://posh.vip/e/nightshift-featuring-usaybflow" target="_blank" rel="noopener noreferrer"><span class="tx-d">Nov 21</span><span><span class="tx-v">Nightshift</span><span class="lk-sub">Phoenix, AZ · market price. (b3b w/ 300nightclub + DrawFour)</span></span><span class="tx-b">Tickets ↗</span></a>
         </div>
       </div>
       <div class="ew">
@@ -1809,19 +1842,11 @@
         <tbody id="c-events-tbody">
           <tr>
             <td class="e-dot"><span class="e-status live" title="Confirmed"></span></td>
-            <td class="ed">Oct 31</td>
-            <td class="en">The Archives</td>
-            <td>Scottsdale, AZ</td>
-            <td>Halloween After Dark · 12–1 AM</td>
-            <td><a href="https://posh.vip/f/f0df0?t=sundownpromo-dj" class="da" target="_blank" rel="noopener">Tickets ↗</a></td>
-          </tr>
-          <tr>
-            <td class="e-dot"><span class="e-status live" title="Confirmed"></span></td>
-            <td class="ed">Oct 31</td>
-            <td class="en">The Drop PHX</td>
+            <td class="ed">Nov 21</td>
+            <td class="en">Nightshift</td>
             <td>Phoenix, AZ</td>
-            <td>Just The Afters · 3–4 AM</td>
-            <td><a href="https://thedropphx.com/events/just-the-afters-10-31" class="da" target="_blank" rel="noopener">Tickets ↗</a></td>
+            <td>market price. (b3b w/ 300nightclub + DrawFour)</td>
+            <td><a href="https://posh.vip/e/nightshift-featuring-usaybflow" class="da" target="_blank" rel="noopener">Tickets ↗</a></td>
           </tr>
         </tbody>
       </table>
@@ -1838,6 +1863,30 @@
             <col style="width:150px"><col style="width:170px"><col style="width:160px">
           </colgroup>
           <tbody id="c-past-tbody">
+            <tr>
+              <td class="e-dot"><span class="e-status past" title="Played"></span></td>
+              <td class="ed">Nov 8</td>
+              <td class="en">Sunbar</td>
+              <td>Tempe, AZ</td>
+              <td>DJ Set · 7:30 PM</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="e-dot"><span class="e-status past" title="Played"></span></td>
+              <td class="ed">Oct 31</td>
+              <td class="en">The Archives</td>
+              <td>Scottsdale, AZ</td>
+              <td>Halloween After Dark · 12–1 AM</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="e-dot"><span class="e-status past" title="Played"></span></td>
+              <td class="ed">Oct 31</td>
+              <td class="en">The Drop PHX</td>
+              <td>Phoenix, AZ</td>
+              <td>Just The Afters · 3–4 AM</td>
+              <td></td>
+            </tr>
             <tr>
               <td class="e-dot"><span class="e-status past" title="Played"></span></td>
               <td class="ed">Oct 17</td>
@@ -3409,11 +3458,13 @@
       frame.innerHTML = list.map(function(ev, i) {
         var isUp = ev.status !== 'past', key = REEL_IMG[ev.date + '|' + ev.venue] || REEL_UP[i % REEL_UP.length];
         var link = isUp && /^https?:/i.test(String(ev.link || '').trim()) ? safeUrl(ev.link) : '';
-        return '<article class="rp">' +
+        var fly = isUp ? safeAsset(ev.flyer) : '';
+        return '<article class="rp' + (fly ? ' has-flyer' : '') + '">' +
           '<img class="rp-img" src="images/reel/' + key + '-' + tall + '.webp" alt="" ' + (i > 1 ? 'loading="lazy" ' : '') + 'decoding="async">' +
           '<div class="rp-top"><p class="rp-tag"><b>' + esc(ev.date) + '</b>' + year + ' · ' + (isUp ? 'Upcoming' : 'Played') + '</p>' +
           '<span class="rp-n">' + String(i + 1).padStart(2, '0') + ' / ' + String(list.length).padStart(2, '0') + '</span></div>' +
-          '<div class="rp-bot"><div>' + (ev.type ? '<p class="rp-eye">' + esc(ev.type) + '</p>' : '') +
+          '<div class="rp-bot">' + (fly ? '<a class="rp-flyer" href="' + fly + '" target="_blank" rel="noopener"><img src="' + fly + '" alt="' + esc(ev.venue) + ' flyer, ' + esc(ev.date) + '" decoding="async"></a>' : '') +
+          '<div>' + (ev.type ? '<p class="rp-eye">' + esc(ev.type) + '</p>' : '') +
           '<h3 class="rp-title">' + esc(ev.venue) + '</h3>' +
           '<p class="rp-meta"><span>Date</span>' + esc(ev.date) + ' &nbsp; <span>City</span>' + esc(ev.location || '') + '</p></div>' +
           (link ? '<a class="rp-cta" href="' + link + '" target="_blank" rel="noopener noreferrer">' + esc(ev.link_text || 'Tickets') + ' <span aria-hidden="true">→</span></a>' : '') +

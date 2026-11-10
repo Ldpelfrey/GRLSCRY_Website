@@ -677,6 +677,8 @@
       <div class="fr">
         <div class="fg"><label>Link Text <span style="color:var(--gray);font-weight:300">(optional — default "Info")</span></label>
           <input type="text" class="e-link-text" placeholder="Watch Set" value="${esc(d.link_text||'')}"></div>
+        <div class="fg"><label>Flyer Image <span style="color:var(--gray);font-weight:300">(optional — path in the repo, upcoming shows only)</span></label>
+          <input type="text" class="e-flyer" placeholder="images/flyers/show.jpg" value="${esc(d.flyer||'')}"></div>
       </div>`;
     wrap.appendChild(card);
   }
@@ -752,6 +754,7 @@
       const link = (c.querySelector('.e-link')?.value || '').trim();
       const link_text = (c.querySelector('.e-link-text')?.value || '').trim();
       const full_venue = (c.querySelector('.e-full-venue')?.value || '').trim();
+      const flyer = (c.querySelector('.e-flyer')?.value || '').trim();
       const ev = {
         date:       (c.querySelector('.e-date')?.value     || '').trim(),
         venue:      (c.querySelector('.e-venue')?.value    || '').trim(),
@@ -763,6 +766,7 @@
       if (note)       ev.note       = note;
       if (link)       ev.link       = link;
       if (link_text)  ev.link_text  = link_text;
+      if (flyer)      ev.flyer      = flyer;
       return ev;
     });
 
