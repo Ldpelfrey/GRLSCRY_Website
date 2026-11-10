@@ -2491,7 +2491,7 @@
       const hero = document.getElementById('hero'), box = document.getElementById('hero-cuts');
       if (!hero || !box || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const cuts = [...box.querySelectorAll('.hcut')];
-      let i = -1, t = null, visible = true;
+      let i = -1, t = null, visible = true, ready = false;
       const step = () => {
         i = i + 1 >= cuts.length ? -1 : i + 1;                 // -1 = the jelly plate shows through
         cuts.forEach((c, j) => c.classList.toggle('on', j === i));
@@ -2499,13 +2499,13 @@
         t = setTimeout(run, i < 0 ? 2800 : 1400);
       };
       const run = () => { t = null; if (visible && !document.hidden) step(); };
-      const kick = () => { if (!t && visible && !document.hidden) t = setTimeout(run, 400); };
+      const kick = () => { if (ready && !t && visible && !document.hidden) t = setTimeout(run, 400); };  // one timer chain only: a second one made every other cut flash for a frame
       new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) kick(); }, { threshold: .3 }).observe(hero);
       document.addEventListener('visibilitychange', kick);
       setTimeout(() => {
         const tall = window.matchMedia('(max-width: 700px)').matches;  // phones get the 4:5 crops
         box.querySelectorAll('img[data-src]').forEach(im => { im.src = tall ? im.dataset.src.replace('-w.webp', '-t.webp') : im.dataset.src; im.removeAttribute('data-src'); im.decode && im.decode().catch(() => {}); });  // decode ahead so the first cut doesn't hitch
-        t = setTimeout(run, 2000);                             // first cut ~3.2 s in, after the pieces land
+        ready = true; t = setTimeout(run, 2000);               // first cut ~3.2 s in, after the pieces land
       }, 1200);
     })();
 
