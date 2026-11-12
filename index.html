@@ -2068,7 +2068,8 @@
         </div>
         <p class="t-body" style="margin-bottom:28px; max-width:580px;">Music builds communities. These causes matter. If you want to support something real alongside the music:</p>
         <div class="don-grid">
-          <div class="don-card r d4">
+          <!-- Hidden 2026-11-12: the GoFundMe link is dead (404). Luke: "hide for now". Give it a live address, then remove `hidden`. -->
+          <div class="don-card r d4" hidden>
             <div class="don-title">Men's Mental Health</div>
             <div class="don-desc">Because the grind is real and asking for help isn't weakness.</div>
             <a href="https://www.gofundme.com/f/mens-mental-health-fundraiser" target="_blank" rel="noopener" class="btn bg">Donate ↗</a>
@@ -3454,7 +3455,7 @@
     }
 
     /* Shows reel: every upcoming show, then past shows we have footage of. Images keyed by "date|venue". */
-    var REEL_IMG = { 'Oct 9|Sunbar': 'sunbar-oct9', 'Aug 28|Sunbar': 'sunbar-aug28', 'Jul 24|The Enclave': 'enclave' };
+    var REEL_IMG = { 'Oct 9|Sunbar': 'sunbar-oct9', 'Sep 19|Electric Sanctuary': 'electric-sanctuary', 'Aug 28|Sunbar': 'sunbar-aug28' };
     var REEL_UP = ['up1', 'up2'];
     function renderReel(events) {
       var box = el('reel'), frame = el('reel-frame'), dots = el('reel-dots');
@@ -3467,7 +3468,8 @@
       var year = String(new Date().getFullYear()), tall = window.matchMedia('(max-width: 768px)').matches ? 't' : 'w';
       frame.innerHTML = list.map(function(ev, i) {
         var isUp = ev.status !== 'past', key = REEL_IMG[ev.date + '|' + ev.venue] || REEL_UP[i % REEL_UP.length];
-        var link = isUp && /^https?:/i.test(String(ev.link || '').trim()) ? safeUrl(ev.link) : '';
+        /* Upcoming shows link to tickets; a played show keeps its link too (e.g. Watch Set). */
+        var link = /^https?:/i.test(String(ev.link || '').trim()) ? safeUrl(ev.link) : '';
         var fly = isUp ? safeAsset(ev.flyer) : '';
         return '<article class="rp' + (fly ? ' has-flyer' : '') + '">' +
           '<img class="rp-img" src="images/reel/' + key + '-' + tall + '.webp" alt="" ' + (i > 1 ? 'loading="lazy" ' : '') + 'decoding="async">' +
