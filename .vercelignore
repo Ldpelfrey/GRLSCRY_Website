@@ -8,3 +8,8 @@ images/brand/MANIFEST.md
 tools/
 images/brand/pieces.json
 proto/
+
+# audit relay (2026-11-12)
+AUDIT-FIXES.md
+*.handoff.md
+.relay

@@ -4,3 +4,7 @@ node_modules/
 tools/ORDERS-SPIKE.md
 tools/print_orders.py
 tools/ig-set-dates-*.tsv
+
+# audit relay (2026-11-12)
+.relay/
+tools/audit-out/
