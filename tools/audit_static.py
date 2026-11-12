@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Static checks a relay stage can run without a browser.
 
-    python3 tools/audit_static.py
+    python3 tools/audit_static.py [page.html]
 
 Checks: every inline <script> in index.html parses (node --check), every JSON-LD
 block parses, content.json and vercel.json parse, the events in content.json and
@@ -11,7 +11,8 @@ Prints PASS or FAIL per check and exits 1 on any FAIL.
 import json, os, re, subprocess, sys, tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-html = open(os.path.join(ROOT, 'index.html'), encoding='utf-8').read()
+PAGE = re.sub(r'[^A-Za-z0-9_.-]', '', sys.argv[1]) if len(sys.argv) > 1 else 'index.html'   # e.g. v2a.html
+html = open(os.path.join(ROOT, PAGE), encoding='utf-8').read()
 fails = 0
 
 
@@ -46,8 +47,15 @@ for name in ('content.json', 'vercel.json'):
         rows = re.findall(r'<td class="en">(.*?)</td>', m.group(1)) if m else []
         check('hardcoded upcoming rows match content.json', rows == [e['venue'] for e in up], 'html=%s json=%s' % (rows, [e['venue'] for e in up]))
 
-for sid in ('hero', 'links', 'about', 'events', 'music', 'artist', 'asm', 'shop', 'contact'):
-    check('section #%s present once' % sid, len(re.findall(r'<section[^>]*\bid="%s"' % sid, html)) == 1)
+ids = re.findall(r'<section[^>]*\bid="([^"]+)"', html)
+if PAGE == 'index.html':
+    for sid in ('hero', 'links', 'about', 'events', 'music', 'artist', 'asm', 'shop', 'contact'):
+        check('section #%s present once' % sid, ids.count(sid) == 1)
+else:
+    print('section order: ' + ', '.join(ids))
+    check('no section id repeated', len(ids) == len(set(ids)))
+    for sid in ('hero', 'events', 'music', 'asm', 'shop', 'contact'):
+        check('section #%s present once' % sid, ids.count(sid) == 1)
 check('style and script tags balanced', html.count('<style') == html.count('</style>') and html.count('<script') == html.count('</script>'))
-print('index.html lines: %d' % (html.count('\n') + 1))
+print('%s lines: %d' % (PAGE, html.count('\n') + 1))
 sys.exit(1 if fails else 0)

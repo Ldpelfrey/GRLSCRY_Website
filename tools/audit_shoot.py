@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Shoot the local site on desktop and phone, and print the audit's measured checks.
 
-    python3 tools/audit_shoot.py <tag>
+    python3 tools/audit_shoot.py <tag> [page.html]
 
 Serves the repo root on a free local port, captures the page top to bottom at
 1440x900 and 390x844 into tools/audit-out/<tag>/, builds contact sheets
@@ -17,6 +17,7 @@ from playwright.sync_api import sync_playwright
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TAG = re.sub(r'[^A-Za-z0-9_-]', '', sys.argv[1]) if len(sys.argv) > 1 else 'run'
 OUT = os.path.join(ROOT, 'tools', 'audit-out', TAG)
+PAGE = re.sub(r'[^A-Za-z0-9_.-]', '', sys.argv[2]) if len(sys.argv) > 2 else ''   # e.g. v2a.html; default index
 
 METRICS_JS = r'''() => {
   const lum = c => { const a = c.map(v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4) }); return .2126 * a[0] + .7152 * a[1] + .0722 * a[2] };
@@ -43,6 +44,18 @@ METRICS_JS = r'''() => {
     ? [...mm.querySelectorAll('a,button')].filter(a => a.tabIndex >= 0).length : 0;
   out.scrollTriggers = window.ScrollTrigger ? ScrollTrigger.getAll().length : null;
   out.docH = document.documentElement.scrollHeight; out.docW = document.documentElement.scrollWidth; out.vw = innerWidth;
+  out.sections = [...document.querySelectorAll('section[id], footer')].map(e => [e.id || 'footer', Math.round(e.getBoundingClientRect().top + scrollY), Math.round(e.offsetHeight)]);
+  const hn = document.getElementById('hero-next'); out.heroNext = hn && getComputedStyle(hn).display !== 'none' ? hn.textContent.replace(/\s+/g, ' ').trim() : null;
+  const boxed = e => { const cs = getComputedStyle(e); return cs.display !== 'none' && cs.visibility !== 'hidden' && (parseFloat(cs.borderTopWidth) > 0 || (cs.backgroundColor !== 'rgba(0, 0, 0, 0)' && cs.backgroundColor !== 'transparent')) };
+  out.heroBoxedButtons = [...document.querySelectorAll('#hero a, #hero button')].filter(e => e.offsetParent && boxed(e) && e.textContent.trim()).length;
+  const nl = document.querySelector('.nl'); out.navLogo = nl ? ((nl.querySelector('img') && getComputedStyle(nl.querySelector('img')).display !== 'none') ? (nl.querySelector('img').currentSrc || '').split('/').pop() : 'no-img (mask or text)') : null;
+  const tb = document.querySelector('.t-body'); out.bodyFont = tb ? parseFloat(getComputedStyle(tb).fontSize) : null;
+  let ml = 0; const lw = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); let ln;
+  while (ln = lw.nextNode()) { if (!ln.textContent.trim()) continue; const e = ln.parentElement, cs = getComputedStyle(e);
+    if (cs.display === 'none' || cs.visibility === 'hidden' || !e.offsetParent || e.closest('[aria-hidden="true"], a, button, table, nav, label, input, select, textarea')) continue;
+    if (cs.textTransform === 'uppercase' && parseFloat(cs.fontSize) <= 13 && /mono/i.test(cs.fontFamily)) ml++; }
+  out.microLabels = ml;
+  out.playedRowsVisible = [...document.querySelectorAll('.past-table tr')].filter(r => r.offsetParent).length;
   out.upcomingRows = document.querySelectorAll('#c-events-tbody tr').length;
   out.reelPanels = document.querySelectorAll('#reel .rp').length;
   out.playerRows = document.querySelectorAll('.cl-row').length;
@@ -90,11 +103,21 @@ def run(p, base, name, vp, mobile):
     pg.on('console', lambda m: errs.append(m.text[:160]) if m.type == 'error' else None)
     pg.on('pageerror', lambda e: errs.append(str(e)[:160]))
     pg.on('request', lambda r: sc.__setitem__('n', sc['n'] + 1) if ('soundcloud' in r.url or 'sndcdn' in r.url) else None)
-    pg.goto(base, wait_until='load'); pg.wait_for_timeout(1200)
+    pg.goto(base + PAGE, wait_until='load'); pg.wait_for_timeout(1200)
     pg.screenshot(path=os.path.join(OUT, name, '000-load-1s.jpg'), type='jpeg', quality=60)
     pg.wait_for_timeout(3500)
     pg.screenshot(path=os.path.join(OUT, name, '001-load-5s.jpg'), type='jpeg', quality=60)
     sc_before_scroll = sc['n']
+    hero_share = None
+    if not mobile or True:
+        os.makedirs(os.path.join(OUT, name + '-hero'), exist_ok=True)
+        n_cut = 0; n_all = 0
+        for i in range(100):                      # 25 s more, sampled every 250 ms (5 s already elapsed)
+            if pg.evaluate("document.getElementById('hero').classList.contains('cutting')"): n_cut += 1
+            n_all += 1
+            if i % 12 == 0: pg.screenshot(path=os.path.join(OUT, name + '-hero', '%03d-t%02ds.jpg' % (i, 5 + i // 4)), type='jpeg', quality=60)
+            pg.wait_for_timeout(250)
+        hero_share = round(1 - n_cut / n_all, 2)
     H = pg.evaluate('document.documentElement.scrollHeight'); step = int(vp['height'] * .85)
     for i in range(1, math.ceil(H / step) + 1):
         y = min(i * step, H - vp['height'])
@@ -104,6 +127,7 @@ def run(p, base, name, vp, mobile):
     pg.wait_for_timeout(400)
     m = pg.evaluate(METRICS_JS)
     m['consoleErrors'] = errs[:8]; m['soundcloudRequestsBeforeScroll'] = sc_before_scroll
+    m['heroLogoShare'] = hero_share
     m['under12Pct'] = round(100 * m['under12'] / max(1, m['chars']))
     m['lowContrastStyles'] = len(m['low']); m['low'] = m['low'][:12]
     b.close()
@@ -139,12 +163,14 @@ def main():
                'mob': run(p, base, 'mob', {'width': 390, 'height': 844}, True)}
     srv.shutdown()
     sheets('desk', 2, 3, 760); sheets('mob', 5, 2, 330)
+    sheets('desk-hero', 3, 3, 500); sheets('mob-hero', 9, 1, 200)
     res['static'] = static_checks()
     json.dump(res, open(os.path.join(OUT, 'metrics.json'), 'w'), indent=1)
     keys = ['consoleErrors', 'docH', 'docW', 'vw', 'under12Pct', 'minFont', 'lowContrastStyles', 'navCta',
             'hiddenMenuTabStops', 'backToTopVisibleAtEnd', 'footerTextUnderBarPx', 'flyerGapBelowTagPx',
-            'soundcloudRequestsBeforeScroll', 'scrollTriggers', 'upcomingRows', 'reelPanels', 'playerRows']
-    print('AUDIT SHOOT tag=%s -> tools/audit-out/%s/' % (TAG, TAG))
+            'soundcloudRequestsBeforeScroll', 'scrollTriggers', 'upcomingRows', 'reelPanels', 'playerRows',
+            'heroLogoShare', 'heroNext', 'heroBoxedButtons', 'navLogo', 'bodyFont', 'microLabels', 'playedRowsVisible', 'sections']
+    print('AUDIT SHOOT tag=%s page=%s -> tools/audit-out/%s/' % (TAG, PAGE or 'index.html', TAG))
     for dev in ('desk', 'mob'):
         for k in keys:
             if k in res[dev]: print('%s.%s = %s' % (dev, k, json.dumps(res[dev][k])))

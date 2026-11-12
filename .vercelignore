@@ -14,3 +14,6 @@ admin/config.yaml
 AUDIT-FIXES.md
 *.handoff.md
 .relay
+v2a.html
+v2b.html
+V2-PROTOS.md
