@@ -69,80 +69,6 @@
       },
       {
         "@type": "MusicEvent",
-        "name": "GRLSCRY at Almost Famous",
-        "startDate": "2026-08-29",
-        "eventStatus": "https://schema.org/EventScheduled",
-        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-        "performer": { "@id": "https://grlscry.com/#artist" },
-        "location": {
-          "@type": "Place",
-          "name": "Old Town Scottsdale",
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Scottsdale",
-            "addressRegion": "AZ",
-            "addressCountry": "US"
-          }
-        }
-      },
-      {
-        "@type": "MusicEvent",
-        "name": "GRLSCRY at Electric Sanctuary",
-        "startDate": "2026-09-19",
-        "eventStatus": "https://schema.org/EventScheduled",
-        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-        "performer": { "@id": "https://grlscry.com/#artist" },
-        "location": {
-          "@type": "Place",
-          "name": "Electric Sanctuary",
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Scottsdale",
-            "addressRegion": "AZ",
-            "addressCountry": "US"
-          }
-        }
-      },
-      {
-        "@type": "MusicEvent",
-        "name": "GRLSCRY at Halloween After Dark",
-        "startDate": "2026-11-01T00:00-07:00",
-        "eventStatus": "https://schema.org/EventScheduled",
-        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-        "performer": { "@id": "https://grlscry.com/#artist" },
-        "location": {
-          "@type": "Place",
-          "name": "The Archives",
-          "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "7332 E Earll Dr",
-            "addressLocality": "Scottsdale",
-            "addressRegion": "AZ",
-            "addressCountry": "US"
-          }
-        }
-      },
-      {
-        "@type": "MusicEvent",
-        "name": "GRLSCRY at Just The Afters",
-        "startDate": "2026-11-01T03:00-07:00",
-        "eventStatus": "https://schema.org/EventScheduled",
-        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-        "performer": { "@id": "https://grlscry.com/#artist" },
-        "location": {
-          "@type": "Place",
-          "name": "The Drop PHX",
-          "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "4700 N 12th St, Suite 111",
-            "addressLocality": "Phoenix",
-            "addressRegion": "AZ",
-            "addressCountry": "US"
-          }
-        }
-      },
-      {
-        "@type": "MusicEvent",
         "name": "GRLSCRY at After12",
         "startDate": "2026-11-14T23:00-07:00",
         "endDate": "2026-11-15T05:00-07:00",
@@ -242,6 +168,7 @@
     .lenis.lenis-scrolling iframe { pointer-events: none; }
 
     *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+    button, input, select, textarea { font-family: inherit; } /* form controls default to the browser face (Arial) */
     body {
       background: var(--black);
       color: var(--white);
@@ -369,10 +296,10 @@
       display: flex; flex-direction: column;
       justify-content: center; align-items: flex-start;
       padding: 0 var(--gutter);
-      opacity: 0; pointer-events: none;
-      transition: opacity .45s ease;
+      opacity: 0; pointer-events: none; visibility: hidden;
+      transition: opacity .45s ease, visibility 0s linear .45s;
     }
-    #mm.open { opacity: 1; pointer-events: auto; }
+    #mm.open { opacity: 1; pointer-events: auto; visibility: visible; transition-delay: 0s; }
     #mm a {
       font-family: var(--poster); font-stretch: 125%; font-weight: 800;
       font-size: clamp(1.9rem, 4.4vw, 3.6rem);
@@ -587,6 +514,7 @@
     .shop-note { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--sage-dim); margin-bottom: 26px; }
     .shop-sizes-label { font-family: var(--mono); font-size: 9px; letter-spacing: .24em; text-transform: uppercase; color: var(--sage); margin-bottom: 10px; }
     .shop-sizes { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; border: 0; padding: 0; }
+    @media (max-width: 480px) { .shop-sizes { display: grid; grid-template-columns: repeat(4, 1fr); } .shop-size { min-width: 0; } } /* 4 + 3, not 6 + 1 */
     .shop-size {
       min-width: 46px; min-height: 44px; padding: 0 12px;
       font-family: var(--mono); font-size: 11px; letter-spacing: .1em;
@@ -958,7 +886,7 @@
     }
 
     /* ─── ACTIVE NAV LINK ───────────────────────────────────────── */
-    .nv a.act { color: var(--sage) !important; }
+    .nv a.act:not(.nb) { color: var(--sage) !important; }
     .nv a.act::after { transform: scaleX(1) !important; }
 
     /* ─── BACK TO TOP ───────────────────────────────────────────── */
@@ -1505,7 +1433,7 @@
     @media (max-width: 768px) {
       .reel-frame { top: 116px; left: 12px; right: 12px; bottom: 96px; border-radius: 18px; }
       .rp-bot { flex-direction: column; align-items: flex-start; }
-      .rp.has-flyer .rp-bot { top: 68px; justify-content: flex-end; gap: 18px; }
+      .rp.has-flyer .rp-bot { top: 88px; justify-content: flex-end; gap: 18px; }
       .rp-flyer { position: static; flex: 1 1 0; min-height: 0; width: 100%; height: auto; max-height: none; justify-content: flex-start; }
       .rp-title { font-size: clamp(32px, 10vw, 56px); }
       .reel-dots { right: 3px; }
@@ -1585,6 +1513,8 @@
     @media (max-width: 900px) {
       /* Lift back-to-top clear of the sticky CTA bar. */
       .btt { bottom: 80px; right: 16px; }
+      /* Keep the last footer lines clear of the fixed CTA bar (48px + 16px). */
+      footer { padding-bottom: 76px; }
     }
     .cs-label, .cs-sc { font-size: 10px; }
     .cs-meta, .cs-time, .cs-dur, .cl-m, .cl-d { font-size: 10px; }
@@ -2722,9 +2652,14 @@
     const btt  = document.getElementById('btt');
     const nav  = document.getElementById('nav');
     let lastY  = 0;
+    let bttInlineSeen = false; /* footer's own back-to-top in view: hide the floating one */
+    new IntersectionObserver(es => {
+      bttInlineSeen = es[0].isIntersecting;
+      btt.classList.toggle('visible', lastY > 300 && !bttInlineSeen);
+    }).observe(document.getElementById('btt-inline'));
     lenis.on('scroll', e => {
       if (prog) prog.style.width = Math.min(e.progress * 100, 100) + '%';
-      btt.classList.toggle('visible', e.scroll > 300);
+      btt.classList.toggle('visible', e.scroll > 300 && !bttInlineSeen);
       nav.classList.toggle('sc', e.scroll > 60);
       if (e.scroll > 120 && e.scroll > lastY) nav.style.transform = 'translateY(-100%)';
       else nav.style.transform = '';

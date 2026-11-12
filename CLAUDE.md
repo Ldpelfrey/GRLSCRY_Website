@@ -30,7 +30,7 @@ lighting, not built). Media provenance is in `images/brand/MANIFEST.md`.
 
 ## What it is
 
-One hand-written `index.html` (~2,780 lines) with all HTML, CSS, and JS inline.
+One hand-written `index.html` (~3,600 lines) with all HTML, CSS, and JS inline.
 **No build step, no framework, no npm install, no bundler.** Edit the file, load
 it in a browser. Third-party code is CDN `<script>` tags only.
 
@@ -144,7 +144,7 @@ as an Instagram bio link.
 ## Motion — the fragile part
 
 GSAP 3.12 + ScrollTrigger, Lenis smooth scroll, SoundCloud Widget API, all from
-CDN. ~48 ScrollTriggers. The page has heavy scroll cinematics and a sticky bottom
+CDN. 52 ScrollTriggers. The page has heavy scroll cinematics and a sticky bottom
 audio player.
 
 **Inserting a section shifts every trigger below it.** When you add one:
@@ -175,7 +175,9 @@ the booking form and admin publishing will fail locally, which is expected.
 - Stale `.git/index.lock` is common: `rm -f .git/index.lock` and retry.
 - Event data is duplicated in three places: the JSON-LD block in `<head>`, the
   hardcoded Shows table, and `content.json`. Keep all three in sync. Never emit a
-  past event as upcoming.
+  past event as upcoming: the JSON-LD block holds upcoming shows only (drop a show from it once it is played).
+- Audit tools: `python3 tools/audit_shoot.py <tag>` shoots the page (desk + phone) into `tools/audit-out/<tag>/`
+  with metrics; `python3 tools/audit_static.py` checks the static files (JSON-LD, robots, links) and exits 0 when clean.
 - Crate player tracks live in two places: `content.json` `tracks` (what the admin panel edits; the page applies it
   through `window.crateSetTracks`) and the built-in `TRACKS` array in the player script (fallback until the fetch
   lands). Keep them identical. Order = SoundCloud plays, most first, as of 2026-11-10 (all 26 public uploads; the list
