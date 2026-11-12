@@ -297,6 +297,17 @@
   ],
   "events": [
     {
+      "date": "Nov 14",
+      "venue": "After12",
+      "location": "Phoenix, AZ",
+      "type": "House Stage · 11 PM–5 AM · 18+",
+      "status": "live",
+      "full_venue": "4822 S 40th St",
+      "link": "https://www.flite.city/e/after12-saturday-11-14",
+      "link_text": "Tickets",
+      "flyer": "images/flyers/after12-nov14.jpg"
+    },
+    {
       "date": "Nov 21",
       "venue": "Nightshift",
       "location": "Phoenix, AZ",
