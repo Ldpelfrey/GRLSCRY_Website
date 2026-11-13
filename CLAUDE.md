@@ -82,7 +82,7 @@ on 2026-09-25.
 Hero → Shows reel (`#events`, upcoming only) → Links → Sound (`#music`) → Artist with About folded in
 (`#artist`) → Played (`#played`) → Photos (`#asm`) → Book (`#contact`) → **Shop** → Footer.
 
-v2 flow, live since 2026-11-12 (Luke picked prototype B):
+v2 flow (Luke picked prototype B on 2026-11-12; built on branch `v2-ship`):
 - **Hero** rests on the jelly logo: one burst of 6 cuts (0.7 s each), then 21 s of logo; first burst about 9 s in.
   `#hero-next` names the first event in `content.json` that is not `past` ("SAT NOV 14 · AFTER12 · PHOENIX, AZ"),
   `#hero-cta` goes to that show's tickets, `#hero-alt` is a text link. No upcoming show: line hidden, Book a Set + Listen.
@@ -102,7 +102,7 @@ Added 2026-10-28/29 (all live):
   (timing changed 2026-11-12, see the v2 notes above). Ref: recent.design Olivir; Luke picked prototype B
   (`proto/hero.html?v=a|b`, local only, in `.vercelignore`). Torn mark is baked (`images/brand/mark-torn.webp`).
 - **Shows reel** (top of `#events`): sticky full-frame panels built from `content.json` events — every
-  upcoming show, then past shows listed in `REEL_IMG` ("date|venue" → `images/reel/<key>-{w,t}.webp`).
+  upcoming show (played shows moved to the Played photo row in v2).
   `#events` must stay `overflow: clip` (`hidden` breaks the sticky pin). Snap = scrollEnd + `lenis.scrollTo`.
   An upcoming event with a `flyer` path (`images/flyers/…`, editable in admin) shows the flyer as a card on its
   panel; click opens the full image. Past events ignore `flyer`.
