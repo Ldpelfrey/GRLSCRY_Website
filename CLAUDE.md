@@ -84,7 +84,8 @@ Hero → Shows reel (`#events`, upcoming only) → Links → Sound (`#music`) �
 
 v2 flow, live since 2026-11-12 (Luke picked prototype B):
 - **Hero** rests on the jelly logo: one burst of 6 cuts (0.7 s each), then 21 s of logo; first burst about 9 s in.
-  `#hero-next` names the first event in `content.json` that is not `past` ("SAT NOV 14 · AFTER12 · PHOENIX, AZ"),
+  `#hero-next` names the first event in `content.json` that is not `past` ("SAT NOV 14 · AFTER12 · PHOENIX, AZ";
+  a show whose date has gone by counts as past, see `autoPast` under Gotchas),
   `#hero-cta` goes to that show's tickets, `#hero-alt` is a text link. No upcoming show: line hidden, Book a Set + Listen.
   The logo takes a soft room tint from the hero video (`--amb` on `#hero`, `.lp-tint`); the nav uses the flat cream mark.
 - **Shows reel** = upcoming shows only. The upcoming table is `hidden` (shown again only for the TBA row).
@@ -202,6 +203,14 @@ the booking form and admin publishing will fail locally, which is expected.
 - Event data is duplicated in three places: the JSON-LD block in `<head>`, the
   hardcoded Shows table, and `content.json`. Keep all three in sync. Never emit a
   past event as upcoming: the JSON-LD block holds upcoming shows only (drop a show from it once it is played).
+- **Shows turn past by date (`autoPast`, since 2026-11-13):** the page treats a non-`past` event as played from
+  noon Arizona time the day after its date (late sets stay upcoming through their night), drops its ticket link,
+  and puts it first in Played. A year-less date means its first occurrence at most 60 days gone, so "Jan 9" listed
+  in November stays upcoming. This only fixes what visitors see: still set `past` in `content.json` (admin) and drop
+  the show from the JSON-LD and the hardcoded Shows table and tickets strip at the next deploy.
+  Known gap (older than autoPast): the hero weekday (`renderTix`), the reel label, the Played photo row and the
+  "N sets in YEAR" proof row all use the current year. A show in next year's January gets this year's weekday
+  ("FRI JAN 9" for a Saturday), and from Jan 1 last year's played shows read as the new year's ("19 sets in 2027").
 - Audit tools: `python3 tools/audit_shoot.py <tag>` shoots the page (desk + phone) into `tools/audit-out/<tag>/`
   with metrics; `python3 tools/audit_static.py` checks the static files (JSON-LD, robots, links) and exits 0 when clean.
 - Crate player tracks live in two places: `content.json` `tracks` (what the admin panel edits; the page applies it
