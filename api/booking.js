@@ -15,6 +15,12 @@
 // to work while discarding submissions is worse than one that visibly errors.
 
 const nodemailer = require('nodemailer');
+const { hit, clientIp } = require('./_rate');
+
+// Brakes, per warm instance (see _rate.js): one address may send 5 inquiries in 10 minutes,
+// and the form as a whole 40 an hour, so a script cannot flood the inbox or burn Gmail's send quota.
+const PER_IP = [5, 10 * 60 * 1000];
+const ALL    = [40, 60 * 60 * 1000];
 
 const MAX_FIELD = 5000;
 let transport;
@@ -37,9 +43,10 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({ ok: true });
   }
 
-  const name    = str(body.name);
-  const email   = str(body.email);
-  const type    = str(body.inquiry_type);
+  // Name, email and type go into mail headers: no line breaks allowed in them.
+  const name    = oneLine(str(body.name));
+  const email   = oneLine(str(body.email));
+  const type    = oneLine(str(body.inquiry_type));
   const message = str(body.message);
 
   if (!name || !email || !message) {
@@ -61,6 +68,15 @@ module.exports = async function handler(req, res) {
     });
   }
   const to = process.env.BOOKING_TO || user;
+
+  // Counted only for inquiries that would actually send.
+  if (!hit('booking:' + clientIp(req), PER_IP[0], PER_IP[1]) || !hit('booking:all', ALL[0], ALL[1])) {
+    console.warn('booking: rate limit reached');
+    res.setHeader('Retry-After', '600');
+    return res.status(429).json({
+      error: 'Too many inquiries just now. Please email us directly.',
+    });
+  }
 
   try {
     // Reuse the transport across warm invocations.
@@ -97,4 +113,8 @@ module.exports = async function handler(req, res) {
 
 function str(v) {
   return typeof v === 'string' ? v.trim() : '';
+}
+
+function oneLine(v) {
+  return v.replace(/[\r\n]+/g, ' ');
 }

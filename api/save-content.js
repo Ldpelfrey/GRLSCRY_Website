@@ -5,6 +5,11 @@
 // content.json to GitHub. Fails closed if ADMIN_SECRET is unset.
 
 const crypto = require('crypto');
+const { hit, blocked, clientIp } = require('./_rate');
+
+// Brake on password guessing, per warm instance (see _rate.js): after 8 wrong passwords
+// from one address, that address is refused for 15 minutes, right password or not.
+const BAD_AUTH = [8, 15 * 60 * 1000];
 
 const REPO   = 'Ldpelfrey/GRLSCRY_Website';
 const BRANCH = 'main';
@@ -28,8 +33,16 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: 'Server misconfiguration: ADMIN_SECRET not set' });
   }
 
+  const authKey = 'auth:' + clientIp(req);
+  if (blocked(authKey, BAD_AUTH[0], BAD_AUTH[1])) {
+    console.warn('save-content: too many bad passwords from one address, refusing');
+    res.setHeader('Retry-After', '900');
+    return res.status(429).json({ error: 'Too many wrong passwords. Try again in 15 minutes.' });
+  }
+
   const supplied = req.headers['x-admin-secret'] || '';
   if (!timingSafeEqual(supplied, secret)) {
+    hit(authKey, BAD_AUTH[0], BAD_AUTH[1]);
     console.warn('save-content: rejected request with bad or missing admin secret');
     return res.status(401).json({ error: 'Unauthorized' });
   }

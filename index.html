@@ -1810,11 +1810,11 @@
 
   <!-- MOBILE NAV -->
   <div id="mm" role="dialog" aria-modal="true" aria-label="Mobile navigation">
-    <a href="#events"  onclick="cm()">Shows</a>
-    <a href="#music"   onclick="cm()">Sound</a>
-    <a href="#artist"  onclick="cm()">About</a>
-    <a href="#shop"    onclick="cm()" id="nav-shop-mob">Shop</a>
-    <a href="#contact" onclick="cm()">Book a Set</a>
+    <a href="#events" >Shows</a>
+    <a href="#music"  >Sound</a>
+    <a href="#artist" >About</a>
+    <a href="#shop"    id="nav-shop-mob">Shop</a>
+    <a href="#contact">Book a Set</a>
   </div>
 
   <main id="main">
@@ -2608,6 +2608,7 @@
       lenis.start();
       gsap.to(mmLinks, { y: 32, opacity: 0, duration: .2, ease: 'power2.in' });
     }
+    mm.querySelectorAll('a').forEach(a => a.addEventListener('click', cm));   /* was inline onclick; the CSP now blocks inline handlers */
 
     /* ── SCROLL REVEAL ──────────────────────────────────────────── */
     const io = new IntersectionObserver(entries => {

@@ -200,8 +200,16 @@ the booking form and admin publishing will fail locally, which is expected.
   lands). Keep them identical. Order = SoundCloud plays, most first, as of 2026-11-10 (all 26 public uploads; the list
   scrolls inside the player, `data-lenis-prevent`). Refresh counts with
   `yt-dlp -J --skip-download https://soundcloud.com/grlscry/tracks` (`view_count` per entry).
-- CSP is strict (in `vercel.json`). Any new third-party origin must be added there
-  or it is silently blocked.
+- CSP is strict (in `vercel.json`, written by `tools/csp_hashes.py`). Any new third-party origin must be added
+  to that script or it is silently blocked. **Inline scripts run only by hash (since 2026-11-12):** after ANY edit
+  to a `<script>` block in `index.html`, run `python3 tools/csp_hashes.py` and commit `vercel.json`, or browsers
+  block the site's JavaScript. No inline handlers (`onclick="…"`) on the public page: use `addEventListener`.
+  `tools/audit_static.py` checks both, and a local pre-push hook (`.git/hooks/pre-push`, not in the repo) stops a
+  push when it fails. The admin panel has its own policy that still allows inline scripts. To test a change under
+  the real headers: `python3 tools/serve_csp.py` (port 8896); plain `http.server` sends no CSP.
+- Rate limits (`api/_rate.js`, in memory per warm instance, a brake not a wall): booking form 5 sends per 10 min
+  per address and 40 an hour in total; admin login refuses an address for 15 min after 8 wrong passwords.
+  `node tools/rate_test.js "$PWD"` tests them with mail stubbed. A hard limit needs a Vercel Firewall rule.
 - `.r` elements start at `opacity: 0` and are revealed by GSAP. Under
   `prefers-reduced-motion` that JS is skipped, so a CSS rule forces them visible.
   Don't remove it — without it, reduced-motion users see empty sections.

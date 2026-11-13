@@ -59,6 +59,12 @@ else:
     check('no section id repeated', len(ids) == len(set(ids)))
     for sid in ('hero', 'events', 'music', 'asm', 'shop', 'contact'):
         check('section #%s present once' % sid, ids.count(sid) == 1)
+if PAGE == 'index.html':
+    r = subprocess.run([sys.executable, os.path.join(ROOT, 'tools', 'csp_hashes.py'), '--check'], capture_output=True, text=True)
+    check('CSP in vercel.json matches the inline scripts (else the browser blocks them)', r.returncode == 0, r.stdout.strip() if r.returncode else '')
+    handlers = re.findall(r'<[^>]+\son[a-z]+="', html)
+    check('no inline event handlers (the CSP blocks them; use addEventListener)', not handlers, handlers[0][:80] if handlers else '')
+    check('api/_rate.js present (both functions require it)', os.path.exists(os.path.join(ROOT, 'api', '_rate.js')))
 check('style and script tags balanced', html.count('<style') == html.count('</style>') and html.count('<script') == html.count('</script>'))
 print('%s lines: %d' % (PAGE, html.count('\n') + 1))
 sys.exit(1 if fails else 0)

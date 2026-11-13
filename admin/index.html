@@ -96,6 +96,9 @@
     .fg input:focus, .fg textarea:focus { border-color: var(--sage); }
     .fg textarea { min-height: 78px; resize: vertical; }
     .fg textarea.tall { min-height: 120px; }
+    details.unused { margin-top: 8px; border: 1px dashed var(--gray); padding: 12px 14px; }
+    details.unused summary { cursor: pointer; font-size: 11px; letter-spacing: .08em; color: var(--gray); }
+    details.unused[open] summary { margin-bottom: 16px; }
     .hint { font-size: 9px; letter-spacing: .08em; color: var(--gray); margin-top: 3px; }
 
     .fr  { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -275,9 +278,12 @@
     <!-- ABOUT ────────────────────────────────────────────── -->
     <div class="admin-section">
       <div class="section-title">About</div>
-      <div class="fg"><label>Pull Quote (pink left-border)</label><input type="text" id="f-about-pq"></div>
+      <span class="hint" style="display:block;margin-bottom:14px;">Shown under “Built for 3AM.” on the site: the pull quote and bio paragraphs 1 and 2.</span>
+      <div class="fg"><label>Pull Quote</label><input type="text" id="f-about-pq"></div>
       <div class="fg"><label>Bio — Paragraph 1</label><textarea id="f-bio-1"></textarea></div>
       <div class="fg"><label>Bio — Paragraph 2</label><textarea id="f-bio-2"></textarea></div>
+      <details class="unused">
+        <summary>Not shown on the site since Nov 2026 (kept, in case they come back)</summary>
       <div class="fg"><label>Bio — Paragraph 3</label><textarea id="f-bio-3"></textarea></div>
       <div class="fg"><label>Bio — Paragraph 4 (sign-off line)</label><textarea id="f-bio-4"></textarea></div>
       <div class="fg"><label>Philosophy Block</label><textarea id="f-philosophy"></textarea></div>
@@ -292,6 +298,7 @@
 
       <div class="fg" style="margin-top:16px;"><label>Equipment / Tools</label><textarea id="f-tools"></textarea></div>
       <div class="fg"><label>Inspiration Block</label><textarea id="f-inspiration" class="tall"></textarea></div>
+      </details>
     </div>
 
     <!-- LINKS ────────────────────────────────────────────── -->
