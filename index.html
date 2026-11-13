@@ -3596,6 +3596,8 @@
         return r.json();
       })
       .then(function(c) {
+        /* A show whose date has gone by counts as played even before content.json says so (autoPast). */
+        if (Array.isArray(c.events)) c.events = autoPast(c.events);
 
         /* Meta */
         if (c.meta) {
@@ -3761,6 +3763,28 @@
       if (pol) pol.style.display = 'none';
       /* The section just changed height — every trigger below it moved. */
       refreshTriggers();
+    }
+
+    /* A show turns past by itself at noon, Arizona time, the day after its date, so a late set
+       (After12 runs to 5 am) stays upcoming through its night. "past" in content.json still wins;
+       this covers the days before someone marks it. Dates carry no year, so a date means its first
+       occurrence that is at most 60 days gone: a show that ended in the last 60 days reads as played,
+       and one up to about 10 months ahead ("Jan 9" listed in November) stays upcoming.
+       A show turned past loses its ticket link and note, and leads the played list. */
+    function autoPast(events) {
+      var MON = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+      var now = Date.now(), kept = [], moved = [];
+      events.forEach(function(ev) {
+        var dm = ev && ev.status !== 'past' && String(ev.date || '').trim().match(/^([A-Za-z]{3})[a-z]*\.?\s+(\d{1,2})$/);
+        var m = dm ? MON.indexOf(dm[1].toLowerCase()) : -1;
+        if (m < 0) { kept.push(ev); return; }
+        /* Arizona keeps UTC-7 all year, so noon there is 19:00 UTC. */
+        var yy = new Date().getFullYear() - 1, flip = Date.UTC(yy, m, +dm[2] + 1, 19);
+        while (flip < now - 60 * 864e5) flip = Date.UTC(++yy, m, +dm[2] + 1, 19);
+        if (now < flip) { kept.push(ev); return; }
+        moved.push(Object.assign({}, ev, { status: 'past', link: '', link_text: '', note: '' }));
+      });
+      return moved.length ? moved.reverse().concat(kept) : events;
     }
 
     /* Upcoming shows with a ticket URL go to the top of /links, and the hero's
