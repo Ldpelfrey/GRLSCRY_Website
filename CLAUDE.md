@@ -79,12 +79,27 @@ on 2026-09-25.
 
 ## Sections
 
-Hero → Links → About → Shows (`#events`) → Sound (`#music`) → Artist → Photos (`#asm`) → **Shop** →
-Book (`#contact`) → Footer.
+Hero → Shows reel (`#events`, upcoming only) → Links → Sound (`#music`) → Artist with About folded in
+(`#artist`) → Played (`#played`) → Photos (`#asm`) → Book (`#contact`) → **Shop** → Footer.
+
+v2 flow, live since 2026-11-12 (Luke picked prototype B):
+- **Hero** rests on the jelly logo: one burst of 6 cuts (0.7 s each), then 21 s of logo; first burst about 9 s in.
+  `#hero-next` names the first event in `content.json` that is not `past` ("SAT NOV 14 · AFTER12 · PHOENIX, AZ"),
+  `#hero-cta` goes to that show's tickets, `#hero-alt` is a text link. No upcoming show: line hidden, Book a Set + Listen.
+  The logo takes a soft room tint from the hero video (`--amb` on `#hero`, `.lp-tint`); the nav uses the flat cream mark.
+- **Shows reel** = upcoming shows only. The upcoming table is `hidden` (shown again only for the TBA row).
+  `#events` holds `min-height: 200vh` until `renderReel` adds `.reel-set`, so the page below does not jump.
+- **Played** (`#played`): photo row from `REEL_IMG` ("date|venue" → `images/reel/<key>-{w,t}.webp`, newest three),
+  then 6 rows + "Show all N" (`clipPlayed`), then the booking strip. Add a played show's photo by adding its key to `REEL_IMG`.
+- **About** has no section of its own: quote, bio 1–2 and the proof row sit in `#artist`; an empty `#about` span
+  catches old links. Bio 3–4, stats, chips and the three `//` cards are `hidden` (the admin still edits them; they do not show).
+- **Colour rule:** sage = things you press, cream `#f2e3c8` = display headings, pink = the jelly logo only.
+- **Sound player** (`.crate`) is styled as hardware in CSS only (shell, LCD readout, keys); the player script is unchanged.
+- The ticker (`.status-bar`) rides up with the nav (`.up`).
 
 Added 2026-10-28/29 (all live):
-- **Hero cuts** (`#hero-cuts`): after the jelly-logo intro the hero cuts through 5 brand treatments
-  (1.4 s each) and back to the plate (2.8 s). Ref: recent.design Olivir; Luke picked prototype B
+- **Hero cuts** (`#hero-cuts`): after the jelly-logo intro the hero cuts through the brand treatments
+  (timing changed 2026-11-12, see the v2 notes above). Ref: recent.design Olivir; Luke picked prototype B
   (`proto/hero.html?v=a|b`, local only, in `.vercelignore`). Torn mark is baked (`images/brand/mark-torn.webp`).
 - **Shows reel** (top of `#events`): sticky full-frame panels built from `content.json` events — every
   upcoming show, then past shows listed in `REEL_IMG` ("date|venue" → `images/reel/<key>-{w,t}.webp`).

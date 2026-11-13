@@ -49,8 +49,11 @@ for name in ('content.json', 'vercel.json'):
 
 ids = re.findall(r'<section[^>]*\bid="([^"]+)"', html)
 if PAGE == 'index.html':
-    for sid in ('hero', 'links', 'about', 'events', 'music', 'artist', 'asm', 'shop', 'contact'):
+    order = ['hero', 'events', 'links', 'music', 'artist', 'played', 'asm', 'contact', 'shop']
+    for sid in order:
         check('section #%s present once' % sid, ids.count(sid) == 1)
+    check('section order is ' + ', '.join(order), [i for i in ids if i in order] == order, ', '.join(ids))
+    check('old /#about links still land (anchor present)', 'id="about"' in html)
 else:
     print('section order: ' + ', '.join(ids))
     check('no section id repeated', len(ids) == len(set(ids)))
