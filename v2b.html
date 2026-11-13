@@ -1727,6 +1727,41 @@
       .cs-btn { flex: 1 1 0; width: auto; }
       .cs-play-btn { flex: 1.4 1 0; }
     }
+
+    /* ── v2 FIX: after the relay audit (2026-11-12) ───────────────────── */
+    /* G1: room light comes up from below like bounce light, so the top of each piece stays pink. */
+    .lp-tint { background: linear-gradient(to top, rgb(var(--amb)) 0%, rgba(var(--amb), .5) 30%, rgba(var(--amb), 0) 64%); }
+    #hero.amb-on .lp-tint { opacity: .36; }
+    /* Hero fits one screen again, and the cut backing no longer moves the text. */
+    #hero .ht { margin-bottom: 16px; }
+    #hero .h-ctx { margin-bottom: 16px; }
+    #hero-next { margin-bottom: 14px; }
+    #events:not(.reel-set) { min-height: 200vh; }
+    #hero.cutting #hero-next, #hero.cutting .hc { padding: 0; box-shadow: 0 0 0 8px rgba(14,14,14,.62); }
+    /* Torn cut shows the whole name on desktop too. */
+    .hc-torn img { width: 96%; left: 2%; }
+    /* Proof row: three stacked facts, no ragged wrap. */
+    .ab-proof { flex-direction: column; gap: 8px; }
+    .ab-proof span + span { margin-left: 0; padding-left: 0; border-left: 0; }
+    /* Played strip: photo row breaks out of the text column on desktop. */
+    @media (min-width: 1100px) {
+      .ps { margin-left: calc((100% - min(1240px, 100vw - 2 * var(--gutter))) / 2); margin-right: calc((100% - min(1240px, 100vw - 2 * var(--gutter))) / 2); margin-bottom: 56px; }
+      .ps-v { font-size: clamp(24px, 2.2vw, 32px); }
+    }
+    @media (max-width: 768px) {
+      .ps { margin-right: calc(-2 * var(--gutter)); padding-right: calc(2 * var(--gutter)); scroll-padding-left: 0; margin-bottom: 26px; }
+      .ps-card { flex-basis: 72vw; }
+    }
+    /* Ticker rides up with the nav instead of hanging under an empty band. */
+    .status-bar { transition: transform .35s cubic-bezier(0.86,0,0.07,1); }
+    .status-bar.up { transform: translateY(calc(-1 * var(--nav-h))); }
+    /* B: play key face is solid sage (the old face sat on a black base colour). */
+    .cs-play-btn, .cs-play-btn:hover { background: linear-gradient(180deg, var(--sage) 60%, #bdd1aa) var(--sage); }
+    .cs.stage-playing .cs-play-btn { background: linear-gradient(180deg, #c2d6af, var(--sage)) var(--sage); }
+    /* B: the booking strip moved to the end of Played, so Shows closes tight. */
+    #events { padding-bottom: clamp(20px, 3vw, 40px); }
+    #played .book-strip { margin-top: 48px; }
+    @media (min-width: 1100px) { #played-h { margin-left: calc((100% - min(1240px, 100vw - 2 * var(--gutter))) / 2); } }  /* heading lines up with the photo row */
   </style>
 </head>
 <body>
@@ -1801,7 +1836,7 @@
       <div class="hcut hc-photo"><div class="hz"><img class="ph" data-src="images/reel/sunbar-oct9-w.webp" alt=""><span class="hmark hctr"></span></div></div>
       <div class="hcut hc-torn"><div class="hz">
         <img src="images/brand/mark-torn.webp" alt="" decoding="async"></div></div>
-      <div class="hcut hc-photo tiny"><div class="hz"><img class="ph" data-src="images/reel/enclave-w.webp" alt=""><span class="hmark hctr"></span></div></div>
+      <div class="hcut hc-photo tiny"><div class="hz"><img class="ph" data-src="images/reel/electric-sanctuary-w.webp" alt=""><span class="hmark hctr"></span></div></div>
       <div class="hcut hc-paper"><div class="hz"><div class="lock"><span class="hmark"></span><span>DJ / Producer · Scottsdale, AZ</span></div></div></div>
       <div class="hcut hc-collage"><div class="hz"><div class="fill hctr"><img data-src="images/assembly/s02.webp" alt=""><img data-src="images/assembly/s16.webp" alt=""><img data-src="images/assembly/s09.webp" alt=""><img data-src="images/assembly/s19.webp" alt=""><img data-src="images/assembly/s05.webp" alt=""><img data-src="images/assembly/s17.webp" alt=""><img data-src="images/assembly/s13.webp" alt=""><img data-src="images/assembly/s01.webp" alt=""><img data-src="images/assembly/s18.webp" alt=""><img data-src="images/assembly/s11.webp" alt=""><img data-src="images/assembly/s14.webp" alt=""><img data-src="images/assembly/s15.webp" alt=""><img data-src="images/assembly/s07.webp" alt=""><img data-src="images/assembly/s12.webp" alt=""></div></div></div>
     </div>
@@ -1917,20 +1952,6 @@
         </tbody>
       </table>
 
-      <p class="t-body r d2" style="margin-top:32px; color:var(--gray-tx);">
-        Confirmed dates and ticket links posted here as bookings are finalized.<br>
-        Corporate event packages available — reach out with date, venue, and budget.
-      </p>
-
-      <!-- Conversion exit at the high-intent moment: they have just read the
-           dates. Without this the next booking affordance is ~4 screens away. -->
-      <div class="book-strip r d3">
-        <div class="book-strip-copy">
-          <span class="book-strip-k">Open dates</span>
-          <p class="book-strip-t">Taking bookings for fall and winter.</p>
-        </div>
-        <a href="#contact" class="btn bs book-strip-cta">Book a Set</a>
-      </div>
     </div>
     <span class="sec-n" aria-hidden="true" hidden>03</span>
   </section>
@@ -2295,6 +2316,15 @@
         <!-- v2 S3: the list shows the 6 most recent; clipPlayed() labels this and reveals the rest. -->
         <button type="button" id="past-more" class="past-more" aria-expanded="false" aria-controls="c-past-tbody" hidden>Show all</button>
       </div>
+      <!-- Conversion exit at the high-intent moment: they have just read the
+           played list (v2 FIX: moved here from Shows). Without this the next booking affordance is ~4 screens away. -->
+      <div class="book-strip r d3">
+        <div class="book-strip-copy">
+          <span class="book-strip-k">Open dates</span>
+          <p class="book-strip-t">Taking bookings for fall and winter.</p>
+        </div>
+        <a href="#contact" class="btn bs book-strip-cta">Book a Set</a>
+      </div>
     </div>
   </section>
 
@@ -2614,7 +2644,7 @@
         i = i + 1 >= cuts.length ? -1 : i + 1;                 // -1 = the jelly plate shows through
         cuts.forEach((c, j) => c.classList.toggle('on', j === i));
         hero.classList.toggle('cutting', i >= 0);
-        t = setTimeout(run, i < 0 ? 18000 : 700);   // v2 H1: one short burst (0.7 s a cut), then 18 s of jelly logo
+        t = setTimeout(run, i < 0 ? 21000 : 700);   // v2 H1: one short burst (0.7 s a cut), then 21 s of jelly logo
       };
       const run = () => { t = null; if (visible && !document.hidden) step(); };
       const kick = () => { if (ready && !t && visible && !document.hidden) t = setTimeout(run, 400); };  // one timer chain only: a second one made every other cut flash for a frame
@@ -2850,6 +2880,7 @@
     const btt  = document.getElementById('btt');
     const nav  = document.getElementById('nav');
     let lastY  = 0;
+    const ticker = document.querySelector('.status-bar');
     let bttInlineSeen = false; /* footer's own back-to-top in view: hide the floating one */
     new IntersectionObserver(es => {
       bttInlineSeen = es[0].isIntersecting;
@@ -2859,8 +2890,9 @@
       if (prog) prog.style.width = Math.min(e.progress * 100, 100) + '%';
       btt.classList.toggle('visible', e.scroll > 300 && !bttInlineSeen);
       nav.classList.toggle('sc', e.scroll > 60);
-      if (e.scroll > 120 && e.scroll > lastY) nav.style.transform = 'translateY(-100%)';
-      else nav.style.transform = '';
+      const navUp = e.scroll > 120 && e.scroll > lastY;
+      nav.style.transform = navUp ? 'translateY(-100%)' : '';
+      if (ticker) ticker.classList.toggle('up', navUp);   /* v2 FIX: ticker rides up with the nav */
       lastY = e.scroll;
     });
 
@@ -3439,7 +3471,8 @@
       var music = document.getElementById('music');
       if (!music || !('IntersectionObserver' in window)) { startWidget(); return; }
       var io = new IntersectionObserver(function(entries) {
-        if (entries.some(function(en) { return en.isIntersecting; })) { io.disconnect(); startWidget(); }
+        /* v2 FIX: before the reel is built #music sits near the top; only count it once the visitor has scrolled. */
+        if (window.scrollY > 40 && entries.some(function(en) { return en.isIntersecting; })) { io.disconnect(); startWidget(); }
       }, { rootMargin: '100% 0px 100% 0px' });
       io.observe(music);
     });
@@ -3761,7 +3794,11 @@
     /* Shows reel: every upcoming show, then past shows we have footage of. Images keyed by "date|venue". */
     var REEL_IMG = { 'Oct 9|Sunbar': 'sunbar-oct9', 'Sep 19|Electric Sanctuary': 'electric-sanctuary', 'Aug 28|Sunbar': 'sunbar-aug28' };
     var REEL_UP = ['up1', 'up2'];
+    /* v2 FIX: Shows holds two screens of height until the reel is built, so the page below does not jump
+       (and lazy images under it are not fetched early). Released here, or after 6 s if the data never lands. */
+    setTimeout(function() { var s = document.getElementById('events'); if (s) s.classList.add('reel-set'); }, 6000);
     function renderReel(events) {
+      var evSec = el('events'); if (evSec) evSec.classList.add('reel-set');
       var box = el('reel'), frame = el('reel-frame'), dots = el('reel-dots');
       if (!box || box.dataset.built) return;
       /* v2 S1: upcoming shows only; played sets with footage moved to the strip in #past-block. */
