@@ -1832,13 +1832,13 @@
     </div>
 
     <div class="hero-cuts" id="hero-cuts" aria-hidden="true">
-      <div class="hcut hc-split"><div class="hz"><div class="l"><img class="ph" data-src="images/assembly/s15.webp" alt=""></div><div class="r"></div><span class="hmark hctr"></span></div></div>
+      <div class="hcut hc-split"><div class="hz"><div class="l"><img class="ph" data-src="images/assembly/s15.webp?v=2" alt=""></div><div class="r"></div><span class="hmark hctr"></span></div></div>
       <div class="hcut hc-photo"><div class="hz"><img class="ph" data-src="images/reel/sunbar-oct9-w.webp" alt=""><span class="hmark hctr"></span></div></div>
       <div class="hcut hc-torn"><div class="hz">
         <img src="images/brand/mark-torn.webp" alt="" decoding="async"></div></div>
       <div class="hcut hc-photo tiny"><div class="hz"><img class="ph" data-src="images/reel/electric-sanctuary-w.webp" alt=""><span class="hmark hctr"></span></div></div>
       <div class="hcut hc-paper"><div class="hz"><div class="lock"><span class="hmark"></span><span>DJ / Producer · Scottsdale, AZ</span></div></div></div>
-      <div class="hcut hc-collage"><div class="hz"><div class="fill hctr"><img data-src="images/assembly/s02.webp" alt=""><img data-src="images/assembly/s16.webp" alt=""><img data-src="images/assembly/s09.webp" alt=""><img data-src="images/assembly/s19.webp" alt=""><img data-src="images/assembly/s05.webp" alt=""><img data-src="images/assembly/s17.webp" alt=""><img data-src="images/assembly/s13.webp" alt=""><img data-src="images/assembly/s01.webp" alt=""><img data-src="images/assembly/s18.webp" alt=""><img data-src="images/assembly/s11.webp" alt=""><img data-src="images/assembly/s14.webp" alt=""><img data-src="images/assembly/s15.webp" alt=""><img data-src="images/assembly/s07.webp" alt=""><img data-src="images/assembly/s12.webp" alt=""></div></div></div>
+      <div class="hcut hc-collage"><div class="hz"><div class="fill hctr"><img data-src="images/assembly/s02.webp?v=2" alt=""><img data-src="images/assembly/s16.webp?v=2" alt=""><img data-src="images/assembly/s09.webp?v=2" alt=""><img data-src="images/assembly/s19.webp?v=2" alt=""><img data-src="images/assembly/s05.webp?v=2" alt=""><img data-src="images/assembly/s17.webp?v=2" alt=""><img data-src="images/assembly/s13.webp?v=2" alt=""><img data-src="images/assembly/s01.webp?v=2" alt=""><img data-src="images/assembly/s18.webp?v=2" alt=""><img data-src="images/assembly/s11.webp?v=2" alt=""><img data-src="images/assembly/s14.webp?v=2" alt=""><img data-src="images/assembly/s15.webp?v=2" alt=""><img data-src="images/assembly/s07.webp?v=2" alt=""><img data-src="images/assembly/s12.webp?v=2" alt=""></div></div></div>
     </div>
     <!-- decorative asset — top right -->
     <picture><source srcset="CybersygilsimAsset.webp" type="image/webp"><img src="CybersygilsimAsset.jpg" class="deco-img hero-deco-tr" alt="" aria-hidden="true"></picture>
@@ -2689,7 +2689,7 @@
       for (let i = 0; i < N; i++) {
         const b = document.createElement('button');
         b.className = 'asm-card'; b.type = 'button'; b.setAttribute('aria-label', 'Open photo ' + (i + 1));
-        b.innerHTML = '<span class="asm-in"><img data-src="images/assembly/s' + String(ORDER[i]).padStart(2, '0') + '.webp" alt="" decoding="async"></span>';
+        b.innerHTML = '<span class="asm-in"><img data-src="images/assembly/s' + String(ORDER[i]).padStart(2, '0') + '.webp?v=2" alt="" decoding="async"></span>';
         stage.appendChild(b); cards.push(b);
       }
       let slots = [], open = -1, assembled = false;

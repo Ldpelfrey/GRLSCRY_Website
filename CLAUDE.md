@@ -96,6 +96,8 @@ v2 flow, live since 2026-11-12 (Luke picked prototype B):
 - **Colour rule:** sage = things you press, cream `#f2e3c8` = display headings, pink = the jelly logo only.
 - **Sound player** (`.crate`) is styled as hardware in CSS only (shell, LCD readout, keys); the player script is unchanged.
 - The ticker (`.status-bar`) rides up with the nav (`.up`).
+- Images under `images/` (not `flyers/`) are cached for a year as immutable. Replacing a file in place needs a new
+  name or a bumped `?v=` on its URLs (the Photos cards use `?v=2` since five were replaced on 2026-11-12).
 
 Added 2026-10-28/29 (all live):
 - **Hero cuts** (`#hero-cuts`): after the jelly-logo intro the hero cuts through the brand treatments
