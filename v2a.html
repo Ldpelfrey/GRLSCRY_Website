@@ -250,9 +250,12 @@
     #nav.sc { background: rgba(14,14,14,.96); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
     .nl { font-family: var(--poster); font-stretch: 125%; font-weight: 800; font-size: 20px; letter-spacing: .04em; color: var(--white); flex-shrink: 0; }
     /* nav brand = the jelly logo (same file the hero loads, so no extra bytes) */
-    .nl img { display: block; height: 52px; width: auto; filter: drop-shadow(0 4px 10px rgba(255,105,180,.35)); transition: transform .35s var(--ease); }
-    .nl:hover img, .nl:focus-visible img { transform: rotate(-3deg) scale(1.05); }
-    @media (max-width: 600px) { .nl img { height: 44px; } }
+    /* v2 G3: the flat mark in cream (as .fr-mark), in the jelly logo's old 900x488 box */
+    .nl-mark { display: block; height: 52px; aspect-ratio: 900 / 488; background: #f2e3c8;
+      -webkit-mask: url(images/brand/mark-flat.png) center / contain no-repeat; mask: url(images/brand/mark-flat.png) center / contain no-repeat;
+      transition: transform .35s var(--ease); }
+    .nl:hover .nl-mark, .nl:focus-visible .nl-mark { transform: rotate(-3deg) scale(1.05); }
+    @media (max-width: 600px) { .nl-mark { height: 44px; } }
     .nv { display: flex; align-items: center; gap: 24px; margin-left: auto; list-style: none; }
     .nv a {
       font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
@@ -355,7 +358,7 @@
     .hc-split .r { position: absolute; inset: 0 0 0 50%; background: #f2e3c8; }
     .hc-split .r::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 9%; background: var(--sage); }
     .hc-split .hmark { width: min(46vw, 640px); mix-blend-mode: difference; }
-    .hc-photo .hmark { width: min(22vw, 300px); filter: drop-shadow(0 6px 30px rgba(0,0,0,.45)); }
+    .hc-photo .hmark { width: min(46vw, 640px); filter: drop-shadow(0 6px 30px rgba(0,0,0,.45)); }  /* v2 H5: was min(22vw, 300px) */
     .hc-photo.tiny .hmark { width: min(12vw, 150px); }
     .hc-torn { background: #2a1f17; }
     .hc-torn img { position: absolute; left: -8%; top: 46%; width: 140%; transform: translateY(-50%); }
@@ -370,12 +373,14 @@
     .hc-collage .fill img:nth-child(3n) { filter: grayscale(1) contrast(1.2); }
     #hero .heb, #hero .hc { z-index: 4; }
     #hero.cutting .heb { background: rgba(14,14,14,.62); padding: 8px 12px; align-self: flex-start; }
-    #hero.cutting .hc .bo { background: rgba(14,14,14,.62); }
+    /* v2 H2/H3: over a cut (cream paper, collage, split) the next-show line and the actions sit on the same
+       smoked backing the label uses. The backing goes on the wrapper, never on a link. */
+    #hero.cutting #hero-next, #hero.cutting .hc { background: rgba(14,14,14,.62); padding: 8px 12px; align-self: flex-start; }
     @media (max-width: 700px) {
       .hc-split .l { inset: 0 0 50% 0; } .hc-split .r { inset: 50% 0 0 0; }
       .hc-split .hmark { width: 82vw; }
-      .hc-photo .hmark { width: 46vw; } .hc-photo.tiny .hmark { width: 28vw; }
-      .hc-torn img { width: 230%; left: -20%; }
+      .hc-photo .hmark { width: 82vw; } .hc-photo.tiny .hmark { width: 28vw; }  /* v2 H5: was 46vw */
+      .hc-torn img { width: 92vw; left: 4vw; }  /* v2 H4: was 230% / -20%, which cropped the name to "RLS CRY" */
       .hc-paper .lock { flex-direction: column; gap: 22px; }
       .hc-paper .hmark { width: 54vw; }
       .hc-collage .fill { width: 92vw; }
@@ -400,7 +405,7 @@
     .hero-logo-jelly { position: relative; display: block; width: 100%; height: 100%; transform-origin: 50% 88%; animation: jelly 5.5s ease-in-out 1.4s infinite; }
     .hero-logo-jelly img {
       width: 100%; height: 100%; object-fit: contain;
-      filter: drop-shadow(0 22px 44px rgba(255,105,180,.30)) drop-shadow(0 3px 2px rgba(0,0,0,.45));
+      filter: drop-shadow(0 18px 26px rgba(0,0,0,.55)) drop-shadow(0 3px 2px rgba(0,0,0,.45));  /* v2 G2 */
     }
     /* specular sweep, clipped to the logo's own alpha */
     .hero-logo-jelly::after {
@@ -429,8 +434,21 @@
     .lp-exit, .lp-move, .lp-body { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: calc(var(--cx) * 1%) calc(var(--cy) * 1%); }
     .lp-body { transform-origin: calc(var(--cx) * 1%) calc(var(--bot) * 1%); animation: jelly 5.5s ease-in-out infinite; animation-delay: var(--d, 0s); }
     .lp-body img { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .lp-face { filter: drop-shadow(0 22px 44px rgba(255,105,180,.30)) drop-shadow(0 3px 2px rgba(0,0,0,.45)); will-change: transform; }
+    /* v2 G2: a dark contact shadow instead of the pink glow (same two filters as before) */
+    .lp-face { filter: drop-shadow(0 18px 26px rgba(0,0,0,.55)) drop-shadow(0 3px 2px rgba(0,0,0,.45)); will-change: transform; }
     .lp-ext { filter: brightness(.5) saturate(1.35); will-change: transform; }
+    /* v2 G1: room light. A wash above each face, cut to that piece's own shape (--m),
+       filled with --amb (r, g, b), which the hero script samples from the footage behind
+       the logo. Hidden until the first good sample (.amb-on), so a failed read = today's logo.
+       No blend mode, no filter: a flat colour layer that repaints at most 4x a second. */
+    #hero { --amb: 242, 227, 200; }
+    .lp-tint {
+      position: absolute; inset: 0; pointer-events: none;
+      -webkit-mask: var(--m) center / 100% 100% no-repeat;
+              mask: var(--m) center / 100% 100% no-repeat;
+      background: rgb(var(--amb)); opacity: 0; transition: opacity .8s ease;
+    }
+    #hero.amb-on .lp-tint { opacity: .22; }
     .lp-body::after {
       content: ''; position: absolute; inset: 0; pointer-events: none;
       -webkit-mask: var(--m) center / 100% 100% no-repeat;
@@ -461,6 +479,19 @@
       display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
       opacity: 0; animation: su .8s var(--ease) 1s forwards; position: relative; z-index: 2;
     }
+    /* v2 H2: the next show, one line above the actions (filled by renderTix; hidden when nothing is upcoming) */
+    #hero-next {
+      font-family: var(--display); font-weight: 700; font-size: clamp(18px, 2vw, 28px); line-height: 1.2;
+      text-transform: uppercase; color: #f2e3c8; margin-bottom: 18px; max-width: 100%;
+      opacity: 0; animation: su .8s var(--ease) .95s forwards; position: relative; z-index: 4;
+    }
+    /* v2 H3: the second action is a plain underlined link, no box (44px tall for touch) */
+    .h-txt {
+      display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px;
+      font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
+      color: #f2e3c8; text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px;
+    }
+    .h-txt:hover { color: var(--sage); }
     .h-ribbon {
       position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%);
       display: flex; justify-content: flex-end;
@@ -1218,6 +1249,34 @@
     .past-table td { font-weight: 300; }
     .past-table .ed { color: var(--gray-lt); font-weight: 400; }
     .past-table .en { color: var(--gray-lt); }
+    /* v2 S2: played strip — real rooms first, the list underneath. Stills are reel frames at 16:9. */
+    .ps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 1.8vw, 24px); margin: 0 0 40px; }
+    .ps[hidden] { display: none; }
+    .ps-card { margin: 0; min-width: 0; }
+    .ps-img { display: block; overflow: hidden; background: var(--s1); aspect-ratio: 16 / 9; }
+    .ps-img img { display: block; width: 100%; height: 100%; aspect-ratio: 16 / 9; object-fit: cover; transition: transform .7s var(--ease); }
+    .ps-card:hover .ps-img img { transform: scale(1.04); }
+    .ps-v { font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: clamp(20px, 2vw, 26px); line-height: 1.05;
+      text-transform: uppercase; color: #f2e3c8; margin: 16px 0 6px; }
+    .ps-m { font-family: var(--mono); font-size: 12px; line-height: 1.6; color: var(--gray-tx); margin: 0; }
+    .ps-m b { color: var(--gray-lt); font-weight: 400; }
+    .ps-link, .past-more {
+      display: inline-flex; align-items: center; min-height: 44px; padding: 0; background: none; border: 0; cursor: pointer;
+      font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--sage); text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px;
+    }
+    .ps-link:hover, .past-more:hover { color: #f2e3c8; }
+    .past-more { margin-top: 10px; }
+    .past-more[hidden] { display: none; }
+    /* v2 S3: rows past the sixth stay out until "Show all" (class, not [hidden]: phone rows are display:grid). */
+    .past-table.clip tbody tr:nth-child(n+7) { display: none; }
+    @media (max-width: 768px) {
+      /* Phone: one swipe row, cards about 78vw, snapping to the left edge. */
+      .ps { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; }
+      .ps::-webkit-scrollbar { display: none; }
+      .ps-card { flex: 0 0 78vw; scroll-snap-align: start; }
+      .ps-v { margin-top: 12px; }
+    }
     .sr-only {
       position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
       overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
@@ -1528,6 +1587,26 @@
     .mob-book-row .mob-book { position: static; flex: 1; pointer-events: auto; }
     .mob-book.alt { background: var(--black); color: var(--sage); border: 1px solid var(--sage); }
     @media (max-width: 900px) { .mob-book-row { display: flex; } }
+
+    /* ─── v2 TYPE (stage type) ──────────────────────────────────── */
+    /* v2 T1: one body size on desk and phone (was clamp(12px,1.2vw,13.5px) / 1.85). */
+    .t-body { font-size: 15px; line-height: 1.75; }
+    /* v2 T2: fewer labels. These classes set their own display, which beats the UA [hidden] rule. */
+    .ew[hidden], .sg[hidden], .chips[hidden], .sec-n[hidden] { display: none; }
+    .ornament-row > * { visibility: hidden; }   /* the divider goes, its spacing stays */
+    /* The 26 track rows, the now-playing line and the bar: data in its own case, not 26 more caps labels. */
+    .cl-m, .cs-meta, .p-meta { text-transform: none; letter-spacing: .02em; }
+    /* v2 T3: About = pull quote, two paragraphs, one proof row. */
+    #about .pq-lede { margin-bottom: 40px; }
+    .ag.ag-one { grid-template-columns: minmax(0, 1fr); }
+    .ag-one .t-body { max-width: 68ch; }
+    .ab-proof { display: flex; flex-wrap: wrap; margin: 30px 0 0; font-family: var(--display); font-stretch: 112%;
+      font-weight: 800; font-size: 20px; line-height: 1.15; letter-spacing: .03em; text-transform: uppercase; color: #f2e3c8; }
+    .ab-proof span + span { margin-left: 22px; padding-left: 22px; border-left: 1px solid rgba(242,227,200,.28); }
+    @media (max-width: 768px) {
+      .ab-proof { flex-direction: column; gap: 10px; font-size: 19px; }
+      .ab-proof span + span { margin-left: 0; padding-left: 0; border-left: 0; }
+    }
   </style>
 </head>
 <body>
@@ -1561,7 +1640,7 @@
 
   <!-- NAVIGATION -->
   <nav id="nav" role="navigation" aria-label="Main Navigation">
-    <a href="#hero" class="nl"><img src="images/brand/grlscry-logo-900.webp" width="900" height="488" alt="GRLSCRY"></a>
+    <a href="#hero" class="nl"><span class="nl-mark" role="img" aria-label="GRLSCRY"></span></a>
     <ul class="nv" role="list">
       <li><a href="#about">About</a></li>
       <li><a href="#events">Shows</a></li>
@@ -1631,22 +1710,22 @@
           <span class="logo-pieces" aria-hidden="true">
             <span class="lp" data-p="gr" style="--cx:25.92;--cy:39.87;--bot:61.21;--z:40;--d:0s;--m:url(images/brand/logo-piece-gr-900.webp)">
               <span class="lp-exit"><span class="lp-move"><span class="lp-body">
-                <img class="lp-face" src="images/brand/logo-piece-gr-900.webp" srcset="images/brand/logo-piece-gr-900.webp 900w, images/brand/logo-piece-gr-1800.webp 1800w" sizes="(max-width: 600px) 92vw, 60vw" alt="" loading="eager" decoding="async">
+                <img class="lp-face" src="images/brand/logo-piece-gr-900.webp" srcset="images/brand/logo-piece-gr-900.webp 900w, images/brand/logo-piece-gr-1800.webp 1800w" sizes="(max-width: 600px) 92vw, 60vw" alt="" loading="eager" decoding="async"><span class="lp-tint"></span>
               </span></span></span>
             </span>
             <span class="lp" data-p="ls" style="--cx:76.03;--cy:22.67;--bot:44.01;--z:10;--d:0.7s;--m:url(images/brand/logo-piece-ls-900.webp)">
               <span class="lp-exit"><span class="lp-move"><span class="lp-body">
-                <img class="lp-face" src="images/brand/logo-piece-ls-900.webp" srcset="images/brand/logo-piece-ls-900.webp 900w, images/brand/logo-piece-ls-1800.webp 1800w" sizes="(max-width: 600px) 92vw, 60vw" alt="" loading="eager" decoding="async">
+                <img class="lp-face" src="images/brand/logo-piece-ls-900.webp" srcset="images/brand/logo-piece-ls-900.webp 900w, images/brand/logo-piece-ls-1800.webp 1800w" sizes="(max-width: 600px) 92vw, 60vw" alt="" loading="eager" decoding="async"><span class="lp-tint"></span>
               </span></span></span>
             </span>
             <span class="lp" data-p="cr" style="--cx:42.81;--cy:78.15;--bot:98.67;--z:60;--d:1.3s;--m:url(images/brand/logo-piece-cr-900.webp)">
               <span class="lp-exit"><span class="lp-move"><span class="lp-body">
-                <img class="lp-face" src="images/brand/logo-piece-cr-900.webp" srcset="images/brand/logo-piece-cr-900.webp 900w, images/brand/logo-piece-cr-1800.webp 1800w" sizes="(max-width: 600px) 92vw, 60vw" alt="" loading="eager" decoding="async">
+                <img class="lp-face" src="images/brand/logo-piece-cr-900.webp" srcset="images/brand/logo-piece-cr-900.webp 900w, images/brand/logo-piece-cr-1800.webp 1800w" sizes="(max-width: 600px) 92vw, 60vw" alt="" loading="eager" decoding="async"><span class="lp-tint"></span>
               </span></span></span>
             </span>
             <span class="lp" data-p="y" style="--cx:78.83;--cy:63.36;--bot:79.94;--z:90;--d:0.35s;--m:url(images/brand/logo-piece-y-900.webp)">
               <span class="lp-exit"><span class="lp-move"><span class="lp-body">
-                <img class="lp-face" src="images/brand/logo-piece-y-900.webp" srcset="images/brand/logo-piece-y-900.webp 900w, images/brand/logo-piece-y-1800.webp 1800w" sizes="(max-width: 600px) 92vw, 60vw" alt="" loading="eager" decoding="async">
+                <img class="lp-face" src="images/brand/logo-piece-y-900.webp" srcset="images/brand/logo-piece-y-900.webp 900w, images/brand/logo-piece-y-1800.webp 1800w" sizes="(max-width: 600px) 92vw, 60vw" alt="" loading="eager" decoding="async"><span class="lp-tint"></span>
               </span></span></span>
             </span>
           </span>
@@ -1657,9 +1736,10 @@
 
     <p class="h-ctx">Scottsdale, AZ · House · Multi-Genre · 2026</p>
 
+    <p id="hero-next" hidden></p>
     <div class="hc">
-      <a href="#links"   class="btn bs" id="hero-cta">Get Tickets</a>
-      <a href="#contact" class="btn bo">Book a Set</a>
+      <a href="#contact" class="btn bs" id="hero-cta">Book a Set</a>
+      <a href="#music" class="h-txt" id="hero-alt">Listen</a>
     </div>
 
     <div class="hs" aria-hidden="true">
@@ -1667,7 +1747,7 @@
       <div class="sb"></div>
     </div>
 
-    <span class="sec-n" aria-hidden="true">01</span>
+    <span class="sec-n" aria-hidden="true" hidden>01</span>
 
   </section>
 
@@ -1684,7 +1764,7 @@
           <a class="tx-row" href="https://posh.vip/e/nightshift-featuring-usaybflow" target="_blank" rel="noopener noreferrer"><span class="tx-d">Nov 21</span><span><span class="tx-v">Nightshift</span><span class="lk-sub">Phoenix, AZ · market price. (b3b w/ 300nightclub + DrawFour)</span></span><span class="tx-b">Tickets ↗</span></a>
         </div>
       </div>
-      <div class="ew">
+      <div class="ew" hidden><!-- v2 T2 -->
         <span class="el"></span>
         <span class="t-label">Links</span>
       </div>
@@ -1721,7 +1801,7 @@
     <picture><source srcset="CybersygilsimAsset.webp" type="image/webp"><img src="CybersygilsimAsset.jpg" class="deco-img about-deco-bg" alt="" aria-hidden="true"></picture>
 
     <div class="w">
-      <div class="ew r">
+      <div class="ew r" hidden><!-- v2 T2 -->
         <span class="el"></span>
         <span class="t-label">Origin Story</span>
       </div>
@@ -1730,20 +1810,22 @@
         Phoenix heat, late nights, dark rooms.
       </blockquote>
 
-      <div class="ag">
+      <div class="ag ag-one"><!-- v2 T3: one column; the right column (stats tiles + cards) is hidden -->
         <!-- LEFT: bio -->
         <div>
           <h2 class="t-sec r" id="about-h" style="margin-bottom:28px;">About</h2>
 
           <p class="t-body r d2" id="c-bio-1" style="margin-bottom:18px;">That’s where GRLSCRY comes from.</p>
           <p class="t-body r d3" id="c-bio-2" style="margin-bottom:18px;">DJ and producer building house that doesn’t ask for permission—it just takes the room. Dark, high-energy, made for 3 a.m. when the filters are off and people actually move.</p>
-          <p class="t-body r d3" id="c-bio-3">No chasing trends, no forced hype. Just clean, heavy sound that hits your chest and stays there. Raw emotion wrapped in tight rhythm. Tracks that don’t fade, sets that don’t apologize, a brand that shows up the same way every time: intentional, untouchable, a little dangerous.</p>
-          <p class="t-body r d4" id="c-bio-4">Step in. Feel it. Get on the ride.</p>
-          <div class="ph ph-philosophy r d4">
+          <!-- v2 T3: one proof row in the display face. The set count is recounted from content.json events (status "past"). -->
+          <p class="ab-proof r d3"><span id="ab-sets">17 sets in 2026</span><span>Support for Flava D</span><span>Sold-out MogFest: Ascension</span></p>
+          <p class="t-body r d3" id="c-bio-3" hidden>No chasing trends, no forced hype. Just clean, heavy sound that hits your chest and stays there. Raw emotion wrapped in tight rhythm. Tracks that don’t fade, sets that don’t apologize, a brand that shows up the same way every time: intentional, untouchable, a little dangerous.</p>
+          <p class="t-body r d4" id="c-bio-4" hidden>Step in. Feel it. Get on the ride.</p>
+          <div class="ph ph-philosophy r d4" hidden>
             <span class="t-cap">// Philosophy</span>
             <p id="c-philosophy">GRLSCRY: Dark House That Hits Different. High Energy, Late Nights, No Compromises. Ready to Feel the Pulse? Explore Releases, Gigs, and the Raw Behind the Beats.</p>
           </div>
-          <div class="chips r d5" id="c-chips">
+          <div class="chips r d5" id="c-chips" hidden>
             <span class="chip">Chris Lake</span>
             <span class="chip">Odd Mob</span>
             <span class="chip">Fisher</span>
@@ -1752,27 +1834,27 @@
             <span class="chip">House</span>
           </div>
         </div>
-        <!-- RIGHT: stats -->
-        <div>
-          <div class="sg r d1" id="c-stats">
+        <!-- RIGHT: stats (v2 T2/T3: tiles and the // cards hidden; the loader still fills them) -->
+        <div hidden>
+          <div class="sg r d1" id="c-stats" hidden>
             <div class="sc"><div class="sv">10+</div><div class="sl">Years DJing</div></div>
             <div class="sc"><div class="sv">PHX</div><div class="sl">Desert Built</div></div>
             <div class="sc"><div class="sv">ZERO</div><div class="sl">Compromises</div></div>
             <div class="sc"><div class="sv">3AM</div><div class="sl">Peak Hour</div></div>
           </div>
 
-          <div class="ph ph-tools r d2" style="margin-bottom:20px;">
+          <div class="ph ph-tools r d2" style="margin-bottom:20px;" hidden>
             <span class="t-cap">// Tools</span>
             <p id="c-tools" style="margin-top:8px;">Ableton Live 12 · Serum 2 · Pioneer DDJ-400 · Pioneer DDJ-GRV6 · CDJ 30000 · CDJ 20000 · DJM · A-Series</p>
           </div>
-          <div class="ph r d3">
+          <div class="ph r d3" hidden>
             <span class="t-cap">// Inspiration</span>
             <p id="c-inspiration" style="margin-top:8px;">GRLSCRY pulls from the real late-night underbelly: blacked-out warehouses, bass that hits your chest, feral crowds moving like tomorrow's cancelled. Sweat, smoke, glances that stick under dim strobes. Built by people who already own the room. Beats land with quiet empathy, natural charisma, subtle edge.</p>
           </div>
         </div>
       </div>
     </div>
-    <span class="sec-n" aria-hidden="true">02</span>
+    <span class="sec-n" aria-hidden="true" hidden>02</span>
   </section>
 
   <div class="ornament-row" aria-hidden="true">
@@ -1789,7 +1871,7 @@
       <div class="reel-pin"><div class="reel-frame" id="reel-frame"></div><div class="reel-dots" id="reel-dots" aria-hidden="true"></div></div>
     </div>
     <div class="w">
-      <div class="ew r">
+      <div class="ew r" hidden><!-- v2 T2 -->
         <span class="el"></span>
         <span class="t-label">Live Dates</span>
       </div>
@@ -1828,6 +1910,8 @@
       <!-- Played sets. Proof of history, deliberately quieter than upcoming. -->
       <div id="past-block" class="past-block r d2">
         <h3 class="past-h">Played</h3>
+        <!-- v2 S2: three played sets we have footage of, built by renderPlayedStrip from REEL_IMG + events. -->
+        <div id="played-strip" class="ps" hidden></div>
         <table class="evt past-table">
           <caption class="sr-only">Past GRLSCRY sets — date, venue, location, type</caption>
           <!-- This table has no thead, so column widths come from colgroup.
@@ -1975,6 +2059,8 @@
             </tr>
           </tbody>
         </table>
+        <!-- v2 S3: the list shows the 6 most recent; clipPlayed() labels this and reveals the rest. -->
+        <button type="button" id="past-more" class="past-more" aria-expanded="false" aria-controls="c-past-tbody" hidden>Show all</button>
       </div>
 
       <p class="t-body r d2" style="margin-top:32px; color:var(--gray-tx);">
@@ -1992,7 +2078,7 @@
         <a href="#contact" class="btn bs book-strip-cta">Book a Set</a>
       </div>
     </div>
-    <span class="sec-n" aria-hidden="true">03</span>
+    <span class="sec-n" aria-hidden="true" hidden>03</span>
   </section>
 
   <div class="ornament-row" aria-hidden="true">
@@ -2006,7 +2092,7 @@
   <!-- ══════════════════════════════════════════════════════════════ -->
   <section id="music" aria-labelledby="music-h">
     <div class="w">
-      <div class="ew r">
+      <div class="ew r" hidden><!-- v2 T2 -->
         <span class="el"></span>
         <span class="t-label">Streaming Now</span>
       </div>
@@ -2083,7 +2169,7 @@
       </div>
 
     </div>
-    <span class="sec-n" aria-hidden="true">04</span>
+    <span class="sec-n" aria-hidden="true" hidden>04</span>
   </section>
 
   <!-- ══════════════════════════════════════════════════════════════ -->
@@ -2131,7 +2217,7 @@
   <!-- ═════════════════════════════════════════════════════════════ -->
   <section id="shop" aria-labelledby="shop-h">
     <div class="w">
-      <div class="ew r">
+      <div class="ew r" hidden><!-- v2 T2 -->
         <span class="el"></span>
         <span class="t-label">Merch</span>
       </div>
@@ -2192,7 +2278,7 @@
     <picture><source srcset="CybersygilsimAsset.webp" type="image/webp"><img src="CybersygilsimAsset.jpg" class="deco-img contact-deco" alt="" aria-hidden="true"></picture>
 
     <div class="w">
-      <div class="ew r">
+      <div class="ew r" hidden><!-- v2 T2 -->
         <span class="el"></span>
         <span class="t-label">Get in Touch</span>
       </div>
@@ -2256,7 +2342,7 @@
         </div>
       </div>
     </div>
-    <span class="sec-n" aria-hidden="true">05</span>
+    <span class="sec-n" aria-hidden="true" hidden>05</span>
   </section>
 
   </main>
@@ -2416,7 +2502,7 @@
         { threshold: 0 }).observe(contact);
     })();
 
-    /* ── HERO CUTS: jelly plate (2.8 s) → five treatments (1.4 s each) → back. Starts after the logo intro,
+    /* ── HERO CUTS (v2 H1): jelly plate (18 s, first ~9 s) → one burst of the treatments (0.7 s each) → back. Starts after the logo intro,
        pauses off-screen / in hidden tabs, off under reduced motion. ── */
     (function() {
       const hero = document.getElementById('hero'), box = document.getElementById('hero-cuts');
@@ -2427,7 +2513,7 @@
         i = i + 1 >= cuts.length ? -1 : i + 1;                 // -1 = the jelly plate shows through
         cuts.forEach((c, j) => c.classList.toggle('on', j === i));
         hero.classList.toggle('cutting', i >= 0);
-        t = setTimeout(run, i < 0 ? 2800 : 1400);
+        t = setTimeout(run, i < 0 ? 18000 : 700);   // v2 H1: one short burst (0.7 s a cut), then 18 s of jelly logo
       };
       const run = () => { t = null; if (visible && !document.hidden) step(); };
       const kick = () => { if (ready && !t && visible && !document.hidden) t = setTimeout(run, 400); };  // one timer chain only: a second one made every other cut flash for a frame
@@ -2436,7 +2522,7 @@
       setTimeout(() => {
         const tall = window.matchMedia('(max-width: 700px)').matches;  // phones get the 4:5 crops
         box.querySelectorAll('img[data-src]').forEach(im => { im.src = tall ? im.dataset.src.replace('-w.webp', '-t.webp') : im.dataset.src; im.removeAttribute('data-src'); im.decode && im.decode().catch(() => {}); });  // decode ahead so the first cut doesn't hitch
-        ready = true; t = setTimeout(run, 2000);               // first cut ~3.2 s in, after the pieces land
+        ready = true; t = setTimeout(run, 8000);               // v2 H1: first burst ~9.2 s in (was ~3.2 s)
       }, 1200);
     })();
 
@@ -2790,6 +2876,82 @@
         window.removeEventListener('touchend', onGesture);
         window.removeEventListener('click', onGesture);
       }, { once: true });
+    })();
+
+    /* ── v2 G1: ROOM LIGHT ───────────────────────────────────── */
+    /* Four times a second: draw the visible plate frame (as object-fit: cover crops
+       it) into a 16x9 canvas, average the cells behind the logo, ease toward that
+       colour and write it to --amb on #hero (.lp-tint washes each piece with it).
+       The average is lifted to a fixed brightness so the wash carries the room's
+       hue, not its darkness. Off screen, tab hidden or during a cut: no sampling.
+       Reduced motion / Save-Data (no video): one sample of the poster. Any read
+       error: drop back to the default look and stop for good. */
+    (() => {
+      const hero = document.getElementById('hero');
+      const plate = hero && hero.querySelector('.hero-plate');
+      const logo = document.querySelector('.hero-logo');
+      if (!plate || !logo) return;
+      let ctx;
+      try {
+        const cv = document.createElement('canvas'); cv.width = 16; cv.height = 9;
+        ctx = cv.getContext('2d', { willReadFrequently: true });
+      } catch (e) { return; }
+      if (!ctx) return;
+      const cl = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+      let amb = null, timer = 0, onScreen = true, dead = false, lastOut = '';
+
+      // false = nothing to read yet; throws on a tainted canvas
+      const sample = src => {
+        const sw = src.videoWidth || src.naturalWidth, sh = src.videoHeight || src.naturalHeight;
+        const box = plate.getBoundingClientRect();
+        if (!sw || !sh || !box.width || !box.height) return false;
+        const k = Math.max(box.width / sw, box.height / sh);
+        const vw = box.width / k, vh = box.height / k;
+        ctx.drawImage(src, (sw - vw) / 2, (sh - vh) / 2, vw, vh, 0, 0, 16, 9);
+        const L = logo.getBoundingClientRect();
+        const x0 = cl(Math.floor((L.left - box.left) / box.width * 16), 0, 15);
+        const x1 = cl(Math.ceil((L.right - box.left) / box.width * 16), x0 + 1, 16);
+        const y0 = cl(Math.floor((L.top - box.top) / box.height * 9), 0, 8);
+        const y1 = cl(Math.ceil((L.bottom - box.top) / box.height * 9), y0 + 1, 9);
+        const d = ctx.getImageData(x0, y0, x1 - x0, y1 - y0).data;
+        let r = 0, g = 0, b = 0;
+        for (let i = 0; i < d.length; i += 4) { r += d[i]; g += d[i + 1]; b += d[i + 2]; }
+        const n = d.length / 4, m = Math.max(r, g, b) / n;
+        if (m < 6) return true;                              // black frame: keep the last colour
+        const f = 235 / m, t = [r / n * f, g / n * f, b / n * f];
+        amb = amb ? amb.map((v, i) => v + (t[i] - v) * .35) : t;
+        const out = amb.map(Math.round).join(', ');
+        if (out !== lastOut) { hero.style.setProperty('--amb', out); lastOut = out; }
+        hero.classList.add('amb-on');
+        return true;
+      };
+      const fail = () => {
+        dead = true; clearTimeout(timer);
+        hero.classList.remove('amb-on'); hero.style.removeProperty('--amb');
+      };
+      const once = src => { try { sample(src); } catch (e) { fail(); } };
+
+      const vid = plate.querySelector('video');
+      if (reduceMotion || !vid || !vid.getAttribute('src')) {
+        const poster = vid && vid.getAttribute('poster');
+        if (!poster) return;
+        const img = new Image();
+        img.onload = () => once(img);
+        img.src = poster;
+        return;
+      }
+      const tick = () => {
+        timer = 0;
+        if (dead || !onScreen || document.hidden) return;
+        if (!hero.classList.contains('cutting')) {
+          const v = plate.querySelector('video.on');
+          if (v && v.readyState >= 2) { try { sample(v); } catch (e) { fail(); return; } }
+        }
+        timer = setTimeout(tick, 250);
+      };
+      const kick = () => { if (!dead && !timer && onScreen && !document.hidden) tick(); };
+      new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; kick(); }, { threshold: 0 }).observe(hero);
+      document.addEventListener('visibilitychange', kick);
     })();
 
     /* ── SCROLL CINEMATICS ───────────────────────────────────── */
@@ -3238,12 +3400,14 @@
     };
 
     /* ── hero "Stream Now" (renderTix turns it into "Get Tickets" while shows are on sale) ── */
-    var streamNow = document.getElementById('hero-cta');
-    if (streamNow) {
-      streamNow.addEventListener('click', function() {
-        if (streamNow.getAttribute('href') === '#music') setTimeout(function() { loadTrack(0, true); }, 600);
-      });
-    }
+    ['hero-cta', 'hero-alt'].forEach(function(id) {   // v2 H3: "Listen" is now the text link
+      var streamNow = document.getElementById(id);
+      if (streamNow) {
+        streamNow.addEventListener('click', function() {
+          if (streamNow.getAttribute('href') === '#music') setTimeout(function() { loadTrack(0, true); }, 600);
+        });
+      }
+    });
   })();
   </script>
 
@@ -3271,6 +3435,8 @@
       var s = String(v == null ? '' : v).trim();
       return /^(https?:|mailto:|\/|#)/i.test(s) ? esc(s) : '';
     }
+
+    clipPlayed(); // v2 S3: the hardcoded list is clipped too, in case content.json never lands
 
     fetch('/content.json' + CACHE_BUST)
       .then(function(r) {
@@ -3333,6 +3499,9 @@
         /* Events — upcoming and played render into separate tables.
            A played set must never show "Booking Open". */
         if (c.events && c.events.length) {
+          /* v2 T3: About proof row. Event dates carry no year; every event in the list is taken as this year's. */
+          var setsPlayed = c.events.filter(function(ev) { return ev && ev.status === 'past'; }).length;
+          if (setsPlayed) setText('ab-sets', setsPlayed + ' sets in ' + new Date().getFullYear());
           var rowHtml = function(ev) {
             var status = ev.status || 'tbd';
             var isPast = status === 'past';
@@ -3364,12 +3533,14 @@
           if (pastBody) pastBody.innerHTML = played.map(rowHtml).join('');
           // Hide the whole block rather than leave a stranded heading.
           if (pastBlock) pastBlock.style.display = played.length ? '' : 'none';
+          clipPlayed();
         }
 
         /* Links — first item is the featured card (16:9 cover). */
         if (Array.isArray(c.links)) renderLinks(c.links);
         renderTix(Array.isArray(c.events) ? c.events : []);
         renderReel(Array.isArray(c.events) ? c.events : []);
+        renderPlayedStrip(Array.isArray(c.events) ? c.events : []);
 
         /* Contact */
         if (c.contact) {
@@ -3438,7 +3609,32 @@
     function renderTix(events) {
       var host = el('c-tix'), cta = el('hero-cta');
       var tix = events.filter(function(ev) { return ev && ev.status !== 'past' && /^https?:/i.test(String(ev.link || '').trim()) && safeUrl(ev.link); });
-      if (cta) { cta.textContent = tix.length ? 'Get Tickets' : 'Stream Now'; cta.setAttribute('href', tix.length ? '#links' : '#music'); }
+      /* v2 H2/H3: name the next show above the actions; the sage button goes straight to its tickets. */
+      var next = events.filter(function(ev) { return ev && ev.status !== 'past'; })[0];
+      var nextLink = next && /^https?:/i.test(String(next.link || '').trim()) ? safeUrl(next.link) : '';
+      var hn = el('hero-next'), alt = el('hero-alt');
+      if (hn) {
+        var line = '';
+        if (next) {
+          var MON = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+          var dm = String(next.date || '').trim().match(/^([A-Za-z]{3})[a-z]*\.?\s+(\d{1,2})$/), wd = '';
+          if (dm && MON.indexOf(dm[1].toLowerCase()) >= 0) {
+            wd = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(new Date().getFullYear(), MON.indexOf(dm[1].toLowerCase()), +dm[2]).getDay()];
+          }
+          line = [(wd ? wd + ' ' : '') + String(next.date || '').trim(), next.venue, next.location]
+            .map(function(s) { return String(s || '').trim(); }).filter(Boolean).join(' · ');
+        }
+        hn.textContent = line;              // textContent: content.json never reaches innerHTML here
+        hn.hidden = !line;
+      }
+      if (cta) {
+        if (nextLink) { cta.textContent = 'Get Tickets'; cta.setAttribute('href', nextLink); cta.target = '_blank'; cta.rel = 'noopener noreferrer'; }
+        else { cta.textContent = 'Book a Set'; cta.setAttribute('href', '#contact'); cta.removeAttribute('target'); cta.removeAttribute('rel'); }
+      }
+      if (alt) {
+        if (nextLink) { alt.textContent = 'Book a Set'; alt.setAttribute('href', '#contact'); }
+        else { alt.textContent = 'Listen'; alt.setAttribute('href', '#music'); }
+      }
       var mt = el('mob-tix'), mb = el('mob-book');
       if (mt) mt.style.display = tix.length ? '' : 'none';
       if (mb) mb.classList.toggle('alt', !!tix.length);
@@ -3460,9 +3656,8 @@
     function renderReel(events) {
       var box = el('reel'), frame = el('reel-frame'), dots = el('reel-dots');
       if (!box || box.dataset.built) return;
-      var up = events.filter(function(ev) { return ev && ev.status !== 'past'; });
-      var past = events.filter(function(ev) { return ev && ev.status === 'past' && REEL_IMG[ev.date + '|' + ev.venue]; });
-      var list = up.concat(past);
+      /* v2 S1: upcoming shows only; played sets with footage moved to the strip in #past-block. */
+      var list = events.filter(function(ev) { return ev && ev.status !== 'past'; });
       if (!list.length) return;
       box.dataset.built = '1';
       var year = String(new Date().getFullYear()), tall = window.matchMedia('(max-width: 768px)').matches ? 't' : 'w';
@@ -3511,6 +3706,49 @@
         if (window.lenis) window.lenis.scrollTo(y, { duration: .55, easing: t => 1 - Math.pow(1 - t, 3) }); else window.scrollTo({ top: y, behavior: 'smooth' });
       });
       refreshTriggers();
+    }
+
+    /* v2 S2: played strip — the past sets in REEL_IMG, newest first (events order), with the -w still at 16:9. */
+    function renderPlayedStrip(events) {
+      var box = el('played-strip');
+      if (!box) return;
+      var year = String(new Date().getFullYear());
+      var list = events.filter(function(ev) { return ev && ev.status === 'past' && REEL_IMG[ev.date + '|' + ev.venue]; }).slice(0, 3);
+      if (!list.length) { box.hidden = true; box.innerHTML = ''; refreshTriggers(); return; }
+      box.innerHTML = list.map(function(ev) {
+        var key = REEL_IMG[ev.date + '|' + ev.venue];
+        var link = /^https?:/i.test(String(ev.link || '').trim()) ? safeUrl(ev.link) : '';
+        return '<article class="ps-card">' +
+          '<div class="ps-img"><img src="images/reel/' + key + '-w.webp" width="1600" height="900" alt="' + esc(ev.venue) + ', ' + esc(ev.date) + '" loading="lazy" decoding="async"></div>' +
+          '<h4 class="ps-v">' + esc(ev.venue) + '</h4>' +
+          '<p class="ps-m"><b>' + esc(ev.date) + ' ' + year + '</b>' + (ev.type ? ' · ' + esc(ev.type) : '') + '</p>' +
+          (link ? '<a class="ps-link" href="' + link + '" target="_blank" rel="noopener noreferrer">' + esc(ev.link_text || 'Watch Set') + ' ↗</a>' : '') +
+          '</article>';
+      }).join('');
+      box.hidden = false;
+      refreshTriggers();
+    }
+
+    /* v2 S3: the played list shows the 6 most recent rows; "Show all N" reveals the rest. */
+    function clipPlayed() {
+      /* 6 must match .past-table.clip tbody tr:nth-child(n+7). Called before this line runs, so no var here. */
+      var body = el('c-past-tbody'), btn = el('past-more');
+      if (!body || !btn) return;
+      var table = body.closest('table'), n = body.querySelectorAll('tr').length;
+      if (n <= 6) { table.classList.remove('clip'); btn.hidden = true; return; }
+      table.classList.add('clip');
+      btn.textContent = 'Show all ' + n;
+      btn.setAttribute('aria-expanded', 'false');
+      btn.hidden = false;
+      if (!btn.dataset.wired) {
+        btn.dataset.wired = '1';
+        btn.addEventListener('click', function() {
+          var open = !table.classList.toggle('clip');
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+          btn.textContent = open ? 'Show fewer' : 'Show all ' + body.querySelectorAll('tr').length;
+          refreshTriggers();
+        });
+      }
     }
 
     function renderLinks(list) {
