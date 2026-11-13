@@ -82,7 +82,7 @@ on 2026-09-25.
 Hero → Shows reel (`#events`, upcoming only) → Links → Sound (`#music`) → Artist with About folded in
 (`#artist`) → Played (`#played`) → Photos (`#asm`) → Book (`#contact`) → **Shop** → Footer.
 
-v2 flow (Luke picked prototype B on 2026-11-12; built on branch `v2-ship`):
+v2 flow, live since 2026-11-12 (Luke picked prototype B):
 - **Hero** rests on the jelly logo: one burst of 6 cuts (0.7 s each), then 21 s of logo; first burst about 9 s in.
   `#hero-next` names the first event in `content.json` that is not `past` ("SAT NOV 14 · AFTER12 · PHOENIX, AZ"),
   `#hero-cta` goes to that show's tickets, `#hero-alt` is a text link. No upcoming show: line hidden, Book a Set + Listen.
