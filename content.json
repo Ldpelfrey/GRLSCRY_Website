@@ -1,12 +1,12 @@
 {
   "meta": {
-    "title": "GRLSCRY — House / SCOTTSDALE, AZ",
-    "description": "GRLSCRY — DJ / Producer. Dark. High Energy. Late Night. PHX, AZ. House & Multi-Genre."
+    "title": "GRLS CRY — Tempe & Scottsdale DJ · House, Trance, UKG",
+    "description": "GRLS CRY (GRLSCRY) is a Tempe and Scottsdale, Arizona DJ and producer playing house, trance and UKG. Music, next dates, merch and bookings."
   },
-  "ticker": "SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · KETTAMA · TWOFACED · INTERPLANETARY CRIMINAL · MALL GRAB · PROSPA · SAMMY VIRJI · MAIN PHASE · TODD EDWARDS · MJ COLE · DJ EZ · HOUSE · UKG · MULTI-GENRE · DARK HIGH ENERGY · LATE NIGHT · ELECTRIC SANCTUARY · ALMOST FAMOUS · SUNBAR TEMPE · RIOT HOUSE · AFTER12 · MOGFEST · YZ KARAOKE CAFE · THE ENCLAVE · THIRDS. · DOCUMENT DON'T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ",
+  "ticker": "TEMPE · SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · KETTAMA · TWOFACED · INTERPLANETARY CRIMINAL · MALL GRAB · PROSPA · SAMMY VIRJI · MAIN PHASE · TODD EDWARDS · MJ COLE · DJ EZ · HOUSE · TRANCE · UKG · DARK HIGH ENERGY · LATE NIGHT · ELECTRIC SANCTUARY · ALMOST FAMOUS · SUNBAR TEMPE · RIOT HOUSE · AFTER12 · MOGFEST · YZ KARAOKE CAFE · THE ENCLAVE · THIRDS. · DOCUMENT DON'T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ",
   "hero": {
     "pullquote": "\"he's got that raw bad boy attitude... just need to tame it\"",
-    "label": "DJ / Producer — SCOTTSDALE, AZ",
+    "label": "DJ / Producer — Tempe | Scottsdale, AZ",
     "tagline": "Dark · High Energy · Late Night"
   },
   "about": {
@@ -23,8 +23,9 @@
       "Odd Mob",
       "Fisher",
       "Cloonee",
-      "Multi-Genre",
-      "House"
+      "House",
+      "Trance",
+      "UKG"
     ],
     "stats": [
       {
@@ -451,7 +452,7 @@
     }
   ],
   "contact": {
-    "blurb": "Available for bookings across Phoenix, Scottsdale, and beyond. Corporate packages available under a separate EPK. Reach out with your date, venue, and budget.",
+    "blurb": "Available for bookings across Tempe, Scottsdale, Phoenix and beyond. Corporate packages available under a separate EPK. Reach out with your date, venue, and budget.",
     "instagram_url": "https://instagram.com/grlscryofficial",
     "instagram_handle": "@grlscryofficial",
     "x_url": "https://x.com/grlscryofficial",
@@ -496,6 +497,6 @@
     }
   },
   "footer": {
-    "copyright": "© 2026 — SCOTTSDALE, AZ — House / Multi-Genre - GRLS CRY Approved"
+    "copyright": "© 2026 — TEMPE | SCOTTSDALE, AZ — House / Trance / UKG - GRLS CRY Approved"
   }
 }
