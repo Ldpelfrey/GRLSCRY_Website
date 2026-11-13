@@ -1,6 +1,6 @@
 # GRLSCRY_Website
 
-DJ portfolio, booking, and merch site for GRLS CRY (Scottsdale, AZ). Live at
+DJ portfolio, booking, and merch site for GRLS CRY (Tempe | Scottsdale, AZ; House | Trance | UKG, per the IG bio). Live at
 **https://grlscry.com**.
 
 ## Current state (2026-10-29): LIVE ON VERCEL (cutover 2026-09-25)
@@ -96,6 +96,15 @@ v2 flow, live since 2026-11-12 (Luke picked prototype B):
 - **Colour rule:** sage = things you press, cream `#f2e3c8` = display headings, pink = the jelly logo only.
 - **Sound player** (`.crate`) is styled as hardware in CSS only (shell, LCD readout, keys); the player script is unchanged.
 - The ticker (`.status-bar`) rides up with the nav (`.up`).
+- **Identity (2026-11-13, matched to the IG bio "Tempe | Scottsdale DJ / House | Trance | UKG"):** title, description,
+  og/twitter tags, JSON-LD (`name` GRLS CRY, `alternateName` GRLSCRY, genres House/Trance/UK Garage, `areaServed`),
+  hero label, hero genre line (`.h-ctx`), ticker, artist label, cut lockup, contact blurb and footer all say it.
+  `content.json` holds meta/ticker/hero label/contact/footer too and the loader applies them over the static text:
+  change both, or the admin panel.
+- **Link-preview video** (`og:video`, plays inline in iMessage, Discord, Facebook): `images/og-loop-v1.mp4`
+  (1200x630, 24 fps, 9.5 s, silent) and its last frame `images/og-cover-v3.jpg` (= `og:image`). Source
+  `tools/og/og-anim.html` (text, timing, the three cuts), render `python3 tools/og/render_og.py <work-dir>
+  images/og-loop-vN.mp4 images/og-cover-vN.jpg`, then point the head tags at the new names (images are cached a year).
 - Images under `images/` (not `flyers/`) are cached for a year as immutable. Replacing a file in place needs a new
   name or a bumped `?v=` on its URLs (the Photos cards use `?v=2` since five were replaced on 2026-11-12).
 

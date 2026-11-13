@@ -1,0 +1,84 @@
+<!doctype html><html><head><meta charset="utf-8">
+<!-- GRLS CRY link-preview video, top layer. window.__frame(t) draws second t on a transparent page;
+     render_og.py shoots every frame and lays them over the hero footage with ffmpeg. The cut burst rebuilds
+     three of the hero's brand cuts (photo + mark, collage mark, torn mark) from the site's own CSS and images.
+     Text = the IG bio's first two lines, "Tempe | Scottsdale DJ" / "House | Trance | UKG" (the preview card itself shows
+     the domain and the page title). Change it here, then re-render. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1200px;height:630px;overflow:hidden;background:transparent}
+body{position:relative;font-family:'IBM Plex Mono',monospace;color:#f2e3c8}
+.veil{position:absolute;inset:0;background:
+  linear-gradient(to bottom,rgba(14,14,14,.58) 0%,rgba(14,14,14,.14) 24%,rgba(14,14,14,.10) 56%,rgba(14,14,14,.80) 100%),
+  radial-gradient(ellipse 78% 72% at 50% 44%,rgba(14,14,14,0) 42%,rgba(14,14,14,.48) 100%)}
+.logo{position:absolute;left:280px;top:104px;width:640px;transform-origin:50% 56%;
+  filter:drop-shadow(0 18px 26px rgba(0,0,0,.55)) drop-shadow(0 3px 2px rgba(0,0,0,.45))}
+.logo img{display:block;width:100%}
+.label{position:absolute;left:0;right:0;top:46px;text-align:center;font-weight:500;font-size:31px;line-height:1;letter-spacing:.16em;text-transform:uppercase}
+.label i{display:inline-block;width:13px;height:13px;border-radius:50%;background:#d7efc2;margin-right:18px;vertical-align:4px}
+.genres{position:absolute;left:0;right:0;top:494px;text-align:center;font-family:Archivo,sans-serif;font-weight:800;font-stretch:112%;font-size:62px;line-height:1;letter-spacing:.01em;text-transform:uppercase}
+.genres span{display:inline-block}
+.genres .dot{color:rgba(242,227,200,.5);margin:0 .28em}
+.cut{position:absolute;inset:0;overflow:hidden;display:none}
+.cz{position:absolute;inset:0;transform-origin:50% 50%}
+.mark{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);aspect-ratio:900/353;background:#f2e3c8;
+  -webkit-mask:url(../../images/brand/mark-flat.png) center/contain no-repeat;mask:url(../../images/brand/mark-flat.png) center/contain no-repeat}
+.c-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.c-photo .mark{width:552px;filter:drop-shadow(0 6px 30px rgba(0,0,0,.45))}
+.c-collage{background:#f6f1e7}
+.c-collage .fill{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:936px;aspect-ratio:900/353;display:grid;
+  grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(2,1fr);
+  -webkit-mask:url(../../images/brand/mark-flat.png) center/contain no-repeat;mask:url(../../images/brand/mark-flat.png) center/contain no-repeat}
+.c-collage .fill img{width:100%;height:100%;object-fit:cover;display:block}
+.c-collage .fill img:nth-child(3n){filter:grayscale(1) contrast(1.2)}
+.c-torn{background:#2a1f17}
+.c-torn img{position:absolute;left:2%;width:96%;top:46%;transform:translateY(-50%)}
+</style></head><body>
+<div class="veil" id="veil"></div>
+<div class="logo" id="logo"><img src="../../images/brand/grlscry-logo-1800.webp" alt=""></div>
+<p class="label" id="label"><i></i>Tempe | Scottsdale DJ</p>
+<p class="genres" id="genres"><span id="g1">House</span><span class="dot" id="s1">·</span><span id="g2">Trance</span><span class="dot" id="s2">·</span><span id="g3">UKG</span></p>
+<div class="cut c-photo" id="c1"><div class="cz"><img src="../../images/reel/sunbar-oct9-w.webp" alt=""><span class="mark"></span></div></div>
+<div class="cut c-collage" id="c2"><div class="cz"><div class="fill">
+<img src="../../images/assembly/s02.webp" alt=""><img src="../../images/assembly/s16.webp" alt=""><img src="../../images/assembly/s09.webp" alt=""><img src="../../images/assembly/s19.webp" alt=""><img src="../../images/assembly/s05.webp" alt=""><img src="../../images/assembly/s17.webp" alt=""><img src="../../images/assembly/s13.webp" alt=""><img src="../../images/assembly/s01.webp" alt=""><img src="../../images/assembly/s18.webp" alt=""><img src="../../images/assembly/s11.webp" alt=""><img src="../../images/assembly/s14.webp" alt=""><img src="../../images/assembly/s15.webp" alt=""><img src="../../images/assembly/s07.webp" alt=""><img src="../../images/assembly/s12.webp" alt="">
+</div></div></div>
+<div class="cut c-torn" id="c3"><div class="cz"><img src="../../images/brand/mark-torn.webp" alt=""></div></div>
+<script>
+/* Timeline, seconds. 0.3 s: jelly logo pops in; 1.05-1.45: genres tick in; 4.6-6.1: three brand cuts, 0.5 s each
+   (two big light changes a second at most, under the 3-flashes rule); 6.1: back to the logo; 9.5: end = the still. */
+var TL = { label: .15, logo: .30, g: [1.05, 1.25, 1.45], cuts: [4.6, 5.1, 5.6, 6.1], end: 9.5 };
+function $(id) { return document.getElementById(id); }
+function clamp(x) { return Math.max(0, Math.min(1, x)); }
+function out3(x) { return 1 - Math.pow(1 - x, 3); }
+function settle(x) { return x >= 1 ? 1 : 1 - Math.pow(2, -10 * x); }          /* ~ the site's hz-settle curve */
+window.__frame = function (t) {
+  var inCut = t >= TL.cuts[0] && t < TL.cuts[3];
+  for (var i = 0; i < 3; i++) {
+    var a = TL.cuts[i], b = TL.cuts[i + 1], el = $('c' + (i + 1)), on = t >= a && t < b;
+    el.style.display = on ? 'block' : 'none';
+    if (on) el.firstElementChild.style.transform = 'scale(' + (1.06 - .06 * settle(clamp((t - a) / .5))) + ')';
+  }
+  ['veil', 'logo', 'label', 'genres'].forEach(function (id) { $(id).style.visibility = inCut ? 'hidden' : 'visible'; });
+  var xl = clamp((t - TL.label) / .4);
+  $('label').style.opacity = out3(xl); $('label').style.transform = 'translateY(' + (10 * (1 - out3(xl))) + 'px)';
+  var x = t - TL.logo, lg = $('logo');
+  if (x < 0) { lg.style.opacity = 0; }
+  else {
+    var s = 1 - .2 * Math.exp(-6 * x) * Math.cos(10 * x);                  /* jelly overshoot, settles to 1 */
+    var r = -4 * Math.exp(-5 * x) * Math.cos(8 * x);
+    var w = clamp((t - 1.0) / .8); w = w * w * (3 - 2 * w);                  /* idle float eases in */
+    var fy = w * 5 * Math.sin(2 * Math.PI * t / 3.4), fr = w * .6 * Math.sin(2 * Math.PI * t / 4.3), fs = w * .012 * Math.sin(2 * Math.PI * t / 2.9);
+    var back = t >= TL.cuts[3] ? .04 * (1 - out3(clamp((t - TL.cuts[3]) / .35))) : 0;
+    lg.style.opacity = clamp(x / .14);
+    lg.style.transform = 'translateY(' + fy + 'px) rotate(' + (r + fr) + 'deg) scale(' + (s + fs + back) + ')';
+  }
+  [['g1', 0], ['s1', 1], ['g2', 1], ['s2', 2], ['g3', 2]].forEach(function (p) {
+    var el = $(p[0]), a = TL.g[p[1]];
+    el.style.opacity = clamp((t - a) / .2);
+    el.style.transform = 'translateY(' + (16 * (1 - out3(clamp((t - a) / .35)))) + 'px)';
+  });
+};
+window.__len = TL.end;
+window.__frame(/[?&]t=([\d.]+)/.test(location.search) ? +RegExp.$1 : TL.end);
+</script></body></html>
