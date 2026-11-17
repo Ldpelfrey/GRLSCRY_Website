@@ -56,8 +56,13 @@
       "image": "images/links/electric-sanctuary-0919.webp"
     },
     {
+      "title": "In My Soul",
+      "subtitle": "New single · Out Nov 19 · Pre-save",
+      "url": "/inmysoul"
+    },
+    {
       "title": "Bass is Pumpin",
-      "subtitle": "New single · Spotify",
+      "subtitle": "Single · Spotify",
       "url": "https://open.spotify.com/track/2mWxcSRTxTvGnNydabD5PV"
     },
     {
@@ -301,12 +306,9 @@
       "date": "Nov 14",
       "venue": "After12",
       "location": "Phoenix, AZ",
-      "type": "House Stage · 11 PM–5 AM · 18+",
-      "status": "live",
-      "full_venue": "4822 S 40th St",
-      "link": "https://www.flite.city/e/after12-saturday-11-14",
-      "link_text": "Tickets",
-      "flyer": "images/flyers/after12-nov14.jpg"
+      "type": "House Stage · 11 PM–5 AM",
+      "status": "past",
+      "full_venue": "4822 S 40th St"
     },
     {
       "date": "Nov 21",
