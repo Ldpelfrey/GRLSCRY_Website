@@ -7,6 +7,11 @@
       "source": "/links",
       "destination": "/#links",
       "permanent": false
+    },
+    {
+      "source": "/:slug(inmysoul|in-my-soul)",
+      "destination": "https://distrokid.com/hyperfollow/grlscry/in-my-soul?ref=grlscry",
+      "permanent": false
     }
   ],
   "headers": [
