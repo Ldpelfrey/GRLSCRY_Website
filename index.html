@@ -85,6 +85,29 @@
       },
       {
         "@type": "MusicEvent",
+        "name": "GRLS CRY at Sunbar Brunch",
+        "startDate": "2026-11-21T12:30-07:00",
+        "endDate": "2026-11-21T13:30-07:00",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "isAccessibleForFree": true,
+        "image": "https://grlscry.com/images/flyers/sunbar-brunch-nov21.jpg",
+        "performer": { "@id": "https://grlscry.com/#artist" },
+        "location": {
+          "@type": "Place",
+          "name": "Sunbar",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "24 W 5th St",
+            "addressLocality": "Tempe",
+            "addressRegion": "AZ",
+            "postalCode": "85281",
+            "addressCountry": "US"
+          }
+        }
+      },
+      {
+        "@type": "MusicEvent",
         "name": "GRLS CRY at Nightshift",
         "startDate": "2026-11-21T22:00-07:00",
         "endDate": "2026-11-22T04:00-07:00",
@@ -474,6 +497,10 @@
       text-transform: uppercase; color: #f2e3c8; margin-bottom: 18px; max-width: 100%;
       opacity: 0; animation: su .8s var(--ease) .95s forwards; position: relative; z-index: 4;
     }
+    #hero-next .hn-l { display: block; }
+    #hero-next .hn-l + .hn-l { margin-top: 4px; }
+    #hero-next .hn-d { display: none; }
+    @media (max-width: 560px) { #hero-next .hn-d { display: block; } #hero-next .hn-ld { display: none; } }
     /* v2 H3: the second action is a plain underlined link, no box (44px tall for touch) */
     .h-txt {
       display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px;
@@ -1346,6 +1373,11 @@
     /* Released single, links out to Spotify (no embed: keeps the CSP closed). */
     .sp-rel { display: grid; grid-template-columns: 72px minmax(0,1fr) auto; align-items: center; gap: 18px; padding: 16px 20px 16px 16px; margin-bottom: 3px; border: 1px solid var(--border); border-left: 2px solid var(--sage); background: rgba(215,239,194,.03); color: var(--white); transition: background .2s, border-color .2s; }
     .sp-rel:hover { background: rgba(215,239,194,.06); border-color: var(--sage); }
+    .sp-now { margin-bottom: 3px; padding: 16px; border: 1px solid var(--border); border-left: 2px solid var(--sage); background: rgba(215,239,194,.03); }
+    .sp-now iframe { display: block; width: 100%; height: 152px; margin-top: 12px; border: 0; border-radius: 12px; }
+    .sp-now-more { margin-top: 12px; font-family: var(--mono); font-size: 12px; letter-spacing: .03em; color: var(--gray-tx); }
+    .sp-now-more a { color: var(--white); text-decoration: underline; text-decoration-color: var(--sage); text-underline-offset: 3px; transition: color .2s; }
+    .sp-now-more a:hover, .sp-now-more a:focus-visible { color: var(--sage); }
     .sp-rel img { width: 72px; height: 72px; object-fit: cover; display: block; }
     .sp-rel-k { display: block; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--sage); }
     .sp-rel-n { display: block; margin-top: 6px; font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: 20px; line-height: 1.05; text-transform: uppercase; }
@@ -1493,8 +1525,10 @@
       .reel-dots { right: 3px; }
     }
     .reel.static .reel-pin { position: relative; height: auto; }
-    .reel.static .reel-frame { position: relative; inset: auto; height: 80vh; margin: 0 3vw 16px; top: 0; }
-    .reel.static .rp { transform: none; }
+    /* Static (reduced motion or one show): panels flow one under another; absolute panels in one frame hid all but the last. */
+    .reel.static .reel-frame { position: relative; inset: auto; height: auto; margin: 0 3vw 16px; top: 0; }
+    .reel.static .rp { position: relative; inset: auto; height: 80vh; transform: none; }
+    .reel.static .rp + .rp { margin-top: 3px; }
     /* ── ASSEMBLY: photo cards fly in from depth into two clusters; a click dollies one to centre ── */
     .asm { position: relative; z-index: 2; height: clamp(620px, 100vh, 920px); overflow: hidden; background: #0e0e0e; }
     .asm-stage { position: absolute; inset: 0; perspective: 1400px; }
@@ -1925,6 +1959,14 @@
           <tr>
             <td class="e-dot"><span class="e-status live" title="Confirmed"></span></td>
             <td class="ed">Nov 21</td>
+            <td class="en">Sunbar</td>
+            <td>Tempe, AZ</td>
+            <td>Patio Brunch · 12:30–1:30 PM · Free · 21+</td>
+            <td><a href="https://www.google.com/maps/search/?api=1&amp;query=Sunbar+24+W+5th+St+Tempe+AZ" class="da" target="_blank" rel="noopener">Free · Map ↗</a></td>
+          </tr>
+          <tr>
+            <td class="e-dot"><span class="e-status live" title="Confirmed"></span></td>
+            <td class="ed">Nov 21</td>
             <td class="en">Nightshift</td>
             <td>Phoenix, AZ</td>
             <td>market price. (b3b w/ 300nightclub + DrawFour)</td>
@@ -1952,6 +1994,7 @@
       <div class="tx" id="c-tix">
         <span class="tx-h">Next Up · Tickets</span>
         <div class="tx-list">
+          <a class="tx-row" href="https://www.google.com/maps/search/?api=1&amp;query=Sunbar+24+W+5th+St+Tempe+AZ" target="_blank" rel="noopener noreferrer"><span class="tx-d">Nov 21</span><span><span class="tx-v">Sunbar</span><span class="lk-sub">Tempe, AZ · Patio Brunch · 12:30–1:30 PM · Free · 21+</span></span><span class="tx-b">Free · Map ↗</span></a>
           <a class="tx-row" href="https://posh.vip/e/nightshift-featuring-usaybflow" target="_blank" rel="noopener noreferrer"><span class="tx-d">Nov 21</span><span><span class="tx-v">Nightshift</span><span class="lk-sub">Phoenix, AZ · market price. (b3b w/ 300nightclub + DrawFour)</span></span><span class="tx-b">Tickets ↗</span></a>
         </div>
       </div>
@@ -1966,7 +2009,7 @@
           <span class="lk-feat-t"><span><span class="lk-feat-title">Electric Sanctuary — Full Set</span><span class="lk-sub">Live in Scottsdale · 09.19.26 · Watch on YouTube</span></span><span class="lk-go" aria-hidden="true">↗</span></span>
         </a>
         <nav class="lk-list" aria-label="Links">
-          <a class="lk-row" href="/inmysoul"><span class="lk-n">01</span><span><span class="lk-row-title">In My Soul</span><span class="lk-sub">New single · Out Nov 19 · Pre-save</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="/inmysoul"><span class="lk-n">01</span><span><span class="lk-row-title">In My Soul</span><span class="lk-sub">New single · Out now</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
           <a class="lk-row" href="https://open.spotify.com/track/2mWxcSRTxTvGnNydabD5PV" target="_blank" rel="noopener noreferrer"><span class="lk-n">02</span><span><span class="lk-row-title">Bass is Pumpin</span><span class="lk-sub">Single · Spotify</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
           <a class="lk-row" href="https://soundcloud.com/grlscry" target="_blank" rel="noopener noreferrer"><span class="lk-n">03</span><span><span class="lk-row-title">Mixes</span><span class="lk-sub">SoundCloud</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
           <a class="lk-row" href="#shop"><span class="lk-n">04</span><span><span class="lk-row-title">GRLS CRY Merch</span><span class="lk-sub">Shop</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
@@ -2008,14 +2051,14 @@
         <!-- Stage -->
         <div class="cs">
           <div class="cs-art">
-            <img id="cs-img" loading="lazy" src="https://i1.sndcdn.com/artworks-VwLdZ445YkCh2tww-YtDhRw-t500x500.jpg" alt="Active track artwork">
+            <img id="cs-img" loading="lazy" src="https://i1.sndcdn.com/artworks-qWWj7yeYsn5wn3CN-sfMOhw-t500x500.jpg" alt="Active track artwork">
             <div class="cs-art-veil"></div>
           </div>
           <div class="cs-body">
             <div class="cs-wv" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
-            <span class="cs-label" id="cs-n">TRACK 01 / 26</span>
-            <h3 class="cs-title" id="cs-title">GOLDRUSH DJ COMPETITION 2026</h3>
-            <div class="cs-meta" id="cs-meta">Competition Set · 2026</div>
+            <span class="cs-label" id="cs-n">TRACK 01 / 27</span>
+            <h3 class="cs-title" id="cs-title">In My Soul</h3>
+            <div class="cs-meta" id="cs-meta">Single · 2026</div>
             <div class="cs-controls">
               <button class="cs-btn" id="cs-prev" aria-label="Previous track">◀</button>
               <button class="cs-btn cs-play-btn" id="cs-play" aria-label="Play / Pause">▶</button>
@@ -2024,24 +2067,21 @@
             <div class="cs-prog">
               <span class="cs-time" id="cs-time">0:00</span>
               <div class="cs-bar" id="cs-bar"><div class="cs-fill" id="cs-fill"></div></div>
-              <span class="cs-dur" id="cs-dur">38:05</span>
+              <span class="cs-dur" id="cs-dur">4:54</span>
             </div>
-            <a id="cs-sc-link" href="https://soundcloud.com/grlscry/goldrushcomp" target="_blank" rel="noopener" class="cs-sc">Open on SoundCloud ↗</a>
+            <a id="cs-sc-link" href="https://soundcloud.com/grlscry/in-my-soul" target="_blank" rel="noopener" class="cs-sc">Open on SoundCloud ↗</a>
           </div>
         </div>
 
       </div><!-- /.crate -->
 
-      <!-- New single: /inmysoul redirects to DistroKid HyperFollow (vercel.json). Swap to Spotify on release day. -->
-      <a class="sp-rel r d2" href="/inmysoul">
-        <img src="images/music/in-my-soul.webp" width="320" height="320" alt="In My Soul cover art" loading="lazy">
-        <span class="sp-rel-t">
-          <span class="sp-rel-k">New single · Out Nov 19</span>
-          <span class="sp-rel-n">In My Soul</span>
-          <span class="sp-rel-m">GRLS CRY · Single · Nov 2026</span>
-        </span>
-        <span class="sp-rel-go">Pre-save ↗</span>
-      </a>
+      <!-- New single, out 2026-11-19: Spotify player (frame-src open.spotify.com in tools/csp_hashes.py).
+           Height is fixed at Spotify's compact 152 px so the box is reserved before the frame loads. -->
+      <div class="sp-now r d2">
+        <span class="sp-rel-k">New single · Out now</span>
+        <iframe title="Spotify player: In My Soul by GRLS CRY" src="https://open.spotify.com/embed/track/4uZgFr5mWG6BpeUIKh3ola?utm_source=generator&amp;theme=0" width="100%" height="152" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+        <p class="sp-now-more">Also on <a href="https://music.apple.com/us/album/in-my-soul-single/6835806217" target="_blank" rel="noopener noreferrer">Apple Music</a> and <a href="https://soundcloud.com/grlscry/in-my-soul" target="_blank" rel="noopener noreferrer">SoundCloud</a>.</p>
+      </div>
 
       <!-- Spotify release -->
       <a class="sp-rel r d2" href="https://open.spotify.com/track/2mWxcSRTxTvGnNydabD5PV" target="_blank" rel="noopener noreferrer">
@@ -3246,32 +3286,33 @@
   <script>
   (function() {
     var TRACKS = [
-      { num:"01", title:"GOLDRUSH DJ COMPETITION 2026", meta:"Competition Set · 2026", dur:"38:05", art:"https://i1.sndcdn.com/artworks-VwLdZ445YkCh2tww-YtDhRw-t500x500.jpg", url:"https://soundcloud.com/grlscry/goldrushcomp" },
-      { num:"02", title:"Marsolo - Spaceship (GRLS CRY FLIP)", meta:"Flip · 2026", dur:"6:08", art:"https://i1.sndcdn.com/artworks-vXE9FLxWudQ5awvz-2Ry8Rg-t500x500.jpg", url:"https://soundcloud.com/grlscry/marsolo-spaceship-grls-cry-flip" },
-      { num:"03", title:"Perc Popper vs Say My Name", meta:"Edit · 2026", dur:"4:38", art:"https://i1.sndcdn.com/artworks-jatNN5nh7L2jzM6j-hkSOTg-t500x500.jpg", url:"https://soundcloud.com/grlscry/saymynamevspercpopper" },
-      { num:"04", title:"HOUSE PARTY (REMIX)", meta:"Remix · 2026", dur:"2:56", art:"https://i1.sndcdn.com/artworks-YClclpzyyCQ0GaGF-RhJDFQ-t500x500.jpg", url:"https://soundcloud.com/grlscry/house-prty-remix" },
-      { num:"05", title:"Room Shake vs Space Jam (GRLS CRY Edit)", meta:"Edit · 2026", dur:"1:53", art:"https://i1.sndcdn.com/artworks-3KmyWW5ZzLODKzu1-Pla4wQ-t500x500.jpg", url:"https://soundcloud.com/grlscry/rooomshakevsspacejam" },
-      { num:"06", title:"StaySolidRocky - Party Girl (GRLS CRY Remix)", meta:"Remix · 2026", dur:"5:28", art:"https://i1.sndcdn.com/artworks-ihI0ArdMMunyj2e5-umAEyA-t500x500.jpg", url:"https://soundcloud.com/grlscry/party-girl-remix-grls-cry" },
-      { num:"07", title:"Max Vol x GRLS CRY - Rebirth?", meta:"Collab · 2026", dur:"3:15", art:"https://i1.sndcdn.com/artworks-CVnIx25CtbyDxJM2-XO7OhA-t500x500.jpg", url:"https://soundcloud.com/grlscry/max-vol-x-grls-cry-rebirth-wav" },
-      { num:"08", title:"Partiboi69, Kettama - Pumpin (GRLS CRY REMIX)", meta:"Remix · 2026", dur:"5:46", art:"https://i1.sndcdn.com/artworks-lZA6Wb7DTCsdHjoI-xA6Z5g-t500x500.jpg", url:"https://soundcloud.com/grlscry/pumpin" },
-      { num:"09", title:"GRLS CRY — After12 (Full Set)", meta:"Full Set · 2026", dur:"1:00:30", art:"https://i1.sndcdn.com/artworks-pFonN0jQLyXQPSw9-flvvFg-t500x500.jpg", url:"https://soundcloud.com/grlscry/after12test" },
-      { num:"10", title:"SYSTEM OVERLOAD SUBMISSION", meta:"Submission Mix · 2025", dur:"31:55", art:"https://i1.sndcdn.com/artworks-fUKgy0ottOr1hk0r-ViuJxA-t500x500.jpg", url:"https://soundcloud.com/grlscry/system-overload-submission" },
-      { num:"11", title:"GRLS CRY - Tech House Mix Vol. 1 | DJ PROMO", meta:"Promo Mix · 2026", dur:"56:42", art:"https://i1.sndcdn.com/artworks-D7zImviMl244orFE-JuiDww-t500x500.jpg", url:"https://soundcloud.com/grlscry/grlscry-techhousemixvol1-djpromo" },
-      { num:"12", title:"I THINK - GRLS CRY", meta:"Original · 2025", dur:"2:57", art:"https://i1.sndcdn.com/artworks-6njuWWxz7Ie6eLY0-iEe8sw-t500x500.jpg", url:"https://soundcloud.com/grlscry/i-think" },
-      { num:"13", title:"Ball Knowledge Vol. 2", meta:"Mix · 2026", dur:"1:00:39", art:"https://i1.sndcdn.com/artworks-43WZKzieeziEX2SF-HO1QdA-t500x500.jpg", url:"https://soundcloud.com/grlscry/ball-knowledge-vol-2" },
-      { num:"14", title:"Ball Knowledge - Vol 1", meta:"Mix · 2026", dur:"1:26:46", art:"https://i1.sndcdn.com/artworks-6wJNMKbeJwI5geVg-XtN0nA-t500x500.jpg", url:"https://soundcloud.com/grlscry/ballknowledgevol1" },
-      { num:"15", title:"thirds. Live Set", meta:"Live Set · 2026", dur:"57:15", art:"https://i1.sndcdn.com/artworks-uycMSIbmjOQ6n0F6-DZ9E5w-t500x500.jpg", url:"https://soundcloud.com/grlscry/thirds-live-set" },
-      { num:"16", title:"BADMON RUDE BOY SOUND BOY SELECTA - VOL1", meta:"Mix · 2026", dur:"47:53", art:"https://i1.sndcdn.com/artworks-ZDnixYRUw6xr7gu4-BeLhOA-t500x500.jpg", url:"https://soundcloud.com/grlscry/badmon-rude-boy-sound-boy" },
-      { num:"17", title:"thirds. test", meta:"Live Mix · 2026", dur:"1:00:11", art:"https://i1.sndcdn.com/artworks-hq9Hjze6OPcL0FyQ-f1jwuQ-t500x500.jpg", url:"https://soundcloud.com/grlscry/thirdstest" },
-      { num:"18", title:"Mess (Dub)", meta:"Dub · 2026", dur:"4:55", art:"https://i1.sndcdn.com/artworks-MWmiOfZiHsjH6xul-VOFfCQ-t500x500.jpg", url:"https://soundcloud.com/grlscry/mess" },
-      { num:"19", title:"Bass is Pumpin", meta:"Track · 2026", dur:"5:18", art:"https://i1.sndcdn.com/artworks-GK76TgJ6DgQPNG61-EnkMCA-t500x500.jpg", url:"https://soundcloud.com/grlscry/bass-is-pumpin" },
-      { num:"20", title:"UP&UP DJ COMPETITION MIX | GRLS CRY", meta:"Competition Set · 2026", dur:"30:21", art:"https://i1.sndcdn.com/artworks-zQgeOjyXHX2Dr4yt-fyaGPw-t500x500.jpg", url:"https://soundcloud.com/grlscry/upupcompgrlscry" },
-      { num:"21", title:"Forgiveness (Dub)", meta:"Dub · 2026", dur:"4:55", art:"https://i1.sndcdn.com/artworks-UNnAKEYSUoiRYe8g-ezjiVA-t500x500.jpg", url:"https://soundcloud.com/grlscry/forgiveness" },
-      { num:"22", title:"WIDE AWAKE (GRLS CRY SUNSET MIX) - PITCHED - DL FOR OG", meta:"Remix · 2026", dur:"9:59", art:"https://i1.sndcdn.com/artworks-tVwQDMALlvIzjTqP-QMu5uA-t500x500.jpg", url:"https://soundcloud.com/grlscry/wide-awake-grls-cry-sunset-1" },
-      { num:"23", title:"IDK Afters Set - 07.24.2026", meta:"Live Set · 2026", dur:"21:52", art:"https://i1.sndcdn.com/artworks-PyDAx6acGHw5Oe4n-dmIyxw-t500x500.jpg", url:"https://soundcloud.com/grlscry/idk-afters-set" },
-      { num:"24", title:"RIOT HOUSE — TEST", meta:"Live Mix · 2026", dur:"48:23", art:"https://i1.sndcdn.com/artworks-jsTBS8YBu3MzaOw7-cdfF2Q-t500x500.jpg", url:"https://soundcloud.com/grlscry/riothousetest" },
-      { num:"25", title:"not for human consumption", meta:"Mix · 2026", dur:"50:00", art:"https://i1.sndcdn.com/artworks-ExQy0fJNVUO7ZPBz-cB7n0A-t500x500.jpg", url:"https://soundcloud.com/grlscry/not-for-human-consumption" },
-      { num:"26", title:"Ball Knowledge Vol 3", meta:"Mix · 2026", dur:"36:49", art:"https://i1.sndcdn.com/artworks-sCmlEY6kYCaCk03d-g4y1vQ-t500x500.jpg", url:"https://soundcloud.com/grlscry/ball-knowledge-vol-3" }
+      { num:"01", title:"In My Soul", meta:"Single · 2026", dur:"4:54", art:"https://i1.sndcdn.com/artworks-qWWj7yeYsn5wn3CN-sfMOhw-t500x500.jpg", url:"https://soundcloud.com/grlscry/in-my-soul" },
+      { num:"02", title:"GOLDRUSH DJ COMPETITION 2026", meta:"Competition Set · 2026", dur:"38:05", art:"https://i1.sndcdn.com/artworks-VwLdZ445YkCh2tww-YtDhRw-t500x500.jpg", url:"https://soundcloud.com/grlscry/goldrushcomp" },
+      { num:"03", title:"Marsolo - Spaceship (GRLS CRY FLIP)", meta:"Flip · 2026", dur:"6:08", art:"https://i1.sndcdn.com/artworks-vXE9FLxWudQ5awvz-2Ry8Rg-t500x500.jpg", url:"https://soundcloud.com/grlscry/marsolo-spaceship-grls-cry-flip" },
+      { num:"04", title:"Perc Popper vs Say My Name", meta:"Edit · 2026", dur:"4:38", art:"https://i1.sndcdn.com/artworks-jatNN5nh7L2jzM6j-hkSOTg-t500x500.jpg", url:"https://soundcloud.com/grlscry/saymynamevspercpopper" },
+      { num:"05", title:"HOUSE PARTY (REMIX)", meta:"Remix · 2026", dur:"2:56", art:"https://i1.sndcdn.com/artworks-YClclpzyyCQ0GaGF-RhJDFQ-t500x500.jpg", url:"https://soundcloud.com/grlscry/house-prty-remix" },
+      { num:"06", title:"Room Shake vs Space Jam (GRLS CRY Edit)", meta:"Edit · 2026", dur:"1:53", art:"https://i1.sndcdn.com/artworks-3KmyWW5ZzLODKzu1-Pla4wQ-t500x500.jpg", url:"https://soundcloud.com/grlscry/rooomshakevsspacejam" },
+      { num:"07", title:"StaySolidRocky - Party Girl (GRLS CRY Remix)", meta:"Remix · 2026", dur:"5:28", art:"https://i1.sndcdn.com/artworks-ihI0ArdMMunyj2e5-umAEyA-t500x500.jpg", url:"https://soundcloud.com/grlscry/party-girl-remix-grls-cry" },
+      { num:"08", title:"Max Vol x GRLS CRY - Rebirth?", meta:"Collab · 2026", dur:"3:15", art:"https://i1.sndcdn.com/artworks-CVnIx25CtbyDxJM2-XO7OhA-t500x500.jpg", url:"https://soundcloud.com/grlscry/max-vol-x-grls-cry-rebirth-wav" },
+      { num:"09", title:"Partiboi69, Kettama - Pumpin (GRLS CRY REMIX)", meta:"Remix · 2026", dur:"5:46", art:"https://i1.sndcdn.com/artworks-lZA6Wb7DTCsdHjoI-xA6Z5g-t500x500.jpg", url:"https://soundcloud.com/grlscry/pumpin" },
+      { num:"10", title:"GRLS CRY — After12 (Full Set)", meta:"Full Set · 2026", dur:"1:00:30", art:"https://i1.sndcdn.com/artworks-pFonN0jQLyXQPSw9-flvvFg-t500x500.jpg", url:"https://soundcloud.com/grlscry/after12test" },
+      { num:"11", title:"SYSTEM OVERLOAD SUBMISSION", meta:"Submission Mix · 2025", dur:"31:55", art:"https://i1.sndcdn.com/artworks-fUKgy0ottOr1hk0r-ViuJxA-t500x500.jpg", url:"https://soundcloud.com/grlscry/system-overload-submission" },
+      { num:"12", title:"GRLS CRY - Tech House Mix Vol. 1 | DJ PROMO", meta:"Promo Mix · 2026", dur:"56:42", art:"https://i1.sndcdn.com/artworks-D7zImviMl244orFE-JuiDww-t500x500.jpg", url:"https://soundcloud.com/grlscry/grlscry-techhousemixvol1-djpromo" },
+      { num:"13", title:"I THINK - GRLS CRY", meta:"Original · 2025", dur:"2:57", art:"https://i1.sndcdn.com/artworks-6njuWWxz7Ie6eLY0-iEe8sw-t500x500.jpg", url:"https://soundcloud.com/grlscry/i-think" },
+      { num:"14", title:"Ball Knowledge Vol. 2", meta:"Mix · 2026", dur:"1:00:39", art:"https://i1.sndcdn.com/artworks-43WZKzieeziEX2SF-HO1QdA-t500x500.jpg", url:"https://soundcloud.com/grlscry/ball-knowledge-vol-2" },
+      { num:"15", title:"Ball Knowledge - Vol 1", meta:"Mix · 2026", dur:"1:26:46", art:"https://i1.sndcdn.com/artworks-6wJNMKbeJwI5geVg-XtN0nA-t500x500.jpg", url:"https://soundcloud.com/grlscry/ballknowledgevol1" },
+      { num:"16", title:"thirds. Live Set", meta:"Live Set · 2026", dur:"57:15", art:"https://i1.sndcdn.com/artworks-uycMSIbmjOQ6n0F6-DZ9E5w-t500x500.jpg", url:"https://soundcloud.com/grlscry/thirds-live-set" },
+      { num:"17", title:"BADMON RUDE BOY SOUND BOY SELECTA - VOL1", meta:"Mix · 2026", dur:"47:53", art:"https://i1.sndcdn.com/artworks-ZDnixYRUw6xr7gu4-BeLhOA-t500x500.jpg", url:"https://soundcloud.com/grlscry/badmon-rude-boy-sound-boy" },
+      { num:"18", title:"thirds. test", meta:"Live Mix · 2026", dur:"1:00:11", art:"https://i1.sndcdn.com/artworks-hq9Hjze6OPcL0FyQ-f1jwuQ-t500x500.jpg", url:"https://soundcloud.com/grlscry/thirdstest" },
+      { num:"19", title:"Mess (Dub)", meta:"Dub · 2026", dur:"4:55", art:"https://i1.sndcdn.com/artworks-MWmiOfZiHsjH6xul-VOFfCQ-t500x500.jpg", url:"https://soundcloud.com/grlscry/mess" },
+      { num:"20", title:"Bass is Pumpin", meta:"Track · 2026", dur:"5:18", art:"https://i1.sndcdn.com/artworks-GK76TgJ6DgQPNG61-EnkMCA-t500x500.jpg", url:"https://soundcloud.com/grlscry/bass-is-pumpin" },
+      { num:"21", title:"UP&UP DJ COMPETITION MIX | GRLS CRY", meta:"Competition Set · 2026", dur:"30:21", art:"https://i1.sndcdn.com/artworks-zQgeOjyXHX2Dr4yt-fyaGPw-t500x500.jpg", url:"https://soundcloud.com/grlscry/upupcompgrlscry" },
+      { num:"22", title:"Forgiveness (Dub)", meta:"Dub · 2026", dur:"4:55", art:"https://i1.sndcdn.com/artworks-UNnAKEYSUoiRYe8g-ezjiVA-t500x500.jpg", url:"https://soundcloud.com/grlscry/forgiveness" },
+      { num:"23", title:"WIDE AWAKE (GRLS CRY SUNSET MIX) - PITCHED - DL FOR OG", meta:"Remix · 2026", dur:"9:59", art:"https://i1.sndcdn.com/artworks-tVwQDMALlvIzjTqP-QMu5uA-t500x500.jpg", url:"https://soundcloud.com/grlscry/wide-awake-grls-cry-sunset-1" },
+      { num:"24", title:"IDK Afters Set - 07.24.2026", meta:"Live Set · 2026", dur:"21:52", art:"https://i1.sndcdn.com/artworks-PyDAx6acGHw5Oe4n-dmIyxw-t500x500.jpg", url:"https://soundcloud.com/grlscry/idk-afters-set" },
+      { num:"25", title:"RIOT HOUSE — TEST", meta:"Live Mix · 2026", dur:"48:23", art:"https://i1.sndcdn.com/artworks-jsTBS8YBu3MzaOw7-cdfF2Q-t500x500.jpg", url:"https://soundcloud.com/grlscry/riothousetest" },
+      { num:"26", title:"not for human consumption", meta:"Mix · 2026", dur:"50:00", art:"https://i1.sndcdn.com/artworks-ExQy0fJNVUO7ZPBz-cB7n0A-t500x500.jpg", url:"https://soundcloud.com/grlscry/not-for-human-consumption" },
+      { num:"27", title:"Ball Knowledge Vol 3", meta:"Mix · 2026", dur:"36:49", art:"https://i1.sndcdn.com/artworks-sCmlEY6kYCaCk03d-g4y1vQ-t500x500.jpg", url:"https://soundcloud.com/grlscry/ball-knowledge-vol-3" }
     ];
 
     var cur = 0, playing = false, ready = false, dur = 0, widget;
@@ -3776,30 +3817,44 @@
     function renderTix(events) {
       var host = el('c-tix'), cta = el('hero-cta');
       var tix = events.filter(function(ev) { return ev && ev.status !== 'past' && /^https?:/i.test(String(ev.link || '').trim()) && safeUrl(ev.link); });
-      /* v2 H2/H3: name the next show above the actions; the sage button goes straight to its tickets. */
-      var next = events.filter(function(ev) { return ev && ev.status !== 'past'; })[0];
-      var nextLink = next && /^https?:/i.test(String(next.link || '').trim()) ? safeUrl(next.link) : '';
+      /* v2 H2/H3: name the next shows above the actions. Up to two (Luke 2026-11-20, two sets on Nov 21), one per line,
+         each with its event `note` (e.g. "Free"). The sage button goes to the first named show that sells tickets;
+         if none does, to the first named show's own link (a free show's "Free · Map"); else Book a Set. */
+      var shown = events.filter(function(ev) { return ev && ev.status !== 'past'; }).slice(0, 2);
+      var hasLink = function(ev) { return /^https?:/i.test(String(ev.link || '').trim()) && !!safeUrl(ev.link); };
+      var isTix = function(ev) { var t = String(ev.link_text || '').trim(); return hasLink(ev) && (!t || /^tickets$/i.test(t)); };
+      var main = shown.filter(isTix)[0] || shown.filter(hasLink)[0];
       var hn = el('hero-next'), alt = el('hero-alt');
       if (hn) {
-        var line = '';
-        if (next) {
-          var MON = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
-          var dm = String(next.date || '').trim().match(/^([A-Za-z]{3})[a-z]*\.?\s+(\d{1,2})$/), wd = '';
-          if (dm && MON.indexOf(dm[1].toLowerCase()) >= 0) {
-            wd = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(new Date().getFullYear(), MON.indexOf(dm[1].toLowerCase()), +dm[2]).getDay()];
-          }
-          line = [(wd ? wd + ' ' : '') + String(next.date || '').trim(), next.venue, next.location]
-            .map(function(s) { return String(s || '').trim(); }).filter(Boolean).join(' · ');
-        }
-        hn.textContent = line;              // textContent: content.json never reaches innerHTML here
-        hn.hidden = !line;
+        var MON = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+        var dayOf = function(ev) {
+          var d = String(ev.date || '').trim(), dm = d.match(/^([A-Za-z]{3})[a-z]*\.?\s+(\d{1,2})$/);
+          if (!dm || MON.indexOf(dm[1].toLowerCase()) < 0) return d;
+          return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(new Date().getFullYear(), MON.indexOf(dm[1].toLowerCase()), +dm[2]).getDay()] + ' ' + d;
+        };
+        var join = function(parts) { return parts.map(function(s) { return String(s || '').trim(); }).filter(Boolean).join(' · '); };
+        /* textContent only: content.json never reaches innerHTML here. */
+        var span = function(cls, text) { var s = document.createElement('span'); s.className = cls; s.textContent = text; return s; };
+        hn.textContent = '';
+        /* Two shows on one date: phones get the date once on its own line (.hn-d) and a short line per show,
+           since full lines wrap badly there; wider screens keep the date on each line (.hn-ld). */
+        var sameDay = shown.length === 2 && String(shown[0].date || '').trim() === String(shown[1].date || '').trim();
+        if (sameDay) hn.appendChild(span('hn-l hn-d', dayOf(shown[0])));
+        shown.forEach(function(ev) {
+          var line = span('hn-l', '');
+          if (sameDay) line.appendChild(span('hn-ld', dayOf(ev) + ' · '));
+          line.appendChild(document.createTextNode(join([sameDay ? '' : dayOf(ev), ev.venue, ev.location, ev.note])));
+          hn.appendChild(line);
+        });
+        hn.hidden = !shown.length;
       }
       if (cta) {
-        if (nextLink) { cta.textContent = 'Get Tickets'; cta.setAttribute('href', nextLink); cta.target = '_blank'; cta.rel = 'noopener noreferrer'; }
+        /* setAttribute takes the raw URL: safeUrl() HTML-escapes for innerHTML, and "&amp;" in an attribute breaks query strings. */
+        if (main) { cta.textContent = isTix(main) ? 'Get Tickets' : String(main.link_text).trim(); cta.setAttribute('href', String(main.link).trim()); cta.target = '_blank'; cta.rel = 'noopener noreferrer'; }
         else { cta.textContent = 'Book a Set'; cta.setAttribute('href', '#contact'); cta.removeAttribute('target'); cta.removeAttribute('rel'); }
       }
       if (alt) {
-        if (nextLink) { alt.textContent = 'Book a Set'; alt.setAttribute('href', '#contact'); }
+        if (main) { alt.textContent = 'Book a Set'; alt.setAttribute('href', '#contact'); }
         else { alt.textContent = 'Listen'; alt.setAttribute('href', '#music'); }
       }
       var mt = el('mob-tix'), mb = el('mob-book');

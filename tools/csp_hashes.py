@@ -18,7 +18,7 @@ PUBLIC_SOURCE = '/((?!admin).*)'
 ADMIN_SOURCES = ('/admin', '/admin/(.*)')
 SCRIPT_HOSTS = 'https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://w.soundcloud.com'
 REST = ("style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; "
-        "img-src 'self' data: https://*.sndcdn.com; frame-src https://w.soundcloud.com; "
+        "img-src 'self' data: https://*.sndcdn.com; frame-src https://w.soundcloud.com https://open.spotify.com; "
         "connect-src 'self' https://api.soundcloud.com https://w.soundcloud.com; form-action 'self'; "
         "base-uri 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests")
 

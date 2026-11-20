@@ -84,7 +84,7 @@ Hero → Shows reel (`#events`, upcoming only) → Links → Sound (`#music`) �
 
 v2 flow, live since 2026-11-12 (Luke picked prototype B):
 - **Hero** rests on the jelly logo: one burst of 6 cuts (0.7 s each), then 21 s of logo; first burst about 9 s in.
-  `#hero-next` names the first event in `content.json` that is not `past` ("SAT NOV 14 · AFTER12 · PHOENIX, AZ";
+  `#hero-next` names the first one or two events in `content.json` that are not `past` ("SAT NOV 14 · AFTER12 · PHOENIX, AZ";
   a show whose date has gone by counts as past, see `autoPast` under Gotchas),
   `#hero-cta` goes to that show's tickets, `#hero-alt` is a text link. No upcoming show: line hidden, Book a Set + Listen.
   The logo takes a soft room tint from the hero video (`--amb` on `#hero`, `.lp-tint`); the nav uses the flat cream mark.
@@ -215,8 +215,18 @@ the booking form and admin publishing will fail locally, which is expected.
   with metrics; `python3 tools/audit_static.py` checks the static files (JSON-LD, robots, links) and exits 0 when clean.
 - Crate player tracks live in two places: `content.json` `tracks` (what the admin panel edits; the page applies it
   through `window.crateSetTracks`) and the built-in `TRACKS` array in the player script (fallback until the fetch
-  lands). Keep them identical. Order = SoundCloud plays, most first, as of 2026-11-10 (all 26 public uploads; the list
-  scrolls inside the player, `data-lenis-prevent`). Refresh counts with
+  lands). Keep them identical. Order = the new single "In My Soul" pinned at 01 (2026-11-20), then SoundCloud plays,
+  most first, as of 2026-11-10 (27 public uploads; the list scrolls inside the player, `data-lenis-prevent`).
+- Under the crate, `.sp-now` holds a Spotify track embed for In My Soul (compact 152 px, `frame-src https://open.spotify.com`
+  set in `tools/csp_hashes.py`). `/inmysoul` still redirects to DistroKid HyperFollow (`vercel.json`).
+- **Hero names up to two upcoming shows** (2026-11-20, Luke: two sets on Nov 21), one `.hn-l` line each:
+  weekday date · venue · location · `note`. The sage button goes to the first named show that sells tickets
+  (`link_text` empty or "Tickets" → "Get Tickets"); if neither does, to the first named show's own link with its
+  `link_text` as the label; no links → Book a Set.
+- A free show uses `link` = a map URL, `link_text` = "Free · Map" and `note` = "Free" (the hero shows the note).
+  Keep `link_text` short: the tickets strip squeezes the show line on phones when the button is long.
+- Shows reel under reduced motion (`.reel.static`): panels flow one under another (fixed 2026-11-20; before, two
+  upcoming shows sat on top of each other and only the last showed). Refresh counts with
   `yt-dlp -J --skip-download https://soundcloud.com/grlscry/tracks` (`view_count` per entry).
 - CSP is strict (in `vercel.json`, written by `tools/csp_hashes.py`). Any new third-party origin must be added
   to that script or it is silently blocked. **Inline scripts run only by hash (since 2026-11-12):** after ANY edit
