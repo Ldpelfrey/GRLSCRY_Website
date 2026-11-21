@@ -1785,6 +1785,62 @@
     #events { padding-bottom: clamp(20px, 3vw, 40px); }
     #played .book-strip { margin-top: 48px; }
     @media (min-width: 1100px) { #played-h { margin-left: calc((100% - min(1240px, 100vw - 2 * var(--gutter))) / 2); } }  /* heading lines up with the photo row */
+    /* ─── v3 B · photo-led (2026-11-20) ─────────────────────────── */
+    /* One left edge: every section's text starts on the gutter; past 1440px the gutter grows so content stays 1440 wide. */
+    :root { --gutter: max(clamp(24px,5vw,64px), calc((100vw - 1440px) / 2)); }
+    .w { max-width: none; margin: 0; padding: 0; } /* the sections already carry the gutter */
+    #shop { padding: clamp(56px,8vw,96px) var(--gutter) 0; } /* the one section that took its gutter from .w; heading no longer hugs Book's edge */
+    @media (min-width: 1100px) { .ps { margin-left: 0; margin-right: 0; } #played-h { margin-left: 0; } }
+    /* Running text in Archivo; IBM Plex Mono stays for data (times, durations, dates). */
+    body { font-family: var(--display); font-size: 16px; line-height: 1.6; }
+    .t-body { font-family: var(--display); font-size: 17px; font-weight: 400; line-height: 1.6; color: #e7e1d6; }
+    .lk-sub, .lk-row .lk-sub, .sp-now-more { font-family: var(--display); font-size: 15px; letter-spacing: 0; color: #cfc8bb; }
+    .evt td { font-size: 14px; }
+    .evt .ed { font-family: var(--mono); font-size: 13px; }
+    .evt td:nth-child(3) { width: 220px; } .evt td:nth-child(5) { width: auto; } .evt td:nth-child(6) { width: 200px; }
+    /* Hero: the photo carries it; one line under the logo. */
+    .hero-plate picture, .hero-plate img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .hero-plate img { object-fit: cover; object-position: 62% 32%; }
+    .hero-plate::after {
+      background:
+        linear-gradient(90deg, rgba(14,14,14,.78) 0%, rgba(14,14,14,.35) 42%, rgba(14,14,14,0) 70%),
+        linear-gradient(180deg, rgba(14,14,14,.5) 0%, rgba(14,14,14,0) 22%, rgba(14,14,14,0) 70%, var(--black) 100%);
+    }
+    #hero .ht { font-family: var(--display); font-style: normal; font-weight: 500; font-size: clamp(18px,1.6vw,22px); letter-spacing: 0; color: #f2e3c8; }
+    @media (max-width: 700px) {
+      .hero-plate { bottom: auto; height: 64%; }
+      .hero-plate img { object-position: 50% 38%; }
+      .hero-plate::after { background: linear-gradient(180deg, rgba(14,14,14,.35) 0%, rgba(14,14,14,0) 22%, rgba(14,14,14,0) 60%, var(--black) 100%); }
+    }
+    /* Ticker: a readable proof line (artists GRLS CRY has shared a bill with). */
+    .status-bar-inner span { font-size: 11px; letter-spacing: .12em; color: var(--gray-lt); }
+    .status-bar-inner span b { color: var(--sage); font-weight: 500; }
+    /* Links: Electric Sanctuary as a full-width band, the list in two big columns. */
+    #links .lk-grid { grid-template-columns: 1fr; }
+    #links .lk-feat-img { aspect-ratio: 21/9; border: 0; }
+    #links .lk-feat-img img { width: 100%; height: 100%; object-fit: cover; }
+    #links .lk-feat-title { font-size: clamp(28px,4.4vw,60px); }
+    #links .lk-list { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); column-gap: clamp(24px,4vw,48px); border-top: 0; }
+    #links .lk-row { grid-template-columns: minmax(0,1fr) 24px; }
+    #links .lk-row-title { font-size: clamp(20px,2vw,26px); }
+    @media (max-width: 820px) { #links .lk-list { grid-template-columns: 1fr; } }
+    @media (max-width: 480px) { #links .lk-feat-title { font-size: min(24px, 6.1vw); font-stretch: 100%; } } /* two lines from 360 up */
+    /* Played strip bleeds to the screen edge by one gutter now that .w carries none. */
+    @media (max-width: 768px) { .ps { margin-right: calc(-1 * var(--gutter)); padding-right: var(--gutter); } }
+    /* Remaining running text: store policies, the Stripe note, contact links. */
+    .policy p, .shop-fine { font-family: var(--display); font-size: 15px; line-height: 1.6; letter-spacing: 0; text-transform: none; }
+    .si { font-size: 14px; }
+    .cd, .shop-blurb { font-size: 17px; font-weight: 400; line-height: 1.6; color: #e7e1d6; }
+    /* Footer spans the page; Give Back lives here now. */
+    .foot-grid, .foot-bottom { flex: 1 1 100%; width: 100%; }
+    .foot-grid { grid-template-columns: repeat(4, minmax(0,1fr)) auto; }
+    @media (max-width: 768px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .foot-grid { grid-template-columns: 1fr; } }
+    .foot-email { font-family: var(--display); }
+    .policies { border-top: 0; margin-top: 0; } /* one rule under the columns, not two */
+    .foot-give { color: var(--white); font-size: 17px; }
+    .foot-give:hover, .foot-give:focus-visible { color: var(--sage); }
+    .foot-give-d { margin-top: 8px; font-size: 14px; color: var(--gray-lt); max-width: 26ch; }
   </style>
 </head>
 <body>
@@ -1807,11 +1863,11 @@
   <!-- STATUS TICKER -->
   <div class="status-bar" aria-hidden="true">
     <div class="status-bar-inner" id="marquee">
-      <span>◆ <b>GRLSCRY</b></span>
-      <span>TEMPE · SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · KETTAMA · TWOFACED · INTERPLANETARY CRIMINAL · MALL GRAB · PROSPA · SAMMY VIRJI · MAIN PHASE · TODD EDWARDS · MJ COLE · DJ EZ · HOUSE · TRANCE · UKG · DARK HIGH ENERGY · LATE NIGHT · ELECTRIC SANCTUARY · ALMOST FAMOUS · SUNBAR TEMPE · RIOT HOUSE · AFTER12 · MOGFEST · YZ KARAOKE CAFE · THE ENCLAVE · THIRDS. · DOCUMENT DON&#39;T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ</span>
+      <span><b>Shared the bill with</b></span>
+      <span>FLAVA D · USAYBFLOW · DEATHBEAT · DRAWFOUR · TESSLA · 300NIGHTCLUB · POINT.ZERO · JMAU5 · FOCUSS · MK ULTRA · KEANU · VON · CLOWNIE · NAHZGUUL · SYMBREON</span>
       <span>◆</span>
-      <span>◆ <b>GRLSCRY</b></span>
-      <span>TEMPE · SCOTTSDALE AZ · CEDRIC GERVAIS · CHRIS LAKE · ODD MOB · FISHER · CLOONEE · KETTAMA · TWOFACED · INTERPLANETARY CRIMINAL · MALL GRAB · PROSPA · SAMMY VIRJI · MAIN PHASE · TODD EDWARDS · MJ COLE · DJ EZ · HOUSE · TRANCE · UKG · DARK HIGH ENERGY · LATE NIGHT · ELECTRIC SANCTUARY · ALMOST FAMOUS · SUNBAR TEMPE · RIOT HOUSE · AFTER12 · MOGFEST · YZ KARAOKE CAFE · THE ENCLAVE · THIRDS. · DOCUMENT DON&#39;T PERFORM · ABLETON LIVE 12 · PIONEER DDJ-400 · SERUM 2 · PHX AZ</span>
+      <span><b>Shared the bill with</b></span>
+      <span>FLAVA D · USAYBFLOW · DEATHBEAT · DRAWFOUR · TESSLA · 300NIGHTCLUB · POINT.ZERO · JMAU5 · FOCUSS · MK ULTRA · KEANU · VON · CLOWNIE · NAHZGUUL · SYMBREON</span>
       <span>◆</span>
     </div>
   </div>
@@ -1847,11 +1903,12 @@
   <!-- ══════════════════════════════════════════════════════════════ -->
   <section id="hero" aria-label="Hero">
 
-    <!-- cinematic plate: GRLS CRY's own live-set footage. Sources are attached by JS
-         (size by viewport, skipped under reduced motion / Save-Data); the poster is the fallback. -->
+    <!-- v3 B: the hero rests on GRLS CRY at Sunbar (Nov 8). Portrait crop on phones. -->
     <div class="hero-plate" aria-hidden="true">
-      <video id="hero-video" class="on" muted playsinline preload="none" tabindex="-1"
-             poster="images/hero/plate-poster.jpg" width="1600" height="900"></video>
+      <picture>
+        <source media="(max-width: 700px)" srcset="images/reel/sunbar-nov8-t.webp" width="800" height="1000">
+        <img src="images/reel/sunbar-nov8-w.webp" width="1600" height="900" alt="" fetchpriority="high" decoding="async">
+      </picture>
     </div>
 
     <div class="hero-cuts" id="hero-cuts" aria-hidden="true">
@@ -1868,14 +1925,6 @@
     <!-- decorative asset — bottom left -->
     <picture><source srcset="CybersygilsimAsset.webp" type="image/webp"><img src="CybersygilsimAsset.jpg" class="deco-img hero-deco-bl" alt="" aria-hidden="true"></picture>
 
-    <!-- floating pull-quote (neocities aesthetic) -->
-    <div class="h-ribbon" aria-hidden="true">
-      <p class="h-ribbon-inner" id="c-pullquote">"he's got that raw bad boy attitude...<br> just need to tame it"</p>
-    </div>
-    <div class="heb">
-      <div class="ld" aria-hidden="true"></div>
-      <span class="t-label" id="c-hero-label">DJ / Producer — Tempe | Scottsdale, AZ</span>
-    </div>
     <h1 class="t-hero hn">
       <span class="hero-logo-wrap">
         <span class="hero-logo">
@@ -1910,9 +1959,8 @@
         </span>
       </span>
     </h1>
-    <p class="ht" id="c-hero-tagline">Dark · High Energy · Late Night</p>
+    <p class="ht" id="c-hero-tagline">High-Energy house, trance, UKG. Tempe |⁠ Scottsdale, AZ</p>
 
-    <p class="h-ctx">House · Trance · UKG</p>
 
     <p id="hero-next" hidden></p>
     <div class="hc">
@@ -1920,10 +1968,6 @@
       <a href="#music" class="h-txt" id="hero-alt">Listen</a>
     </div>
 
-    <div class="hs" aria-hidden="true">
-      <span>Scroll</span>
-      <div class="sb"></div>
-    </div>
 
     <span class="sec-n" aria-hidden="true" hidden>01</span>
 
@@ -1979,11 +2023,6 @@
     <span class="sec-n" aria-hidden="true" hidden>03</span>
   </section>
 
-  <div class="ornament-row" aria-hidden="true">
-    <div class="ornament-line"></div>
-    <span class="ornament-text">◆</span>
-    <div class="ornament-line"></div>
-  </div>
 
   <!-- ══════════════════════════════════════════════════════════════ -->
   <!-- LINKS — grlscry.com/links redirects here; it is the IG bio link. -->
@@ -1991,13 +2030,6 @@
   <!-- ══════════════════════════════════════════════════════════════ -->
   <section id="links" aria-labelledby="links-h">
     <div class="w">
-      <div class="tx" id="c-tix">
-        <span class="tx-h">Next Up · Tickets</span>
-        <div class="tx-list">
-          <a class="tx-row" href="https://www.google.com/maps/search/?api=1&amp;query=Sunbar+24+W+5th+St+Tempe+AZ" target="_blank" rel="noopener noreferrer"><span class="tx-d">Nov 21</span><span><span class="tx-v">Sunbar</span><span class="lk-sub">Tempe, AZ · Patio Brunch · 12:30–1:30 PM · Free · 21+</span></span><span class="tx-b">Free · Map ↗</span></a>
-          <a class="tx-row" href="https://posh.vip/e/nightshift-featuring-usaybflow" target="_blank" rel="noopener noreferrer"><span class="tx-d">Nov 21</span><span><span class="tx-v">Nightshift</span><span class="lk-sub">Phoenix, AZ · market price. (b3b w/ 300nightclub + DrawFour)</span></span><span class="tx-b">Tickets ↗</span></a>
-        </div>
-      </div>
       <div class="ew" hidden><!-- v2 T2 -->
         <span class="el"></span>
         <span class="t-label">Links</span>
@@ -2009,23 +2041,18 @@
           <span class="lk-feat-t"><span><span class="lk-feat-title">Electric Sanctuary — Full Set</span><span class="lk-sub">Live in Scottsdale · 09.19.26 · Watch on YouTube</span></span><span class="lk-go" aria-hidden="true">↗</span></span>
         </a>
         <nav class="lk-list" aria-label="Links">
-          <a class="lk-row" href="/inmysoul"><span class="lk-n">01</span><span><span class="lk-row-title">In My Soul</span><span class="lk-sub">New single · Out now</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
-          <a class="lk-row" href="https://open.spotify.com/track/2mWxcSRTxTvGnNydabD5PV" target="_blank" rel="noopener noreferrer"><span class="lk-n">02</span><span><span class="lk-row-title">Bass is Pumpin</span><span class="lk-sub">Single · Spotify</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
-          <a class="lk-row" href="https://soundcloud.com/grlscry" target="_blank" rel="noopener noreferrer"><span class="lk-n">03</span><span><span class="lk-row-title">Mixes</span><span class="lk-sub">SoundCloud</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
-          <a class="lk-row" href="#shop"><span class="lk-n">04</span><span><span class="lk-row-title">GRLS CRY Merch</span><span class="lk-sub">Shop</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
-          <a class="lk-row" href="#contact"><span class="lk-n">05</span><span><span class="lk-row-title">Book a Set</span><span class="lk-sub">Clubs, events, corporate</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
-          <a class="lk-row" href="https://instagram.com/grlscryofficial" target="_blank" rel="noopener noreferrer"><span class="lk-n">06</span><span><span class="lk-row-title">Instagram</span><span class="lk-sub">@grlscryofficial</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
-          <a class="lk-row" href="https://x.com/grlscryofficial" target="_blank" rel="noopener noreferrer"><span class="lk-n">07</span><span><span class="lk-row-title">X</span><span class="lk-sub">@grlscryofficial</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="/inmysoul"><span><span class="lk-row-title">In My Soul</span><span class="lk-sub">New single · Out now</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="https://open.spotify.com/track/2mWxcSRTxTvGnNydabD5PV" target="_blank" rel="noopener noreferrer"><span><span class="lk-row-title">Bass is Pumpin</span><span class="lk-sub">Single · Spotify</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="https://soundcloud.com/grlscry" target="_blank" rel="noopener noreferrer"><span><span class="lk-row-title">Mixes</span><span class="lk-sub">SoundCloud</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="#shop"><span><span class="lk-row-title">GRLS CRY Merch</span><span class="lk-sub">Shop</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="#contact"><span><span class="lk-row-title">Book a Set</span><span class="lk-sub">Clubs, events, corporate</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="https://instagram.com/grlscryofficial" target="_blank" rel="noopener noreferrer"><span><span class="lk-row-title">Instagram</span><span class="lk-sub">@grlscryofficial</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="https://x.com/grlscryofficial" target="_blank" rel="noopener noreferrer"><span><span class="lk-row-title">X</span><span class="lk-sub">@grlscryofficial</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
         </nav>
       </div>
     </div>
   </section>
 
-  <div class="ornament-row" aria-hidden="true">
-    <div class="ornament-line"></div>
-    <span class="ornament-text">∴ Sound ∴</span>
-    <div class="ornament-line"></div>
-  </div>
 
   <!-- ══════════════════════════════════════════════════════════════ -->
   <!-- MUSIC -->
@@ -2083,38 +2110,6 @@
         <p class="sp-now-more">Also on <a href="https://music.apple.com/us/album/in-my-soul-single/6835806217" target="_blank" rel="noopener noreferrer">Apple Music</a> and <a href="https://soundcloud.com/grlscry/in-my-soul" target="_blank" rel="noopener noreferrer">SoundCloud</a>.</p>
       </div>
 
-      <!-- Spotify release -->
-      <a class="sp-rel r d2" href="https://open.spotify.com/track/2mWxcSRTxTvGnNydabD5PV" target="_blank" rel="noopener noreferrer">
-        <img src="images/music/bass-is-pumpin.webp" width="320" height="320" alt="Bass is Pumpin cover art" loading="lazy">
-        <span class="sp-rel-t">
-          <span class="sp-rel-k">Out now · Spotify</span>
-          <span class="sp-rel-n">Bass is Pumpin</span>
-          <span class="sp-rel-m">GRLS CRY · Single · Sept 2026</span>
-        </span>
-        <span class="sp-rel-go">Listen ↗</span>
-      </a>
-
-      <!-- ── Give Back ── -->
-      <div style="margin-top:56px;" class="r d3">
-        <div class="ew">
-          <span class="el"></span>
-          <span class="t-label">Give Back</span>
-        </div>
-        <p class="t-body" style="margin-bottom:28px; max-width:580px;">Music builds communities. These causes matter. If you want to support something real alongside the music:</p>
-        <div class="don-grid">
-          <!-- Hidden 2026-11-12: the GoFundMe link is dead (404). Luke: "hide for now". Give it a live address, then remove `hidden`. -->
-          <div class="don-card r d4" hidden>
-            <div class="don-title">Men's Mental Health</div>
-            <div class="don-desc">Because the grind is real and asking for help isn't weakness.</div>
-            <a href="https://www.gofundme.com/f/mens-mental-health-fundraiser" target="_blank" rel="noopener" class="btn bg">Donate ↗</a>
-          </div>
-          <div class="don-card r d5">
-            <div class="don-title">Save the Music</div>
-            <div class="don-desc">Keeping music education alive for kids who can't afford to pay for it.</div>
-            <a href="https://www.savethemusic.org/donate/" target="_blank" rel="noopener" class="btn bg">Donate ↗</a>
-          </div>
-        </div>
-      </div>
 
     </div>
     <span class="sec-n" aria-hidden="true" hidden>04</span>
@@ -2204,8 +2199,8 @@
           <!-- This table has no thead, so column widths come from colgroup.
                Values must match the .evt nth-child widths above. -->
           <colgroup>
-            <col style="width:32px"><col style="width:110px"><col>
-            <col style="width:150px"><col style="width:170px"><col style="width:160px">
+            <col style="width:32px"><col style="width:110px"><col style="width:220px">
+            <col style="width:150px"><col><col style="width:200px">
           </colgroup>
           <tbody id="c-past-tbody">
             <tr>
@@ -2374,11 +2369,6 @@
     <p class="asm-hint">Tap a photo</p>
   </section>
 
-  <div class="ornament-row" aria-hidden="true">
-    <div class="ornament-line"></div>
-    <span class="ornament-text">∴ Book ∴</span>
-    <div class="ornament-line"></div>
-  </div>
 
   <!-- ══════════════════════════════════════════════════════════════ -->
   <!-- CONTACT -->
@@ -2456,11 +2446,6 @@
     <span class="sec-n" aria-hidden="true" hidden>05</span>
   </section>
 
-  <div class="ornament-row" aria-hidden="true">
-    <div class="ornament-line"></div>
-    <span class="ornament-text">∴ Shop ∴</span>
-    <div class="ornament-line"></div>
-  </div>
 
   <!-- ═════════════════════════════════════════════════════════════ -->
   <!-- SHOP — one product, one size choice, one button.                -->
@@ -2550,6 +2535,11 @@
           <a href="#shop" id="nav-shop-foot">Shop</a>
           <a href="#contact">Book a Set</a>
         </nav>
+      </div>
+      <div>
+        <p class="foot-section-label">Give back</p>
+        <a href="https://www.savethemusic.org/donate/" target="_blank" rel="noopener" class="foot-give">Save the Music ↗</a>
+        <p class="foot-give-d">Music education for kids who can't afford it.</p>
       </div>
       <div class="foot-btt-col">
         <button class="btt-inline" id="btt-inline" aria-label="Back to top">↑</button>
@@ -2798,6 +2788,7 @@
     /* ── STATUS BAR ─────────────────────────────────────────────── */
     (function() {
       const m = document.getElementById('marquee');
+      if (!m) return;
       m.addEventListener('mouseenter', () => m.style.animationPlayState = 'paused');
       m.addEventListener('mouseleave', () => m.style.animationPlayState = 'running');
     })();
@@ -3137,12 +3128,8 @@
         scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5 }
       });
       heroExit
-        .to('.heb',          { y: -30,  opacity: 0, ease: 'power2.in' }, 0)
-        .to('.h-ribbon',     { x: -80,  opacity: 0, ease: 'power2.in' }, 0)
         .to('.ht',           { y: -50,  opacity: 0, ease: 'power2.in' }, 0.05)
-        .to('.h-ctx',        { y: -30,  opacity: 0, ease: 'power2.in' }, 0.08)
         .to('.hc',           { y: -40,  opacity: 0, ease: 'power2.in' }, 0.1)
-        .to('.hs',           { opacity: 0 }, 0)
         .to('.hero-deco-tr', { y: -140, opacity: 0 }, 0)
         .to('.hero-deco-bl', { y:  140, opacity: 0 }, 0);
 
@@ -3265,8 +3252,8 @@
     <div class="p-info">
       <span class="p-num" id="p-num" aria-hidden="true">01</span>
       <div style="min-width:0;overflow:hidden;">
-        <div class="p-title" id="p-title">Spaceship Flip</div>
-        <div class="p-meta" id="p-meta">House Mix · 2026</div>
+        <div class="p-title" id="p-title">In My Soul</div>
+        <div class="p-meta" id="p-meta">Single · 2026</div>
       </div>
     </div>
     <div class="p-controls">
@@ -3639,9 +3626,9 @@
           if (marquee) {
             var t = esc(c.ticker);
             marquee.innerHTML =
-              '<span>◆ <b>GRLSCRY</b></span>' +
+              '<span><b>Shared the bill with</b></span>' +
               '<span>' + t + '</span><span>◆</span>' +
-              '<span>◆ <b>GRLSCRY</b></span>' +
+              '<span><b>Shared the bill with</b></span>' +
               '<span>' + t + '</span><span>◆</span>';
           }
         }
@@ -3992,8 +3979,8 @@
         (img ? '<span class="lk-feat-img"><img src="' + esc(img) + '" width="1280" height="720" alt="' + esc(f.title) + '">' +
           (/youtu\.?be/i.test(f.url) ? '<span class="lk-play">Watch</span>' : '') + '</span>' : '') +
         '<span class="lk-feat-t"><span><span class="lk-feat-title">' + esc(f.title) + '</span>' + sub(f) + '</span>' + go + '</span></a>';
-      var rows = items.slice(1).map(function(it, i) {
-        return '<a class="lk-row" ' + attrs(it.url) + '><span class="lk-n">' + String(i + 1).padStart(2, '0') + '</span>' +
+      var rows = items.slice(1).map(function(it) {
+        return '<a class="lk-row" ' + attrs(it.url) + '>' +
           '<span><span class="lk-row-title">' + esc(it.title) + '</span>' + sub(it) + '</span>' + go + '</a>';
       }).join('');
       host.innerHTML = feat + (rows ? '<nav class="lk-list" aria-label="Links">' + rows + '</nav>' : '');
