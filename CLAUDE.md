@@ -91,7 +91,9 @@ v3 "B photo-led" (2026-11-20, branch `redesign-b`; Luke picked it from the desig
   keep them if you edit it).
 - **Ticker** = only artists GRLS CRY has played with or shared a lineup with (Luke 2026-11-20), labelled "Shared the bill
   with". Sources: the Played rows (Flava D, DeathBeat, TESSLA, DrawFour), Ascension MogFest May 1, MogFest Reloaded Jul 25
-  night bill, Nightshift Nov 21. Add a name only with a bill to back it.
+  night bill + the PowerFest day DJs on the same floor (mogfestAZ-site config.js), Nightshift Nov 21 flyer, After12 Nov 14
+  flyer (both stages). 38 names on 2026-11-21 ("way more people", Luke). Add a name only with a bill to back it.
+  The loop runs at a fixed 85 s per 15-name length: when the list grows, scale `animation-duration` in the v3 B block.
 - **One left edge:** `--gutter` grows past 1440 px so content stays 1440 wide; `.w` carries no padding (the sections do).
 - Running text is Archivo 15–17 px; IBM Plex Mono is for data (times, durations, dates, the crate rows).
 - Links: no ticket strip, no 01–07; Electric Sanctuary is a 21:9 band, list in two columns (one at ≤820 px).
