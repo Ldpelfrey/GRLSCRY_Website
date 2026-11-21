@@ -82,6 +82,21 @@ on 2026-09-25.
 Hero → Shows reel (`#events`, upcoming only) → Links → Sound (`#music`) → Artist with About folded in
 (`#artist`) → Played (`#played`) → Photos (`#asm`) → Book (`#contact`) → **Shop** → Footer.
 
+v3 "B photo-led" (2026-11-20, branch `redesign-b`; Luke picked it from the design-audit deck). Its CSS is the
+"v3 B" block at the end of the main stylesheet; it overrides the older rules above it:
+- **Hero** rests on `images/reel/sunbar-nov8-{w,t}.webp` (`<picture>` in `.hero-plate`; on phones the plate is the top 64%
+  so the logo sits below Luke's face). No hero video any more (the loader exits when `#hero-video` is absent, so `--amb`
+  stays at its default). Eyebrow, pull-quote, `.h-ctx` and the scroll cue are gone; the tagline under the logo is Luke's
+  line "High-Energy house, trance, UKG. Tempe | Scottsdale, AZ" (U+00A0 and U+2060 keep "Tempe | Scottsdale, AZ" on one line;
+  keep them if you edit it).
+- **Ticker** = only artists GRLS CRY has played with or shared a lineup with (Luke 2026-11-20), labelled "Shared the bill
+  with". Sources: the Played rows (Flava D, DeathBeat, TESSLA, DrawFour), Ascension MogFest May 1, MogFest Reloaded Jul 25
+  night bill, Nightshift Nov 21. Add a name only with a bill to back it.
+- **One left edge:** `--gutter` grows past 1440 px so content stays 1440 wide; `.w` carries no padding (the sections do).
+- Running text is Archivo 15–17 px; IBM Plex Mono is for data (times, durations, dates, the crate rows).
+- Links: no ticket strip, no 01–07; Electric Sanctuary is a 21:9 band, list in two columns (one at ≤820 px).
+- Save the Music lives in the footer ("Give back"); the Bass is Pumpin card under Sound is gone (it is in the link list).
+
 v2 flow, live since 2026-11-12 (Luke picked prototype B):
 - **Hero** rests on the jelly logo: one burst of 6 cuts (0.7 s each), then 21 s of logo; first burst about 9 s in.
   `#hero-next` names the first one or two events in `content.json` that are not `past` ("SAT NOV 14 · AFTER12 · PHOENIX, AZ";
