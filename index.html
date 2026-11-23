@@ -1792,6 +1792,28 @@
     .foot-give { color: var(--white); font-size: 17px; }
     .foot-give:hover, .foot-give:focus-visible { color: var(--sage); }
     .foot-give-d { margin-top: 8px; font-size: 14px; color: var(--gray-lt); max-width: 26ch; }
+    /* ─── hero fixes (2026-11-23, from the blind A/B judge) ─── */
+    /* 1. The logo ends before Luke's face: a smaller cap on wide screens, and the photo slides so he sits further right. */
+    @media (min-width: 701px) {
+      .hero-logo { width: clamp(300px, 50vw, 840px); }
+      .hero-plate img { object-position: 40% 32%; }
+    }
+    /* 2. The ticker label stays put; the names roll under it. */
+    .sb-label { position: relative; z-index: 1; flex: none; align-self: stretch; display: flex; align-items: center;
+      padding: 0 20px 0 var(--gutter); background: var(--black); box-shadow: 18px 0 14px -6px var(--black);
+      font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 500; color: var(--sage); white-space: nowrap; }
+    /* 3 + 4. A darker top edge so the nav (and the phone logo over the Sunbar sign) reads; nav links in white over the photo. */
+    .hero-plate::after {
+      background:
+        linear-gradient(90deg, rgba(14,14,14,.78) 0%, rgba(14,14,14,.35) 42%, rgba(14,14,14,0) 70%),
+        linear-gradient(180deg, rgba(14,14,14,.78) 0%, rgba(14,14,14,.4) 10%, rgba(14,14,14,0) 24%, rgba(14,14,14,0) 70%, var(--black) 100%);
+    }
+    #nav:not(.sc) .nv a:not(.nb) { color: var(--white); }
+    /* Phones: the photo starts under the ticker, so the logo sits on black, not on the Sunbar sign. */
+    @media (max-width: 700px) {
+      .hero-plate { top: calc(var(--nav-h) + var(--ticker-h)); height: calc(64% - var(--nav-h) - var(--ticker-h)); }
+      .hero-plate::after { background: linear-gradient(180deg, rgba(14,14,14,.35) 0%, rgba(14,14,14,0) 18%, rgba(14,14,14,0) 60%, var(--black) 100%); }
+    }
   </style>
 </head>
 <body>
@@ -1813,11 +1835,10 @@
 
   <!-- STATUS TICKER -->
   <div class="status-bar" aria-hidden="true">
+    <span class="sb-label">Shared the bill with</span><!-- 2026-11-23: pinned; it used to scroll off and read "…ILL WITH" -->
     <div class="status-bar-inner" id="marquee">
-      <span><b>Shared the bill with</b></span>
       <span>FLAVA D · USAYBFLOW · DEATHBEAT · DRAWFOUR · TESSLA · 300NIGHTCLUB · POINT.ZERO · JMAU5 · FOCUSS · MK ULTRA · KEANU · VON · CLOWNIE · NAHZGUUL · SYMBREON · FLYGRL · RVNT! · ARSENIIC · SMOCKAVELI · LILAN8TOR · AUDREY VOSS · ARMEN PRODUCTION · BAGGINS · MOOSE · MORPHO · DECIBEL · FOOL MOON · GAGL · HONEY BUNS · HORSEYBOOGS · SPECIAL K · POCKET FULL OF SUNSHINE · ZEVOK · CHASING DAWN · ELOHIM · GAGGY BOOTS · NICO · SYLO</span>
       <span>◆</span>
-      <span><b>Shared the bill with</b></span>
       <span>FLAVA D · USAYBFLOW · DEATHBEAT · DRAWFOUR · TESSLA · 300NIGHTCLUB · POINT.ZERO · JMAU5 · FOCUSS · MK ULTRA · KEANU · VON · CLOWNIE · NAHZGUUL · SYMBREON · FLYGRL · RVNT! · ARSENIIC · SMOCKAVELI · LILAN8TOR · AUDREY VOSS · ARMEN PRODUCTION · BAGGINS · MOOSE · MORPHO · DECIBEL · FOOL MOON · GAGL · HONEY BUNS · HORSEYBOOGS · SPECIAL K · POCKET FULL OF SUNSHINE · ZEVOK · CHASING DAWN · ELOHIM · GAGGY BOOTS · NICO · SYLO</span>
       <span>◆</span>
     </div>
@@ -3577,10 +3598,8 @@
           var marquee = el('marquee');
           if (marquee) {
             var t = esc(c.ticker);
-            marquee.innerHTML =
-              '<span><b>Shared the bill with</b></span>' +
+            marquee.innerHTML = /* the label is pinned outside the track (.sb-label) */
               '<span>' + t + '</span><span>◆</span>' +
-              '<span><b>Shared the bill with</b></span>' +
               '<span>' + t + '</span><span>◆</span>';
           }
         }

@@ -94,6 +94,13 @@ v3 "B photo-led" (2026-11-20, branch `redesign-b`; Luke picked it from the desig
   night bill + the PowerFest day DJs on the same floor (mogfestAZ-site config.js), Nightshift Nov 21 flyer, After12 Nov 14
   flyer (both stages). 38 names on 2026-11-21 ("way more people", Luke). Add a name only with a bill to back it.
   The loop runs at a fixed 85 s per 15-name length: when the list grows, scale `animation-duration` in the v3 B block.
+  Since 2026-11-23 the label is pinned (`.sb-label`, outside `#marquee`), and the CMS loader rebuilds only the names. Don't
+  put the label back in the track: it scrolls off and reads "…ILL WITH".
+- **Hero fixes 2026-11-23** (the "hero fixes" block after v3 B, from a blind A/B judge):
+  - From 701 px up, the logo is capped at `clamp(300px, 50vw, 840px)` and the photo sits at `40% 32%`, so the logo ends
+    before Luke's face.
+  - Nav links are white while the nav is over the photo.
+  - On phones the photo starts under the ticker, so the nav logo sits on black, not on the Sunbar sign.
 - **One left edge:** `--gutter` grows past 1440 px so content stays 1440 wide; `.w` carries no padding (the sections do).
 - Running text is Archivo 15–17 px; IBM Plex Mono is for data (times, durations, dates, the crate rows).
 - Links: no ticket strip, no 01–07; Electric Sanctuary is a 21:9 band, list in two columns (one at ≤820 px).
