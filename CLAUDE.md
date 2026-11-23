@@ -90,10 +90,14 @@ v3 "B photo-led" (2026-11-20, branch `redesign-b`; Luke picked it from the desig
   line "High-Energy house, trance, UKG. Tempe | Scottsdale, AZ" (U+00A0 and U+2060 keep "Tempe | Scottsdale, AZ" on one line;
   keep them if you edit it).
 - **Ticker** = only artists GRLS CRY has played with or shared a lineup with (Luke 2026-11-20), labelled "Shared the bill
-  with". 51 names on 2026-11-23, each backed by a bill. Add a name only with a bill to back it. Sources:
-  - Mar 20 After12: "lineup A-Z" on Luke's set cover (`~/LucasPelfrey-Portfolio/pack/graphics/after12-live-cover.jpg`).
-    The headliner ("NPROGR…") and one column sit under the barcode sticker: still unknown.
+  with". 71 names on 2026-11-23, each backed by a bill. Add a name only with a bill to back it. Sources:
+  - Mar 20 After12: the original flyer in Photos (2026-03-17, no barcode sticker): NPROGRESS headlines, then lineup
+    A-Z incl. DEAD AGAIN… (printed with the dots), K888T, NUUZ; two slots are "????" on the flyer.
   - May 1 Ascension MogFest flyer (DeathBeat, Point.Zero, JMAU5, DrawFour).
+  - May 14 Riot House: Sun Down Promotions "Crowd Control" flyer in Photos: GRLSCRY | KAINN | TESSLA | DIMARZ.
+  - Jul 24 Alchemist Enclave set-times flyer in Photos: E.C.O.FREQ, MARTIAN, TOO LEAN, C-NAMI, BICYCL3 JESUS, C.O.R.V., MESIA.
+  - Oct 3 IDK: After12 "House vs Bass" night-two flyer in Photos: Baggins, House Gremlinz, Juan Moore, Mucci, TRN ME UP.
+  - Oct 17 YZ Karaoke: "Good Vibes Only" flyer drawn as a text thread: Ecks, Vicez, Loko, Mucci b2b Posh.
   - Jun 18 thirds.: Luke's 7/2 IG post (LIVVIEP headline, Brainbounce, Pulse).
   - Jul 25 MogFest Reloaded final poster, plus the PowerFest day DJs on the same floor (mogfestAZ-site config.js).
   - Aug 20 Almost Famous: Posh event "MATTILO | NEW Almost Famous Grand Re-Opening" (b2b TESSLA).
@@ -101,10 +105,11 @@ v3 "B photo-led" (2026-11-20, branch `redesign-b`; Luke picked it from the desig
   - Nov 14 After12 flyer (both stages).
   - Nov 21 Night Shift: Posh title "Featuring: uSAYbFLOW", plus the flyer.
   - Nov 21 Sunbar brunch flyer (Casti, Vicez, James V).
-  - No other names found for Riot House May 14, Enclave and IDK Jul 24, Almost Famous Aug 29, IDK Oct 3, YZ Oct 17,
-    Archives and The Drop Oct 31 (The Drop's flyer is GRLS CRY alone), or Sunbar Nov 8.
+  - No names found (Photos, ~/Downloads, Drive flyers all OCR'd 11-23) for IDK Jul 24, Sunbar Aug 28, Almost Famous
+    Aug 29, Electric Sanctuary Sep 19, Archives and The Drop Oct 31 (The Drop's flyer is GRLS CRY alone), or Sunbar Nov 8.
+    Not Luke's bills, so not on the ticker: Enclave "Alchemy After Dark" Oct 3, Sunbar "Casa Lokera" Apr 4.
   The loop runs at about 16.6 px/s. When the list changes, measure half of `#marquee`'s scrollWidth and set the v3 B
-  `animation-duration` to half / 16.6 (51 names = 245 s).
+  `animation-duration` to half / 16.6 (71 names = 5529 px = 333 s).
   Since 2026-11-23 the label is pinned (`.sb-label`, outside `#marquee`), and the CMS loader rebuilds only the names. Don't
   put the label back in the track: it scrolls off and reads "…ILL WITH".
 - **Hero fixes 2026-11-23** (the "hero fixes" block after v3 B, from a blind A/B judge):
