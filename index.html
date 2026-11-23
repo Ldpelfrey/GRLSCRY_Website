@@ -1815,6 +1815,7 @@
       .hero-plate::after { background: linear-gradient(180deg, rgba(14,14,14,.35) 0%, rgba(14,14,14,0) 18%, rgba(14,14,14,0) 60%, var(--black) 100%); }
     }
   </style>
+  <link rel="stylesheet" href="clips.css">
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
@@ -2138,6 +2139,59 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- AFTER12 CLIPS (clips.css, clips.js): three muted loops of the House Stage set, each with a play/pause control -->
+  <!-- and a longer cut with sound that loads only on a tap. Posters show without script. Add a clip: a figure here +  -->
+  <!-- four files under media/after12/ (see CLAUDE.md § Sections).                                                     -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section id="after12" class="a12" data-clips aria-labelledby="a12-h">
+    <h2 class="t-sec" id="a12-h">After12, Phoenix</h2>
+    <p class="a12-line">Nov 14 2026 · House Stage · 3–4 AM</p>
+    <p class="a12-credit">Filmed by Nomad Media Works (Spencer&nbsp;Tuttrup)</p>
+    <div class="a12-grid" tabindex="0" role="group" aria-label="After12 clips">
+      <figure class="a12-clip a12-lead" data-name="decks" data-secs="20"
+              data-w="media/after12/a12-02058396-w1280-v1.mp4" data-t="media/after12/a12-02058396-t720-v1.mp4"
+              data-w-snd="media/after12/a12-02058396-w1280-snd-v1.mp4" data-t-snd="media/after12/a12-02058396-t720-snd-v1.mp4">
+        <picture>
+          <source media="(max-width: 768px)" srcset="media/after12/a12-02058396-t720-v1.webp" width="720" height="1280">
+          <img src="media/after12/a12-02058396-w1280-v1.webp" width="1280" height="720" loading="lazy" decoding="async"
+               alt="Over GRLS CRY's shoulder at the CDJs, the House Stage floor ahead under orange beams and truss lights">
+        </picture>
+        <div class="a12-bar">
+          <button class="a12-btn a12-loop is-default" type="button" hidden><span class="a12-ic" aria-hidden="true"></span><span class="a12-lb">Play</span></button>
+          <button class="a12-btn a12-snd is-default" type="button" hidden><span class="a12-ic" aria-hidden="true"></span><span class="a12-lb">Play with sound</span></button>
+        </div>
+      </figure>
+      <figure class="a12-clip" data-name="floor" data-secs="17"
+              data-w="media/after12/a12-02061708-w1280-v1.mp4" data-t="media/after12/a12-02061708-t720-v1.mp4"
+              data-w-snd="media/after12/a12-02061708-w1280-snd-v1.mp4" data-t-snd="media/after12/a12-02061708-t720-snd-v1.mp4">
+        <picture>
+          <source media="(max-width: 768px)" srcset="media/after12/a12-02061708-t720-v1.webp" width="720" height="1280">
+          <img src="media/after12/a12-02061708-w1280-v1.webp" width="1280" height="720" loading="lazy" decoding="async"
+               alt="The House Stage from the floor: green laser beams over the crowd in silhouette">
+        </picture>
+        <div class="a12-bar">
+          <button class="a12-btn a12-loop is-default" type="button" hidden><span class="a12-ic" aria-hidden="true"></span><span class="a12-lb">Play</span></button>
+          <button class="a12-btn a12-snd is-default" type="button" hidden><span class="a12-ic" aria-hidden="true"></span><span class="a12-lb">Play with sound</span></button>
+        </div>
+      </figure>
+      <figure class="a12-clip" data-name="booth" data-secs="25"
+              data-w="media/after12/a12-01989316-w1280-v1.mp4" data-t="media/after12/a12-01989316-t720-v1.mp4"
+              data-w-snd="media/after12/a12-01989316-w1280-snd-v1.mp4" data-t-snd="media/after12/a12-01989316-t720-snd-v1.mp4">
+        <picture>
+          <source media="(max-width: 768px)" srcset="media/after12/a12-01989316-t720-v1.webp" width="720" height="1280">
+          <img src="media/after12/a12-01989316-w1280-v1.webp" width="1280" height="720" loading="lazy" decoding="async"
+               alt="The booth angle: GRLS CRY in headphones at the decks, the crowd beyond under gold light">
+        </picture>
+        <div class="a12-bar">
+          <button class="a12-btn a12-loop is-default" type="button" hidden><span class="a12-ic" aria-hidden="true"></span><span class="a12-lb">Play</span></button>
+          <button class="a12-btn a12-snd is-default" type="button" hidden><span class="a12-ic" aria-hidden="true"></span><span class="a12-lb">Play with sound</span></button>
+        </div>
+      </figure>
+    </div>
+    <p class="a12-live" role="status" aria-live="polite"></p>
   </section>
 
   <!-- ══════════════════════════════════════════════════════════════ -->
@@ -3395,6 +3449,9 @@
       setPlayState(false);
     }
 
+    /* After12 clips (clips.js): a clip played with sound pauses this player. */
+    document.addEventListener('grlscry:clip-sound', function () { pending = null; if (widget && ready) widget.pause(); setPlayState(false); });
+
     function loadTrack(i, autoplay) {
       cur = i;
       setTrackInfo(i);
@@ -3447,6 +3504,7 @@
         if (pending) { var p = pending; pending = null; scLoad(cur, p.autoplay); }
       });
       widget.bind(SC.Widget.Events.PLAY, function() {
+        document.dispatchEvent(new CustomEvent('grlscry:player-play'));
         setPlayState(true);
         widget.getDuration(function(d) {
           dur = d;
@@ -4063,5 +4121,6 @@
   })();
   </script>
 
+<script src="clips.js" defer></script>
 </body>
 </html>

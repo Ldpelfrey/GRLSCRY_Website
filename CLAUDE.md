@@ -80,7 +80,7 @@ on 2026-09-25.
 ## Sections
 
 Hero → Shows reel (`#events`, upcoming only) → Links → Sound (`#music`) → Artist with About folded in
-(`#artist`) → Played (`#played`) → Photos (`#asm`) → Book (`#contact`) → **Shop** → Footer.
+(`#artist`) → After12 clips (`#after12`, `[data-clips]`) → Played (`#played`) → Photos (`#asm`) → Book (`#contact`) → **Shop** → Footer.
 
 v3 "B photo-led" (2026-11-20, branch `redesign-b`; Luke picked it from the design-audit deck). Its CSS is the
 "v3 B" block at the end of the main stylesheet; it overrides the older rules above it:

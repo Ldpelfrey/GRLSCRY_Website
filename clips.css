@@ -1,0 +1,82 @@
+/* Hallmark · component: clip band · genre: atmospheric · theme: the site's own tokens (no deal) · states: 8 · contrast: pass · copy: verbatim · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S5 R4 V3 · weakest: V, a third row of 16:9 tiles would echo the Played strip; took a 2:1 lead-plus-stack and a 9:16 snap strip on phones instead */
+/* Hallmark · waive 64 · --font-outlier is the page's IBM Plex Mono and .a12-line and .a12-credit set dates, times and credits in it · Luke chose the page's own mono caption voice at the gate on 2026-11-23, so the band matches the Played rows */
+/* Hallmark · waive 63 · the Played rows join date, venue and hours with middle dots and the band's caption line does the same · the page's kept signature, Luke's answer at the gate on 2026-11-23 (Hallmark's linter rejects it, the Floor is never waivable; the collision is listed for Luke) */
+/* Hallmark · waive 67 · the control labels are tracked mono caps (letter-spacing .04em, uppercase) like the page's .btn labels · the page's kept signature, Luke's answer at the gate on 2026-11-23 */
+/* Hallmark · waive 19 · the en dash in "3–4 AM" matches the Played rows · the page's kept signature, Luke's answer at the gate on 2026-11-23 */
+/* Hallmark · dismissed F4 · the Play and Play with sound pair are two scrim controls over a photograph, neither is a filled primary; the page's one primary stays Book a Set in Artist and Played */
+/* After12 clip band (#after12, [data-clips]). Loaded after the page's own <style>, so it uses the page's :root tokens by name
+   (--black --s1 --border --bm --sage --sage-dim --gray-lt --gray-tx --mono --display --ease --gutter) and adds two of its own below.
+   Controls: .a12-btn (.a12-loop = play/pause, .a12-snd = play with sound). Each shows all eight states; the .is-* classes force a
+   state for preview/clips.preview.html and are what clips.js sets. No .r reveal: the band is visible with scripts off. */
+
+:root {
+  --font-outlier: var(--mono);      /* the page's data face (IBM Plex Mono) under Hallmark's slot name: dates, times, credits, control labels */
+  --cream: #f2e3c8;                 /* the page's heading cream (index.html writes it as a literal); error and head colour here */
+  --a12-scrim: rgb(14 14 14 / .78); /* a control's surface on moving video */
+}
+
+.a12 { position: relative; z-index: 2; padding: clamp(80px, 11vw, 128px) var(--gutter); background: var(--black); border-bottom: 1px solid var(--border); }
+.a12 .t-sec { margin: 0; min-width: 0; overflow-wrap: break-word; color: var(--cream); }
+.a12-line, .a12-credit { margin: 0; font: 400 13px/1.5 var(--font-outlier); letter-spacing: .02em; }
+.a12-line { margin-top: 16px; color: var(--gray-lt); }
+.a12-credit { margin-top: 4px; color: var(--gray-tx); text-wrap: pretty; }
+
+/* Desktop: the lead loop at two thirds, the other two stacked beside it. Phones: a snap strip of the 9:16 cuts. */
+.a12-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: clamp(16px, 1.8vw, 24px); margin-top: clamp(28px, 3.5vw, 44px); }
+.a12-grid:focus-visible { outline: 2px solid var(--sage); outline-offset: 4px; }
+.a12-clip { position: relative; min-width: 0; margin: 0; aspect-ratio: 16 / 9; overflow: hidden; background: var(--s1); }
+.a12-lead { grid-row: 1 / span 2; aspect-ratio: auto; }
+.a12-clip picture, .a12-clip img, .a12-v { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+.a12-v { background: var(--s1); }
+.a12-clip::after { content: ""; position: absolute; inset: auto 0 0 0; height: 42%; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--black) 72%, transparent)); }
+.a12-bar { position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px; pointer-events: none; }
+.a12-bar > * { pointer-events: auto; }
+.a12-live { min-height: 1lh; margin: 16px 0 0; font: 400 13px/1.5 var(--font-outlier); letter-spacing: .02em; color: var(--gray-lt); }
+
+@media (max-width: 768px) {
+  .a12-grid { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
+    margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); }
+  .a12-grid::-webkit-scrollbar { display: none; }
+  .a12-clip, .a12-lead { flex: 0 0 78vw; aspect-ratio: 9 / 16; scroll-snap-align: start; }
+}
+
+/* ── The control. Default ─────────────────────────────────────── */
+.a12-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 7.75em; min-height: 44px; padding: 0 16px;
+  border: 1px solid var(--bm); border-radius: 0; background: var(--a12-scrim); color: var(--sage);
+  font: 500 12px/1 var(--font-outlier); letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color .25s var(--ease), opacity .25s var(--ease), transform .25s var(--ease); }
+.a12-snd { min-width: 12.5em; }
+@media (max-width: 400px) { .a12-snd { min-width: 0; } .a12-btn { padding: 0 12px; } }
+.a12-btn[hidden] { display: none; }
+.a12-lb { display: block; }
+.a12-ic { flex: none; width: 12px; height: 12px; background: currentColor; clip-path: polygon(0 0, 100% 50%, 0 100%); } /* play */
+.a12-snd .a12-ic { clip-path: polygon(0 35%, 35% 35%, 75% 0, 75% 100%, 35% 65%, 0 65%); }                              /* speaker */
+
+/* Hover: one signal, the border steps to sage. */
+@media (hover: hover) { .a12-btn:hover:not(:disabled) { border-color: var(--sage); } }
+.a12-btn.is-hover { border-color: var(--sage); }
+/* Focus-visible: the page's ring, at once (no transition on the outline). */
+.a12-btn:focus-visible, .a12-btn.is-focus { outline: 2px solid var(--sage); outline-offset: 3px; }
+/* Active. */
+.a12-btn:active:not(:disabled), .a12-btn.is-active { transform: translateY(1px); }
+/* Disabled: the browser cannot play MP4. Opacity, cursor and the attribute together. */
+.a12-btn:disabled, .a12-btn.is-disabled { opacity: .55; cursor: not-allowed; transform: none; }
+/* Loading: a spinner in the icon slot; the label changes, the width does not. */
+.a12-btn[aria-busy="true"], .a12-btn.is-loading { cursor: progress; }
+.a12-btn.is-loading .a12-ic { background: none; clip-path: none; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: a12-spin .8s linear infinite; }
+/* Error: cream border and text and an X glyph, so it is not colour alone. */
+.a12-btn.is-error { border-color: var(--cream); color: var(--cream); }
+.a12-btn.is-error .a12-ic { clip-path: polygon(20% 0, 50% 30%, 80% 0, 100% 20%, 70% 50%, 100% 80%, 80% 100%, 50% 70%, 20% 100%, 0 80%, 30% 50%, 0 20%); }
+/* Success: the result itself. Playing shows Pause; sound on shows Sound off. */
+.a12-btn.is-success { border-color: var(--sage-dim); }
+.a12-loop.is-success .a12-ic { clip-path: none; background: linear-gradient(90deg, currentColor 0 34%, transparent 34% 66%, currentColor 66%); }
+.a12-snd.is-success .a12-ic { clip-path: none; width: 10px; height: 10px; margin: 1px; }
+
+@keyframes a12-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .a12-btn { transition: none; }
+  .a12-btn.is-loading .a12-ic { animation: none; }
+}
