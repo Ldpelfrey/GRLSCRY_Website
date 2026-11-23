@@ -84,7 +84,11 @@ Hero → Shows reel (`#events`, upcoming only) → Links → Sound (`#music`) �
 
 v3 "B photo-led" (2026-11-20, branch `redesign-b`; Luke picked it from the design-audit deck). Its CSS is the
 "v3 B" block at the end of the main stylesheet; it overrides the older rules above it:
-- **Hero** rests on `images/reel/sunbar-nov8-{w,t}.webp` (`<picture>` in `.hero-plate`; on phones the plate is the top 64%
+- **Hero** rests on Callan Ottum's Nov 22 2026 portraits (2026-11-23, Luke: the Sunbar patio still made his face look
+  heavy): `images/reel/hero-callan-booth-w.webp` (desktop, the booth shot, crop chosen so the logo ends before his face)
+  and `images/reel/hero-callan-hex-t.webp` (phones, the neon-hex shot). Originals: Photos, "2026_11_22_Spencer_Party_-3"
+  and "-9" (Sony FX3, sent by Spencer). The footer carries "Hero photos by Callan Ottum" (static `.fc-credit`, not CMS).
+  `sunbar-nov8-{w,t}.webp` stays: the Played row uses it. (`<picture>` in `.hero-plate`; on phones the plate is the top 64%
   so the logo sits below Luke's face). No hero video any more (the loader exits when `#hero-video` is absent, so `--amb`
   stays at its default). Eyebrow, pull-quote, `.h-ctx` and the scroll cue are gone; the tagline under the logo is Luke's
   line "High-Energy house, trance, UKG. Tempe | Scottsdale, AZ" (U+00A0 and U+2060 keep "Tempe | Scottsdale, AZ" on one line;
