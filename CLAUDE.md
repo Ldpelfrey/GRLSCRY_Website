@@ -90,10 +90,21 @@ v3 "B photo-led" (2026-11-20, branch `redesign-b`; Luke picked it from the desig
   line "High-Energy house, trance, UKG. Tempe | Scottsdale, AZ" (U+00A0 and U+2060 keep "Tempe | Scottsdale, AZ" on one line;
   keep them if you edit it).
 - **Ticker** = only artists GRLS CRY has played with or shared a lineup with (Luke 2026-11-20), labelled "Shared the bill
-  with". Sources: the Played rows (Flava D, DeathBeat, TESSLA, DrawFour), Ascension MogFest May 1, MogFest Reloaded Jul 25
-  night bill + the PowerFest day DJs on the same floor (mogfestAZ-site config.js), Nightshift Nov 21 flyer, After12 Nov 14
-  flyer (both stages). 38 names on 2026-11-21 ("way more people", Luke). Add a name only with a bill to back it.
-  The loop runs at a fixed 85 s per 15-name length: when the list grows, scale `animation-duration` in the v3 B block.
+  with". 51 names on 2026-11-23, each backed by a bill. Add a name only with a bill to back it. Sources:
+  - Mar 20 After12: "lineup A-Z" on Luke's set cover (`~/LucasPelfrey-Portfolio/pack/graphics/after12-live-cover.jpg`).
+    The headliner ("NPROGR…") and one column sit under the barcode sticker: still unknown.
+  - May 1 Ascension MogFest flyer (DeathBeat, Point.Zero, JMAU5, DrawFour).
+  - Jun 18 thirds.: Luke's 7/2 IG post (LIVVIEP headline, Brainbounce, Pulse).
+  - Jul 25 MogFest Reloaded final poster, plus the PowerFest day DJs on the same floor (mogfestAZ-site config.js).
+  - Aug 20 Almost Famous: Posh event "MATTILO | NEW Almost Famous Grand Re-Opening" (b2b TESSLA).
+  - Oct 9 Sunbar: Luke's 9/23 IG post (Flava D with LIVVIEP, Troneva).
+  - Nov 14 After12 flyer (both stages).
+  - Nov 21 Night Shift: Posh title "Featuring: uSAYbFLOW", plus the flyer.
+  - Nov 21 Sunbar brunch flyer (Casti, Vicez, James V).
+  - No other names found for Riot House May 14, Enclave and IDK Jul 24, Almost Famous Aug 29, IDK Oct 3, YZ Oct 17,
+    Archives and The Drop Oct 31 (The Drop's flyer is GRLS CRY alone), or Sunbar Nov 8.
+  The loop runs at about 16.6 px/s. When the list changes, measure half of `#marquee`'s scrollWidth and set the v3 B
+  `animation-duration` to half / 16.6 (51 names = 245 s).
   Since 2026-11-23 the label is pinned (`.sb-label`, outside `#marquee`), and the CMS loader rebuilds only the names. Don't
   put the label back in the track: it scrolls off and reads "…ILL WITH".
 - **Hero fixes 2026-11-23** (the "hero fixes" block after v3 B, from a blind A/B judge):
@@ -259,6 +270,8 @@ the booking form and admin publishing will fail locally, which is expected.
   to that script or it is silently blocked. **Inline scripts run only by hash (since 2026-11-12):** after ANY edit
   to a `<script>` block in `index.html`, run `python3 tools/csp_hashes.py` and commit `vercel.json`, or browsers
   block the site's JavaScript. No inline handlers (`onclick="…"`) on the public page: use `addEventListener`.
+  Run `python3 tools/csp_hashes.py --check` before every push. On 2026-11-23, 46055e9 changed the CMS loader without
+  it, and live blocked that script until the next push. The page still showed its static copy, so nothing looked wrong.
   `tools/audit_static.py` checks both, and a local pre-push hook (`.git/hooks/pre-push`, not in the repo) stops a
   push when it fails. The admin panel has its own policy that still allows inline scripts. To test a change under
   the real headers: `python3 tools/serve_csp.py` (port 8896); plain `http.server` sends no CSP.
