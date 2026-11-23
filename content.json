@@ -311,35 +311,30 @@
   ],
   "events": [
     {
-      "date": "Nov 14",
-      "venue": "After12",
+      "date": "Nov 21",
+      "venue": "Nightshift",
       "location": "Phoenix, AZ",
-      "type": "House Stage · 3–4 AM",
+      "type": "market price. (b3b w/ 300nightclub + DrawFour)",
       "status": "past",
-      "full_venue": "4822 S 40th St"
+      "full_venue": "The Fillmore, 2130 W Fillmore St",
+      "flyer": "images/flyers/nightshift-nov21.jpg"
     },
     {
       "date": "Nov 21",
       "venue": "Sunbar",
       "location": "Tempe, AZ",
       "type": "Patio Brunch · 12:30–1:30 PM · Free · 21+",
-      "status": "live",
+      "status": "past",
       "full_venue": "Sunbar Patio, 24 W 5th St",
-      "link": "https://www.google.com/maps/search/?api=1&query=Sunbar+24+W+5th+St+Tempe+AZ",
-      "link_text": "Free · Map",
-      "flyer": "images/flyers/sunbar-brunch-nov21.jpg",
-      "note": "Free"
+      "flyer": "images/flyers/sunbar-brunch-nov21.jpg"
     },
     {
-      "date": "Nov 21",
-      "venue": "Nightshift",
+      "date": "Nov 14",
+      "venue": "After12",
       "location": "Phoenix, AZ",
-      "type": "market price. (b3b w/ 300nightclub + DrawFour)",
-      "status": "live",
-      "full_venue": "The Fillmore, 2130 W Fillmore St",
-      "link": "https://posh.vip/e/nightshift-featuring-usaybflow",
-      "link_text": "Tickets",
-      "flyer": "images/flyers/nightshift-nov21.jpg"
+      "type": "House Stage · 3–4 AM",
+      "status": "past",
+      "full_venue": "4822 S 40th St"
     },
     {
       "date": "Nov 8",

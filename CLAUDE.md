@@ -138,6 +138,9 @@ Added 2026-10-28/29 (all live):
 - **Artist loop** (`.art-bg` video): rendered by `~/Movies/GRLSCRY-Brand-Frames/montage.py` (+ `mobile`
   for the 9:16 phone cut). 1.4x, no pixel holds.
 - **Photos / Assembly** (`#asm`): 19 cards (`images/assembly/`) fly in, click dollies one to centre.
+  `ORDER` picks which files fill the 19 slots (phones show the first 12). 2026-11-23: After12 Nov 14 stills s20-s23
+  took the slots of near-duplicates s03/s05/s07/s09 (files kept: the hero collage still uses s05 and s09). Add new
+  photos as new file numbers, never by overwriting (images are cached immutable for a year).
 
 Performance rules learned 2026-10-29 (hero was ~6 fps): no CSS `filter` on anything that animates
 unless it sits in its own layer; no `mix-blend-mode` inside the 3D logo; no live SVG turbulence (bake it);
