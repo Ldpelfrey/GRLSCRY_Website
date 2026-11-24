@@ -1,0 +1,68 @@
+/* Hallmark · component: clip band · genre: atmospheric · theme: the site's own tokens (no deal) · states: 8 · contrast: pass · copy: verbatim · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S5 R4 V3 · weakest: V, a third row of 16:9 tiles would echo the Played strip; took a 2:1 lead-plus-stack and a 9:16 snap strip on phones instead */
+/* Hallmark · waive 64 · --font-outlier is the page's IBM Plex Mono and .a12-line, .a12-credit and .a12-hint set dates, times, credits and the tap hint in it · Luke chose the page's own mono caption voice at the gate on 2026-11-23, so the band matches the Played rows */
+/* Hallmark · waive 63 · the Played rows join date, venue and hours with middle dots and the band's caption line does the same · the page's kept signature, Luke's answer at the gate on 2026-11-23 (Hallmark's linter rejects it, the Floor is never waivable; the collision is listed for Luke) */
+/* Hallmark · waive 19 · the en dash in "3–4 AM" matches the Played rows · the page's kept signature, Luke's answer at the gate on 2026-11-23 */
+/* Live Sets clip band (#after12, [data-clips]). Loaded after the page's own <style>, so it uses the page's :root tokens by name
+   (--black --s1 --border --sage --gray-lt --gray-tx --mono --ease --gutter) and adds two of its own below.
+   No visible buttons (Luke 2026-11-23): each clip is one transparent button (.a12-hit) over the whole tile. Its states sit on the
+   figure as .is-default/.is-loading/.is-error/.is-success (clips.js); the only mark on the video is the progress line (.a12-prog)
+   while a cut with sound plays. No .r reveal: the band is visible with scripts off. */
+
+:root {
+  --font-outlier: var(--mono);      /* the page's data face (IBM Plex Mono) under Hallmark's slot name: dates, times, credits, the hint */
+  --cream: #f2e3c8;                 /* the page's heading cream (index.html writes it as a literal); head and error colour here */
+  --a12-press: rgb(0 0 0 / .12);    /* the dim under a finger on a clip */
+}
+
+.a12 { position: relative; z-index: 2; padding: clamp(80px, 11vw, 128px) var(--gutter); background: var(--black); border-bottom: 1px solid var(--border); }
+.a12 .t-sec { margin: 0; min-width: 0; overflow-wrap: break-word; color: var(--cream); }
+.a12-line, .a12-credit, .a12-hint { margin: 0; font: 400 13px/1.5 var(--font-outlier); letter-spacing: .02em; }
+.a12-line { margin-top: 16px; color: var(--gray-lt); }
+.a12-credit { margin-top: 4px; color: var(--gray-tx); text-wrap: pretty; }
+.a12-hint { margin-top: 16px; color: var(--gray-lt); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.a12-hint[hidden] { display: none; }
+
+/* Desktop: the lead loop at two thirds, the other two stacked beside it. Phones: a snap strip of the 9:16 cuts. */
+.a12-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: clamp(16px, 1.8vw, 24px); margin-top: clamp(28px, 3.5vw, 44px); }
+.a12-grid:focus-visible { outline: 2px solid var(--sage); outline-offset: 4px; }
+.a12-clip { position: relative; min-width: 0; margin: 0; aspect-ratio: 16 / 9; overflow: hidden; background: var(--s1); }
+.a12-lead { grid-row: 1 / span 2; aspect-ratio: auto; }
+.a12-clip picture, .a12-clip img, .a12-v { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+.a12-v { background: var(--s1); }
+
+/* A second night's group (Almost Famous, 2026-11-23): vertical phone footage, three 9:16 tiles, each as wide as the right-hand column above. */
+.a12-sub { margin-top: clamp(48px, 6vw, 80px); }
+.a12-tall { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.a12-tall .a12-clip { aspect-ratio: 9 / 16; }
+
+@media (max-width: 768px) {
+  .a12-grid { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
+    margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); }
+  .a12-grid::-webkit-scrollbar { display: none; }
+  .a12-clip, .a12-lead { flex: 0 0 78vw; aspect-ratio: 9 / 16; scroll-snap-align: start; }
+}
+
+/* ── The tap target: the whole clip. Default: nothing drawn. ───────── */
+.a12-hit { position: absolute; inset: 0; z-index: 2; display: block; width: 100%; height: 100%; margin: 0; padding: 0;
+  border: 0; border-radius: 0; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.a12-hit[hidden] { display: none; }
+/* Hover: a hairline sage frame inside the clip, at once. */
+@media (hover: hover) { .a12-hit:hover { box-shadow: inset 0 0 0 1px var(--sage); } }
+/* Focus-visible: the page's ring, drawn inside because the figure clips its overflow; no transition. */
+.a12-hit:focus-visible { outline: 2px solid var(--sage); outline-offset: -4px; }
+/* Active: a brief dim under the finger. */
+.a12-hit:active { background: var(--a12-press); }
+/* Disabled: a browser that can't play MP4 never unhides the button, so the poster is all it shows. */
+
+/* Loading, error, success: one line along the bottom of the clip (clips.js adds it; at rest it is scaled to nothing). */
+.a12-prog { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; height: 3px; background: var(--sage); pointer-events: none;
+  transform: scaleX(0); transform-origin: 0 50%; transition: transform .3s linear; }
+.a12-clip.is-loading .a12-prog { transform: scaleX(1) !important; animation: a12-pulse .9s var(--ease) infinite alternate; }
+.a12-clip.is-error .a12-prog { transform: scaleX(1) !important; background: var(--cream); }
+
+@keyframes a12-pulse { from { opacity: .35; } to { opacity: .8; } }
+@media (prefers-reduced-motion: reduce) {
+  .a12-prog { transition: none; }
+  .a12-clip.is-loading .a12-prog { animation: none; }
+}

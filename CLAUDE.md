@@ -80,7 +80,12 @@ on 2026-09-25.
 ## Sections
 
 Hero → Shows reel (`#events`, upcoming only) → Links → Sound (`#music`) → Artist with About folded in
-(`#artist`) → Played (`#played`) → Photos (`#asm`) → Book (`#contact`) → **Shop** → Footer.
+(`#artist`) → Live Sets clips (`#after12`, `[data-clips]`; heading "Live Sets", no visible buttons: each clip is one
+transparent tap target that plays its longer cut with sound, tap again to stop; Luke 2026-11-23. Two groups in the one
+section, so clips.js and the one hint line cover both: After12 Nov 14, filmed by Nomad Media Works, 16:9 + 9:16 files in
+`media/after12/`; and Almost Famous Aug 29 2026, Luke's own phone footage, 9:16 only in `media/almost-famous/` (one
+720x1280 file serves `data-w` and `data-t`), caption "Aug 29 2026 · Almost Famous · Scottsdale": no hours, no credit, as
+neither is known. The DJ before Luke that night (black shirt, blond) stays off the site) → Played (`#played`) → Photos (`#asm`) → Book (`#contact`) → **Shop** → Footer.
 
 v3 "B photo-led" (2026-11-20, branch `redesign-b`; Luke picked it from the design-audit deck). Its CSS is the
 "v3 B" block at the end of the main stylesheet; it overrides the older rules above it:
