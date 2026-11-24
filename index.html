@@ -1218,7 +1218,7 @@
     .past-table .ed { color: var(--gray-lt); font-weight: 400; }
     .past-table .en { color: var(--gray-lt); }
     /* v2 S2: played strip — real rooms first, the list underneath. Stills are reel frames at 16:9. */
-    .ps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 1.8vw, 24px); margin: 0 0 40px; }
+    .ps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(14px, 1.8vw, 24px); margin: 0 0 40px; }
     .ps[hidden] { display: none; }
     .ps-card { margin: 0; min-width: 0; }
     .ps-img { display: block; overflow: hidden; background: var(--s1); aspect-ratio: 16 / 9; }
@@ -2167,7 +2167,7 @@
     <div class="w">
       <h2 class="t-sec r" id="played-h" style="margin-bottom:44px;">Played</h2>
       <div id="past-block" class="past-block r d2">
-        <!-- v2 S2: three played sets we have footage of, built by renderPlayedStrip from REEL_IMG + events. -->
+        <!-- v2 S2: four played sets we have footage of, one per room, built by renderPlayedStrip from REEL_IMG + events. -->
         <div id="played-strip" class="ps" hidden></div>
         <table class="evt past-table">
           <caption class="sr-only">Past GRLSCRY sets — date, venue, location, type</caption>
@@ -3913,7 +3913,7 @@
     }
 
     /* Shows reel: every upcoming show, then past shows we have footage of. Images keyed by "date|venue". */
-    var REEL_IMG = { 'Nov 14|After12': 'after12-nov14', 'Nov 8|Sunbar': 'sunbar-nov8', 'Oct 9|Sunbar': 'sunbar-oct9', 'Sep 19|Electric Sanctuary': 'electric-sanctuary', 'Aug 28|Sunbar': 'sunbar-aug28' };
+    var REEL_IMG = { 'Nov 14|After12': 'after12-nov14', 'Nov 8|Sunbar': 'sunbar-nov8', 'Oct 9|Sunbar': 'sunbar-oct9', 'Sep 19|Electric Sanctuary': 'electric-sanctuary', 'Aug 29|Almost Famous': 'almost-famous-aug29', 'Aug 28|Sunbar': 'sunbar-aug28' };
     var REEL_UP = ['up1', 'up2'];
     /* v2 FIX: Shows holds two screens of height until the reel is built, so the page below does not jump
        (and lazy images under it are not fetched early). Released here, or after 6 s if the data never lands. */
@@ -3979,7 +3979,12 @@
       var box = el('played-strip');
       if (!box) return;
       var year = String(new Date().getFullYear());
-      var list = events.filter(function(ev) { return ev && ev.status === 'past' && REEL_IMG[ev.date + '|' + ev.venue]; }).slice(0, 3);
+      /* the four newest played sets we have footage of, one per room (2026-11-23: was the newest three) */
+      var seen = {};
+      var list = events.filter(function(ev) {
+        if (!ev || ev.status !== 'past' || !REEL_IMG[ev.date + '|' + ev.venue] || seen[ev.venue]) return false;
+        return (seen[ev.venue] = true);
+      }).slice(0, 4);
       if (!list.length) { box.hidden = true; box.innerHTML = ''; refreshTriggers(); return; }
       box.innerHTML = list.map(function(ev) {
         var key = REEL_IMG[ev.date + '|' + ev.venue];
