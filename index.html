@@ -1480,24 +1480,41 @@
     .reel.static .reel-frame { position: relative; inset: auto; height: auto; margin: 0 3vw 16px; top: 0; }
     .reel.static .rp { position: relative; inset: auto; height: 80vh; transform: none; }
     .reel.static .rp + .rp { margin-top: 3px; }
-    /* ── ASSEMBLY: photo cards fly in from depth into two clusters; a click dollies one to centre ── */
-    .asm { position: relative; z-index: 2; height: clamp(620px, 100vh, 920px); overflow: hidden; background: #0e0e0e; }
-    .asm-stage { position: absolute; inset: 0; perspective: 1400px; }
-    .asm-card { position: absolute; left: 0; top: 0; aspect-ratio: 4/5; border-radius: 18px; cursor: pointer;
-      transform-style: preserve-3d; padding: 0;  /* no will-change: a permanent layer at 1x got re-rastered at 3x on every open/close */ border: 0; background: none; }
-    .asm-in { display: block; width: 100%; height: 100%; border-radius: inherit; overflow: hidden; background: #1a1a1a;
-      box-shadow: 0 10px 26px rgba(0,0,0,.5); transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
-    .asm-in img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .asm-card:hover .asm-in, .asm-card:focus-visible .asm-in { transform: scale(1.06) translateZ(0); box-shadow: 0 16px 36px rgba(0,0,0,.6); }
-    .asm.is-open .asm-card:not(.on) .asm-in, .asm.settling .asm-in { box-shadow: none; }  /* shadows only on cards at rest */
-    .asm-card:focus-visible { outline: 2px solid var(--a, #c8f0b0); outline-offset: 4px; }
-    .asm.is-open .asm-card.on .asm-in { transform: none; }
-    .asm-veil { position: absolute; inset: 0; z-index: 400; pointer-events: none; opacity: 0; visibility: hidden; transition: none;
-      -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); background: rgba(14,14,14,.35); }
-    .asm.is-open .asm-veil { opacity: 1; visibility: visible; transition: opacity .4s ease .75s, visibility 0s .75s; }  /* fades in once the cards have stopped; vanishes at once on close */
-    .asm-hint { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 3; margin: 0;
-      font: 500 12px/1 var(--mono, monospace); letter-spacing: .1em; text-transform: uppercase; color: rgba(242,227,200,.55); pointer-events: none; transition: opacity .4s; }
-    .asm.is-open .asm-hint { opacity: 0; }
+    /* ── PHOTOS (#asm): a wall of 14 (Luke picked option C, 2026-11-23). Every photo is 4:5, so a tile that spans n
+       columns also spans n rows and nothing gets cropped; the two leads (Callan Ottum, Nov 22) span 2x2. The photos fly
+       in from depth and land in the wall (JS); a tap opens the full-screen viewer, swipe for the next. ── */
+    .asm { position: relative; z-index: 2; background: var(--black); padding: clamp(80px,11vw,130px) var(--gutter); }
+    .asm-head { margin-bottom: clamp(24px,3vw,40px); }  /* no max-width: --gutter caps content at 1440, one left edge */
+    .asm-line { margin: 16px 0 0; font: 400 13px/1.5 var(--mono); color: var(--gray-lt); }
+    .asm-wall { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); grid-auto-flow: dense; gap: 12px; }
+    .asm-tile { display: block; min-width: 0; aspect-ratio: 4/5; }
+    .asm-tile.lead { aspect-ratio: auto; }
+    .asm-tile.lead-a { grid-column: 1 / span 2; grid-row: 1 / span 2; }
+    .asm-tile.lead-b { grid-column: 3 / span 2; grid-row: 4 / span 2; }
+    .asm-in { display: block; width: 100%; height: 100%; overflow: hidden; background: var(--s1); }
+    .asm-in img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
+    @media (hover: hover) { .asm-tile:hover .asm-in img { transform: scale(1.04); } }
+    .asm-tile:focus-visible { outline: 2px solid var(--sage); outline-offset: 4px; }
+    @media (max-width: 768px) {
+      .asm-wall { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+      .asm-tile.lead-a, .asm-tile.lead-b { grid-column: 1 / -1; grid-row: auto / span 2; }
+      .asm-tile.desk { display: none; }  /* phones show 8 in the wall; the viewer holds all 14 */
+    }
+    /* the viewer: one photo at a time, with a counter and the photographer where known */
+    .asm-view { position: fixed; inset: 0; z-index: 10000; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 16px; padding: 64px 16px 24px; touch-action: pan-y; }
+    .asm-view[hidden] { display: none; }
+    .asm-bg { position: absolute; inset: 0; background: var(--black); opacity: .96; }
+    .asm-big { position: relative; display: block; width: min(92vw, (100vh - 160px) * .8, 960px); aspect-ratio: 4/5; height: auto;
+      object-fit: cover; background: var(--s1); -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
+    @supports (height: 100dvh) { .asm-big { width: min(92vw, (100dvh - 160px) * .8, 960px); } }
+    .asm-bar { position: relative; display: flex; align-items: center; gap: 16px; }
+    .asm-count { margin: 0; min-width: 13ch; text-align: center; font: 400 13px/1 var(--mono); color: var(--gray-lt); }
+    .asm-btn { width: 44px; height: 44px; display: grid; place-items: center; padding: 0; border: 1px solid var(--bm); background: none;
+      color: var(--white); font: 400 18px/1 var(--mono); cursor: pointer; transition: border-color .2s; }
+    .asm-btn:hover { border-color: var(--sage); }
+    .asm-btn:focus-visible { outline: 2px solid var(--sage); outline-offset: 2px; }
+    .asm-x { position: absolute; top: 12px; right: 12px; }
 
     @media (max-width: 768px) {
       .art-hero { grid-template-columns: 1fr; }
@@ -2337,9 +2354,27 @@
     </div>
   </section>
 
-  <section class="asm" id="asm" aria-label="Photos of GRLS CRY">
-    <div class="asm-stage" id="asm-stage"><div class="asm-veil" aria-hidden="true"></div></div>
-    <p class="asm-hint">Tap a photo</p>
+  <section class="asm" id="asm" aria-labelledby="asm-h">
+    <div class="asm-head">
+      <h2 class="t-sec" id="asm-h">Photos</h2>
+      <p class="asm-line">Tap a photo to see all 14.</p>
+    </div>
+    <div class="asm-wall" id="asm-wall">
+      <a class="asm-tile lead lead-a" href="images/assembly/s24.webp" data-by="Callan Ottum" aria-label="Open photo 1 of 14, by Callan Ottum"><span class="asm-in"><img src="images/assembly/s24.webp" width="1200" height="1500" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile" href="images/assembly/s20.webp?v=2" aria-label="Open photo 2 of 14"><span class="asm-in"><img src="images/assembly/s20.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile" href="images/assembly/s16.webp?v=2" aria-label="Open photo 3 of 14"><span class="asm-in"><img src="images/assembly/s16.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile" href="images/assembly/s12.webp?v=2" aria-label="Open photo 4 of 14"><span class="asm-in"><img src="images/assembly/s12.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile" href="images/assembly/s21.webp?v=2" aria-label="Open photo 5 of 14"><span class="asm-in"><img src="images/assembly/s21.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile" href="images/assembly/s23.webp?v=2" aria-label="Open photo 6 of 14"><span class="asm-in"><img src="images/assembly/s23.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile" href="images/assembly/s02.webp?v=2" aria-label="Open photo 7 of 14"><span class="asm-in"><img src="images/assembly/s02.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile desk" href="images/assembly/s19.webp?v=2" aria-label="Open photo 8 of 14"><span class="asm-in"><img src="images/assembly/s19.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile desk" href="images/assembly/s22.webp?v=2" aria-label="Open photo 9 of 14"><span class="asm-in"><img src="images/assembly/s22.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile desk" href="images/assembly/s10.webp?v=2" aria-label="Open photo 10 of 14"><span class="asm-in"><img src="images/assembly/s10.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile desk" href="images/assembly/s11.webp?v=2" aria-label="Open photo 11 of 14"><span class="asm-in"><img src="images/assembly/s11.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile lead lead-b" href="images/assembly/s25.webp" data-by="Callan Ottum" aria-label="Open photo 12 of 14, by Callan Ottum"><span class="asm-in"><img src="images/assembly/s25.webp" width="1200" height="1500" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile desk" href="images/assembly/s15.webp?v=2" aria-label="Open photo 13 of 14"><span class="asm-in"><img src="images/assembly/s15.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile desk" href="images/assembly/s04.webp?v=2" aria-label="Open photo 14 of 14"><span class="asm-in"><img src="images/assembly/s04.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+    </div>
   </section>
 
 
@@ -2678,86 +2713,126 @@
       }, { threshold: .1 }).observe(sec);
     })();
 
-    /* ── ASSEMBLY: 19 cards fly in from depth into two loose clusters (one on phones). Clicking a card
-       dollies it to centre while the rest scatter outward and blur; click again, click away or Esc to put it back. ── */
+    /* ── PHOTOS: each row of the wall flies in from depth as it nears. A tap opens the viewer: swipe, the arrow keys or
+       the buttons for the next; Esc, the close button or a tap outside the photo to close. ── */
     (function() {
-      const box = document.getElementById('asm'), stage = document.getElementById('asm-stage');
-      if (!box || !stage) return;
+      const box = document.getElementById('asm'), wall = document.getElementById('asm-wall');
+      if (!box || !wall) return;
       const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const N = 19, cards = [];
-      // interleave the KRIS stills (1-14) with the site photos (15-19) so neither clump is one colour.
-      // 2026-11-23: After12 Nov 14 stills s20-s23 replace near-duplicates s09, s03, s05, s07 (files kept; the hero collage uses s05/s09).
-      const ORDER = [1,15,20,2,16,12,21,17,10,4,18,13,23,19,11,6,14,22,8];
-      // offsets in card widths from a cluster centre (y is down); authored, not random, so the clumps read composed
-      const A = [[-1.15,-1.35],[-.05,-1.5],[.95,-1.05],[-.6,-.2],[.45,-.1],[-1.35,.85],[-.25,.95],[.85,1.05],[-.8,1.95],[.3,2.0]];
-      const B = [[-.9,-1.3],[.2,-1.45],[1.15,-.95],[-.35,-.25],[.75,.05],[-1.2,.8],[-.05,1.0],[1.05,1.15],[-.45,2.0]];
-      const M = [[-1.1,-1.6],[0,-1.75],[1.05,-1.45],[-.55,-.55],[.55,-.45],[-1.15,.55],[0,.55],[1.1,.65],[-.55,1.6],[.6,1.7],[-1.05,2.6],[.25,2.75]];
+      const tiles = [...wall.querySelectorAll('.asm-tile')], N = tiles.length;
+      const ins = tiles.map(t => t.querySelector('.asm-in'));
       const rnd = i => { const x = Math.sin(i * 91.37) * 43758.5453; return x - Math.floor(x); };
-      for (let i = 0; i < N; i++) {
-        const b = document.createElement('button');
-        b.className = 'asm-card'; b.type = 'button'; b.setAttribute('aria-label', 'Open photo ' + (i + 1));
-        b.innerHTML = '<span class="asm-in"><img data-src="images/assembly/s' + String(ORDER[i]).padStart(2, '0') + '.webp?v=2" alt="" decoding="async"></span>';
-        stage.appendChild(b); cards.push(b);
-      }
-      let slots = [], open = -1, assembled = false;
-      function layout() {
-        const W = stage.clientWidth, H = stage.clientHeight, phone = W < 700;
-        const w = phone ? Math.min(W / 4.1, H / 6.4) : Math.min(W * .1, H / 6);
-        slots = cards.map((c, i) => {
-          let o, cx, cy = H * .56;
-          if (phone) { o = M[i]; cx = W / 2; cy = H * .48; }
-          else if (i < A.length) { o = A[i]; cx = W * .33; }
-          else { o = B[i - A.length]; cx = W * .67; }
-          if (!o) return null;                        // phones show 12 of 19
-          const k = .86 + rnd(i) * .3;                // size varies so some read near, some far
-          return { x: cx + o[0] * w * 1.12 - w * k / 2, y: cy + (o[1] - .3) * w * 1.08 - w * k * .625, w: w * k, r: (rnd(i + 7) - .5) * 7, z: Math.round(k * 100) };
-        });
-        cards.forEach((c, i) => { const s = slots[i]; c.style.display = s ? '' : 'none'; if (s) { c.style.width = s.w + 'px'; c.style.zIndex = s.z; } });
-      }
-      function home(dur) {
-        cards.forEach((c, i) => { const s = slots[i]; if (!s) return;
-          gsap.to(c, { x: s.x, y: s.y, z: 0, rotation: s.r, scale: 1, opacity: 1, duration: dur, ease: 'expo.out', overwrite: true }); });
-      }
-      function focus(i) {
-        const W = stage.clientWidth, H = stage.clientHeight, s = slots[i];
-        const tw = Math.min(W * .62, H * .72 * .8), sc = tw / s.w;
-        open = i; box.classList.add('is-open'); cards.forEach(c => c.classList.toggle('on', c === cards[i]));
-        cards[i].style.zIndex = 500;  // above .asm-veil (400)
-        gsap.to(cards[i], { x: W / 2 - s.w / 2, y: H / 2 - s.w * .625, z: 0, rotation: 0, scale: sc, opacity: 1,
-          duration: still ? 0 : 1.1, ease: 'expo.inOut', overwrite: true });
-        cards.forEach((c, j) => { const t = slots[j]; if (j === i || !t) return;
-          const dx = t.x + t.w / 2 - W / 2, dy = t.y + t.w * .625 - H / 2, d = Math.hypot(dx, dy) || 1;
-          const push = Math.max(W, H) * .32;
-          gsap.to(c, { x: t.x + dx / d * push, y: t.y + dy / d * push * .7, z: -260, opacity: .5,
-            duration: still ? 0 : 1.1, ease: 'expo.inOut', overwrite: true }); });
-      }
-      function close() {
-        if (open < 0) return; const s = slots[open]; cards[open].style.zIndex = s ? s.z : 1;
-        box.classList.add('settling'); clearTimeout(box._st); box._st = setTimeout(() => box.classList.remove('settling'), 1000);
-        open = -1; box.classList.remove('is-open'); cards.forEach(c => c.classList.remove('on')); home(still ? 0 : 1);
-      }
-      cards.forEach((c, i) => c.addEventListener('click', e => { e.stopPropagation(); open === i ? close() : focus(i); }));
-      box.addEventListener('click', close);
-      document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-      // cards parked deep in z read as offscreen to lazy loading, so fetch them all as the section nears
-      const load = () => stage.querySelectorAll('img[data-src]').forEach(im => { im.src = im.dataset.src; im.removeAttribute('data-src'); });
-      ScrollTrigger.create({ trigger: box, start: 'top 250%', once: true, onEnter: load });
-      layout();
-      if (still) { home(0); assembled = true; }
-      else {
-        // start scattered deep in space, out of focus
-        const W = stage.clientWidth, H = stage.clientHeight;
-        cards.forEach((c, i) => { const s = slots[i]; if (!s) return;
-          gsap.set(c, { x: W / 2 + (rnd(i + 3) - .5) * W * 1.4 - s.w / 2, y: H / 2 + (rnd(i + 11) - .5) * H * 1.2, z: -2400 - rnd(i + 5) * 1600,
-            rotation: (rnd(i + 2) - .5) * 40, opacity: 0 }); });
-        ScrollTrigger.create({ trigger: box, start: 'top 70%', once: true, onEnter: () => {
-          assembled = true;
-          cards.forEach((c, i) => { const s = slots[i]; if (!s) return;
-            gsap.to(c, { x: s.x, y: s.y, z: 0, rotation: s.r, opacity: 1, duration: 1.6, delay: i * .045, ease: 'expo.out' }); });
+      // photos parked deep in z read as offscreen to lazy loading, so fetch them all as the section nears
+      ScrollTrigger.create({ trigger: box, start: 'top 250%', once: true,
+        onEnter: () => tiles.forEach(t => { t.querySelector('img').loading = 'eager'; }) });
+      if (!still) {
+        // the tiles stay put (they are the triggers); the photo inside each one starts scattered deep in space
+        ins.forEach((el, i) => gsap.set(el, { transformPerspective: 1400, x: (rnd(i + 3) - .5) * innerWidth * .9,
+          y: (rnd(i + 11) - .3) * innerHeight * .7, z: -2200 - rnd(i + 5) * 1600, rotation: (rnd(i + 2) - .5) * 40, opacity: 0 }));
+        // once a row lands, drop its transforms so the photos stop being separate GPU layers
+        ScrollTrigger.batch(tiles, { start: 'top 92%', once: true, onEnter: batch => {
+          const els = batch.map(t => ins[tiles.indexOf(t)]);
+          gsap.to(els, { x: 0, y: 0, z: 0, rotation: 0, opacity: 1, duration: 1.5, ease: 'expo.out', stagger: .07, overwrite: true,
+            onComplete: () => gsap.set(els, { clearProps: 'transform,opacity' }) });
         } });
       }
-      let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => {
-        layout(); if (open >= 0) focus(open); else if (assembled) home(0); }, 150); });
+
+      const SRC = tiles.map(t => t.getAttribute('href')), BY = tiles.map(t => t.dataset.by || '');
+      const view = document.createElement('div');
+      view.className = 'asm-view'; view.hidden = true;
+      view.setAttribute('role', 'dialog'); view.setAttribute('aria-modal', 'true'); view.setAttribute('aria-label', 'Photos');
+      view.innerHTML = '<div class="asm-bg"></div><img class="asm-big" alt="" draggable="false">' +
+        '<div class="asm-bar"><button class="asm-btn asm-prev" type="button" aria-label="Previous photo">←</button>' +
+        '<p class="asm-count" aria-live="polite"></p>' +
+        '<button class="asm-btn asm-next" type="button" aria-label="Next photo">→</button></div>' +
+        '<button class="asm-btn asm-x" type="button" aria-label="Close">×</button>';
+      document.body.appendChild(view);
+      const bg = view.querySelector('.asm-bg'), big = view.querySelector('.asm-big'), bar = view.querySelector('.asm-bar'),
+        count = view.querySelector('.asm-count'), xBtn = view.querySelector('.asm-x'),
+        keys = [view.querySelector('.asm-prev'), view.querySelector('.asm-next'), xBtn];
+      let cur = 0, opener = null, busy = false;
+      function paint(i) {
+        cur = (i + N) % N; big.src = SRC[cur];
+        big.alt = 'Photo ' + (cur + 1) + ' of ' + N + (BY[cur] ? ', by ' + BY[cur] : '');
+        count.textContent = (cur + 1) + ' / ' + N + (BY[cur] ? ' · ' + BY[cur] : '');
+        [cur - 1, cur + 1].forEach(j => { new Image().src = SRC[(j + N) % N]; });
+      }
+      // the tile's photo on screen right now, or null when it is hidden (phones) or scrolled away
+      function onScreen(i) {
+        if (tiles[i].offsetParent === null) return null;
+        const r = ins[i].getBoundingClientRect();
+        return r.bottom > 0 && r.top < innerHeight ? r : null;
+      }
+      const fly = (a, b) => ({ x: a.left + a.width / 2 - (b.left + b.width / 2), y: a.top + a.height / 2 - (b.top + b.height / 2), scale: a.width / b.width });
+      function openAt(i) {
+        paint(i); view.hidden = false; lenis.stop(); document.body.style.overflow = 'hidden';
+        xBtn.focus({ preventScroll: true });
+        if (still) return;
+        const a = ins[i].getBoundingClientRect();
+        gsap.fromTo(big, fly(a, big.getBoundingClientRect()), { x: 0, y: 0, scale: 1, duration: .8, ease: 'expo.inOut', overwrite: true });
+        gsap.fromTo(bg, { opacity: 0 }, { opacity: .96, duration: .5 });
+        gsap.fromTo([bar, xBtn], { opacity: 0 }, { opacity: 1, duration: .4, delay: .45 });
+      }
+      function close() {
+        if (view.hidden) return;
+        const i = cur, back = (tiles[i].offsetParent !== null ? tiles[i] : opener) || tiles[0];
+        const done = () => { view.hidden = true; busy = false; gsap.set([big, bg, bar, xBtn], { clearProps: 'all' });
+          lenis.start(); document.body.style.overflow = ''; back.focus({ preventScroll: true }); };
+        if (still) { done(); return; }
+        busy = true; gsap.killTweensOf(big);
+        gsap.to([bar, xBtn], { opacity: 0, duration: .15 });
+        gsap.to(bg, { opacity: 0, duration: .45, delay: .2 });
+        const a = onScreen(i);
+        if (a) { gsap.set(big, { x: 0, scale: 1 }); gsap.to(big, Object.assign(fly(a, big.getBoundingClientRect()), { duration: .7, ease: 'expo.inOut', onComplete: done })); }
+        else gsap.to(big, { opacity: 0, scale: .96, duration: .35, ease: 'power2.in', onComplete: done });
+      }
+      function step(d) {
+        if (busy || view.hidden) return;
+        if (still) { paint(cur + d); return; }
+        busy = true;
+        gsap.to(big, { x: -d * 80, opacity: 0, duration: .18, ease: 'power2.in', overwrite: true, onComplete: () => {
+          paint(cur + d);
+          const go = () => gsap.fromTo(big, { x: d * 80, opacity: 0 }, { x: 0, opacity: 1, duration: .35, ease: 'expo.out', onComplete: () => { busy = false; } });
+          big.decode().then(go, go);
+        } });
+      }
+      tiles.forEach((t, i) => t.addEventListener('click', e => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button > 0) return;
+        e.preventDefault(); opener = t; openAt(i);
+      }));
+      keys[0].addEventListener('click', () => step(-1));
+      keys[1].addEventListener('click', () => step(1));
+      xBtn.addEventListener('click', close);
+      // swipe: the photo follows the finger; past 50px it moves on, otherwise it springs back. A tap outside the photo closes.
+      let sx = null, dx = 0, moved = false;
+      view.addEventListener('pointerdown', e => {
+        if (e.target.closest('button') || busy) return;
+        sx = e.clientX; dx = 0; moved = false; view.setPointerCapture(e.pointerId);
+      });
+      view.addEventListener('pointermove', e => {
+        if (sx === null) return;
+        dx = e.clientX - sx; if (Math.abs(dx) > 8) moved = true;
+        if (moved && !still) gsap.set(big, { x: dx * .6 });
+      });
+      const release = e => {
+        if (sx === null) return;
+        const d = dx; sx = null;
+        if (Math.abs(d) > 50) step(d < 0 ? 1 : -1);
+        else if (moved && !still) gsap.to(big, { x: 0, duration: .3, ease: 'expo.out' });
+        else if (!moved && e.type === 'pointerup' && e.target !== big) close();
+      };
+      view.addEventListener('pointerup', release);
+      view.addEventListener('pointercancel', release);
+      document.addEventListener('keydown', e => {
+        if (view.hidden) return;
+        if (e.key === 'Escape') close();
+        else if (e.key === 'ArrowRight') step(1);
+        else if (e.key === 'ArrowLeft') step(-1);
+        else if (e.key === 'Tab') {   // keep focus inside the viewer
+          e.preventDefault(); const k = keys.indexOf(document.activeElement);
+          keys[(k + (e.shiftKey ? keys.length - 1 : 1) + keys.length) % keys.length].focus();
+        }
+      });
     })();
 
     /* ── STATUS BAR ─────────────────────────────────────────────── */

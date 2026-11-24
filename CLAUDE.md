@@ -171,10 +171,13 @@ Added 2026-10-28/29 (all live):
   panel; click opens the full image. Past events ignore `flyer`.
 - **Artist loop** (`.art-bg` video): rendered by `~/Movies/GRLSCRY-Brand-Frames/montage.py` (+ `mobile`
   for the 9:16 phone cut). 1.4x, no pixel holds.
-- **Photos / Assembly** (`#asm`): 19 cards (`images/assembly/`) fly in, click dollies one to centre.
-  `ORDER` picks which files fill the 19 slots (phones show the first 12). 2026-11-23: After12 Nov 14 stills s20-s23
-  took the slots of near-duplicates s03/s05/s07/s09 (files kept: the hero collage still uses s05 and s09). Add new
-  photos as new file numbers, never by overwriting (images are cached immutable for a year).
+- **Photos wall** (`#asm`; replaced the 19-card Assembly 2026-11-23, Luke picked option C from the design deck):
+  14 photos (`images/assembly/`) in a 4-column wall with two 2x2 leads, s24 and s25 (Callan Ottum's Nov 22 portraits,
+  credited in the viewer through `data-by`). Phones (≤768 px) get 2 columns and only the 8 tiles without `.desk`.
+  The photos fly in from depth once (`ScrollTrigger.batch`) and land with no transform left; a tap opens the swipe
+  viewer (arrows, Esc, focus trap, Lenis stopped while open). Markup order = reading order = viewer order. Keep a
+  colour photo, not black-and-white, beside each lead. Add new photos as new file numbers, never by overwriting
+  (images are cached immutable for a year). s03/s05/s07/s09 stay on disk: the hero collage uses s05 and s09.
 
 Performance rules learned 2026-10-29 (hero was ~6 fps): no CSS `filter` on anything that animates
 unless it sits in its own layer; no `mix-blend-mode` inside the 3D logo; no live SVG turbulence (bake it);
@@ -225,7 +228,7 @@ as an Instagram bio link.
 ## Motion — the fragile part
 
 GSAP 3.12 + ScrollTrigger, Lenis smooth scroll, SoundCloud Widget API, all from
-CDN. 52 ScrollTriggers. The page has heavy scroll cinematics and a sticky bottom
+CDN. 62 ScrollTriggers (counted 2026-11-23). The page has heavy scroll cinematics and a sticky bottom
 audio player.
 
 **Inserting a section shifts every trigger below it.** When you add one:
