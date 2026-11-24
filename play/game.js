@@ -464,7 +464,7 @@ const SFX = {
 let state = 'title', G = null, T = 0, cardT = 0, prevFit = 0, flash = 0, shake = 0, btns = [], best = null, endT = 0, paused = false;
 try { best = JSON.parse(localStorage.getItem('gc-best') || 'null'); } catch (e) {}
 const input = { held: false, buf: 0 };
-const BOT = Q.has('bot'), TS = +Q.get('ts') || 1;
+const BOT = Q.has('bot'), TS = +Q.get('ts') || 1, CARD = Q.has('card');   // ?card=1: title art only, for the link-preview image
 
 function newRun(lvl = 0) {
   G = { lvl, clock: CLOCK, usb: 0, usbAll: 0, selfies: 0, donuts: 0, parts: [], ents: [], dist: 0,
@@ -640,6 +640,7 @@ function drawTitle() {
   cx.drawImage(USB, lx, ly - 2); text('GRAB THE USBS', lx + 16, ly + 2, 1);
   cx.drawImage(DONUT, lx - 2, ly + 15); text('DONUTS = PACE', lx + 16, ly + 17, 1);
   cx.drawImage(HEART, lx, ly + 30); text('JUMP THE SELFIES', lx + 16, ly + 31, 1);
+  if (CARD) return;
   const hy = H - gy > 100 ? gy + 50 : ly + 48;
   if (Math.floor(T * 1.6) % 2) text(('ontouchstart' in window) ? 'TAP TO RUN' : 'TAP OR PRESS SPACE', W / 2, hy, 1, CREAM, 0.5);
   text('HOLD FOR A HIGHER JUMP', W / 2, hy + 12, 1, '#c9b6e6', 0.5);
