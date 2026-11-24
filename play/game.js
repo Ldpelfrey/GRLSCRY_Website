@@ -797,7 +797,7 @@ else {
   if (BOT) { start(); }
   const end = Q.get('end');
   if (end) { newRun(); G.lvl = 2; G.usb = end === 'nousb' ? 0 : 31; G.usbAll = 58; G.clock = end === 'lose' ? 0 : 11.4; G.selfies = 2; G.donuts = 9; G.p.x = 1400; BG[2] = buildBG(2); state = end; endT = 1; }
-  window.__gc = { get state() { return state; }, get G() { return G; }, get paused() { return paused; }, get au() { return { buf: AU.buf && AU.buf.duration, playing: !!AU.src, pos: AU.src ? (AU.pos + AU.ctx.currentTime - AU.t0) % LOOP : AU.pos, ctx: AU.ctx && AU.ctx.state }; } };
+  window.__gc = { get state() { return state; }, get G() { return G; }, get paused() { return paused; }, DUDE, FINAL, get au() { return { buf: AU.buf && AU.buf.duration, playing: !!AU.src, pos: AU.src ? (AU.pos + AU.ctx.currentTime - AU.t0) % LOOP : AU.pos, ctx: AU.ctx && AU.ctx.state }; } };
   requestAnimationFrame(frame);
 }
 })();
