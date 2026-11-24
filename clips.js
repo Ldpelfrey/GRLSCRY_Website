@@ -1,10 +1,12 @@
-/* After12 clip band: three muted loops, each with a play/pause control and a "play with sound" cut.
+/* Live Sets clip band: three muted loops; tap a clip to hear its longer cut with sound, tap it again to stop (Luke 2026-11-23: no buttons).
    Markup is in index.html (#after12, [data-clips]); styling in clips.css. Loaded with defer, script-src 'self'.
+   - Each clip has one transparent button over the whole tile (.a12-hit); nothing is drawn on the video except a thin progress line
+     while sound plays. The hint line (.a12-hint) tells people to tap, and says what is happening.
    - Loops: no src until the clip is within 300px of the screen; playing only while at least half of it is on screen.
-   - Reduced motion: never autoplays; the first Play sets the src and plays.
-   - Sound: a tap on "Play with sound" swaps this clip to its longer cut with sound (the same tap that starts it, because iOS
-     allows sound only inside the gesture), pauses the crate player (grlscry:clip-sound) and says so. The cut ends, scrolls
-     under half visible, the tab hides or the crate player starts (grlscry:player-play): back to the muted loop. */
+     The loops have no pause (Luke's call, 2026-11-23). Reduced motion: they never autoplay, the poster shows until a tap.
+   - Sound: the tap swaps this clip to its cut with sound (the same tap that starts it, because iOS allows sound only inside the
+     gesture), pauses the crate player (grlscry:clip-sound) and says so. The cut ends, scrolls under half visible, the tab hides,
+     the clip is tapped again or the crate player starts (grlscry:player-play): back to the muted loop. */
 (function () {
   'use strict';
   var root = document.querySelector('[data-clips]');
@@ -13,21 +15,10 @@
   var small = window.matchMedia('(max-width: 768px)');            /* same test as the artist loop: the 9:16 cut under 768px */
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   var canMp4 = document.createElement('video').canPlayType('video/mp4') !== '';
-  var live = root.querySelector('.a12-live');
-  var LABEL = {
-    loop: { default: 'Play', loading: 'Loading', error: 'Retry', success: 'Pause' },
-    snd: { default: 'Play with sound', loading: 'Loading', error: 'Retry', success: 'Sound off' }
-  };
-  var STATES = ['is-default', 'is-loading', 'is-error', 'is-success', 'is-disabled'];
-
-  function paint(btn, state, label, name) {
-    STATES.forEach(function (s) { btn.classList.remove(s); });
-    btn.classList.add('is-' + state);
-    btn.disabled = state === 'disabled';
-    if (state === 'loading') btn.setAttribute('aria-busy', 'true'); else btn.removeAttribute('aria-busy');
-    btn.querySelector('.a12-lb').textContent = label;
-    btn.setAttribute('aria-label', name);
-  }
+  var hint = root.querySelector('.a12-hint');
+  var HINT = 'Tap a clip for sound';
+  var STATES = ['is-default', 'is-loading', 'is-error', 'is-success'];
+  if (!canMp4) return;                                             /* posters only; the hit buttons and the hint stay hidden */
 
   /* The lazy img has no currentSrc yet at defer time, so read the poster from the markup: the 9:16 <source> on phones, else the 16:9 img. */
   function posterFor(fig, img) {
@@ -38,60 +29,75 @@
 
   var clips = [].slice.call(root.querySelectorAll('.a12-clip')).map(function (fig) {
     var img = fig.querySelector('img');
-    var c = {
-      fig: fig, name: fig.getAttribute('data-name') || 'clip', secs: fig.getAttribute('data-secs'),
-      loopBtn: fig.querySelector('.a12-loop'), sndBtn: fig.querySelector('.a12-snd'),
-      mode: 'loop', busy: false, err: false, held: false, userPlay: false, inView: false, video: null
-    };
-    if (canMp4) {
-      var v = document.createElement('video');
-      v.className = 'a12-v';
-      v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true;
-      v.preload = 'none';
-      v.setAttribute('disablepictureinpicture', '');
-      v.setAttribute('aria-hidden', 'true');
-      v.tabIndex = -1;
-      v.poster = posterFor(fig, img);
-      fig.insertBefore(v, fig.querySelector('.a12-bar'));
-      c.video = v;
-      ['playing', 'pause', 'waiting', 'loadstart', 'canplay'].forEach(function (t) {
-        v.addEventListener(t, function () {
-          if (t === 'playing' || t === 'canplay' && !v.paused) c.busy = false;
-          if (t === 'pause') c.busy = false;
-          if (t === 'waiting' && !v.paused) c.busy = true;
-          if (t === 'playing') c.err = false;
-          render(c);
-        });
+    var hit = fig.querySelector('.a12-hit');
+    var c = { fig: fig, hit: hit, bar: null, name: fig.getAttribute('data-name') || 'clip', secs: fig.getAttribute('data-secs'),
+      mode: 'loop', busy: false, err: false, inView: false, video: null, playerWas: false };
+    var v = document.createElement('video');
+    v.className = 'a12-v';
+    v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true;
+    v.preload = 'none';
+    v.setAttribute('disablepictureinpicture', '');
+    v.setAttribute('aria-hidden', 'true');
+    v.tabIndex = -1;
+    v.poster = posterFor(fig, img);
+    fig.insertBefore(v, hit);
+    c.video = v;
+    var bar = document.createElement('span');
+    bar.className = 'a12-prog';
+    bar.setAttribute('aria-hidden', 'true');
+    fig.insertBefore(bar, hit);
+    c.bar = bar;
+    ['playing', 'pause', 'waiting', 'loadstart', 'canplay'].forEach(function (t) {
+      v.addEventListener(t, function () {
+        if (t === 'playing' || t === 'canplay' && !v.paused) c.busy = false;
+        if (t === 'pause') c.busy = false;
+        if (t === 'waiting' && !v.paused) c.busy = true;
+        if (t === 'playing') c.err = false;
+        render(c);
       });
-      v.addEventListener('error', function () { c.busy = false; if (v.getAttribute('src')) c.err = true; render(c); });
-      v.addEventListener('ended', function () { if (c.mode === 'snd') endSound(c); });
-      c.loopBtn.addEventListener('click', function () { onLoopClick(c); });
-      c.sndBtn.addEventListener('click', function () { onSoundClick(c); });
-    }
-    c.loopBtn.hidden = false;
-    c.sndBtn.hidden = false;
+    });
+    v.addEventListener('timeupdate', function () {
+      if (c.mode === 'snd' && v.duration) bar.style.transform = 'scaleX(' + Math.min(1, v.currentTime / v.duration).toFixed(3) + ')';
+    });
+    v.addEventListener('error', function () { c.busy = false; if (v.getAttribute('src')) c.err = true; render(c); });
+    v.addEventListener('ended', function () { if (c.mode === 'snd') endSound(c); });
+    hit.addEventListener('click', function () { onTap(c); });
+    hit.hidden = false;
     render(c);
     return c;
   });
+  if (hint) { hint.textContent = HINT; hint.hidden = false; }
 
+  /* The tile's state: default (a muted loop or its poster), loading, error or success (its cut with sound is playing). */
   function render(c) {
-    var nm = c.name + ' clip';
-    if (!canMp4) {
-      paint(c.loopBtn, 'disabled', "Can’t play here", "Can’t play here: the " + nm);
-      paint(c.sndBtn, 'disabled', "Can’t play here", "Can’t play here: the " + nm + ' with sound');
-      return;
+    var snd = c.mode === 'snd', nm = 'the ' + c.name + ' clip';
+    var st = !snd ? 'default' : c.err ? 'error' : c.busy ? 'loading' : 'success';
+    STATES.forEach(function (s) { c.fig.classList.remove(s); });
+    c.fig.classList.add('is-' + st);
+    if (st === 'loading') c.hit.setAttribute('aria-busy', 'true'); else c.hit.removeAttribute('aria-busy');
+    c.hit.setAttribute('aria-pressed', snd ? 'true' : 'false');
+    c.hit.setAttribute('aria-label', {
+      default: 'Play ' + nm + ' with sound' + (c.secs ? ', ' + c.secs + ' seconds' : ''),
+      loading: 'Loading ' + nm + ' with sound',
+      error: 'Retry ' + nm + ' with sound',
+      success: 'Stop the sound on ' + nm
+    }[st]);
+    if (!snd) c.bar.style.transform = 'scaleX(0)';
+    say();
+  }
+
+  /* The hint line doubles as the status line (role=status): what to do, or what is happening now. */
+  function say() {
+    if (!hint) return;
+    var on = clips && clips.filter(function (o) { return o.mode === 'snd'; })[0];
+    var t = HINT;
+    /* One line at 375px in every state (white-space: nowrap in clips.css), so the clips below never move. */
+    if (on) {
+      t = on.err ? 'Sound didn’t load. Tap to retry.'
+        : on.busy ? 'Loading the sound'
+        : on.playerWas ? 'Player paused. Tap again to stop.' : 'Sound on. Tap again to stop.';
     }
-    var snd = c.mode === 'snd', v = c.video;
-    var playing = !v.paused && !c.busy && !v.ended;
-    var ls = c.err ? 'error' : c.busy ? 'loading' : playing ? 'success' : 'default';
-    var lname = { default: 'Play the ' + nm, loading: 'Loading the ' + nm, error: 'Retry the ' + nm, success: 'Pause the ' + nm }[ls];
-    paint(c.loopBtn, ls, LABEL.loop[ls], lname);
-    var ss = !snd ? 'default' : c.err ? 'error' : c.busy ? 'loading' : 'success';
-    var sname = { default: 'Play with sound: the ' + nm + (c.secs ? ', ' + c.secs + ' seconds' : ''),
-      loading: 'Loading the ' + nm + ' with sound', error: 'Retry the ' + nm + ' with sound', success: 'Sound off for the ' + nm }[ss];
-    /* Stacked side tiles at 769px and up are narrow: the visible label is "Sound"; the accessible name keeps the full words. */
-    var sl = ss === 'default' && !small.matches && !c.fig.classList.contains('a12-lead') ? 'Sound' : LABEL.snd[ss];
-    paint(c.sndBtn, ss, sl, sname);
+    if (hint.textContent !== t) hint.textContent = t;
   }
 
   function loopSrc(c) { return c.fig.getAttribute(small.matches ? 'data-t' : 'data-w'); }
@@ -106,7 +112,7 @@
     c.busy = true; c.err = false; render(c);
     var p = v.play();
     if (p && p.catch) p.catch(function (e) {
-      /* Blocked autoplay or Low Power Mode: back to Play, not an error. An interrupted play (pause, load) is not one either. */
+      /* Blocked autoplay or Low Power Mode: back to the poster, not an error. An interrupted play (pause, load) is not one either. */
       c.busy = false;
       if (e && e.name !== 'NotAllowedError' && e.name !== 'AbortError' && v.getAttribute('src')) c.err = true;
       render(c);
@@ -115,10 +121,8 @@
 
   /* Loop mode: should this clip be playing right now? */
   function sync(c) {
-    if (!c.video) return;
     if (c.mode === 'snd') { if (!c.inView || document.hidden) endSound(c); return; }
-    var want = c.inView && !document.hidden && (reduce.matches ? c.userPlay : !c.held);
-    if (!c.inView && reduce.matches) c.userPlay = false;
+    var want = c.inView && !document.hidden && !reduce.matches;
     if (want) {
       if (c.video.paused && !c.busy) { ensureSrc(c); tryPlay(c); }
     } else if (!c.video.paused || c.busy) {
@@ -126,29 +130,19 @@
     }
   }
 
-  function onLoopClick(c) {
-    var v = c.video;
-    if (c.err) { v.load(); tryPlay(c); return; }
-    if (!v.paused || c.busy) { c.held = true; c.userPlay = false; v.pause(); return; }
-    c.held = false; c.userPlay = true;
-    ensureSrc(c);
-    tryPlay(c);
-  }
-
-  function onSoundClick(c) {
-    var v = c.video;
+  function onTap(c) {
     if (c.mode === 'snd' && !c.err) { endSound(c); return; }
     /* Everything below runs inside the click, before any await: iOS allows sound only inside the gesture. */
-    var playerWas = document.getElementById('player');
-    var wasPlaying = !!(playerWas && playerWas.classList.contains('playing'));
+    var v = c.video;
+    var player = document.getElementById('player');
+    c.playerWas = !!(player && player.classList.contains('playing'));
     document.dispatchEvent(new CustomEvent('grlscry:clip-sound'));
     clips.forEach(function (o) { if (o !== c && o.mode === 'snd') endSound(o); });
-    c.mode = 'snd'; c.err = false; c.held = false;
+    c.mode = 'snd'; c.err = false;
     v.removeAttribute('muted');
     v.defaultMuted = false; v.muted = false; v.loop = false;
     v.src = sndSrc(c);
     v.currentTime = 0;
-    if (live) live.textContent = wasPlaying ? 'Music player paused.' : '';
     tryPlay(c);
   }
 
@@ -156,17 +150,16 @@
   function endSound(c) {
     if (c.mode !== 'snd') return;
     var v = c.video;
-    c.mode = 'loop'; c.err = false; c.busy = false; c.userPlay = false;
+    c.mode = 'loop'; c.err = false; c.busy = false; c.playerWas = false;
     v.pause();
     v.defaultMuted = true; v.muted = true; v.loop = true;
     v.removeAttribute('src');
     v.load();
-    if (live && !clips.some(function (o) { return o.mode === 'snd'; })) live.textContent = '';
     render(c);
     sync(c);
   }
 
-  if ('IntersectionObserver' in window && canMp4) {
+  if ('IntersectionObserver' in window) {
     var near = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
         var c = clips.filter(function (o) { return o.fig === e.target; })[0];
@@ -187,7 +180,6 @@
   document.addEventListener('visibilitychange', function () { clips.forEach(sync); });
   document.addEventListener('grlscry:player-play', function () { clips.forEach(endSound); });
   if (reduce.addEventListener) reduce.addEventListener('change', function () { clips.forEach(sync); });
-  if (small.addEventListener) small.addEventListener('change', function () { clips.forEach(render); });
 
   /* The band adds height above the page's scroll triggers; its boxes are reserved by aspect-ratio, so one refresh is enough. */
   window.addEventListener('load', function () {
