@@ -1,7 +1,7 @@
 /* Home page: a few seconds in, the game's pixel GRLS CRY runs along the header (feet on the ticker line), stops by the
    logo and asks if you want to play. It sits in the header so it never covers page content or a button.
    One file, loaded by index.html. Sprite sheet = play/invite.png (10 frames of 34x42: 8 run, stand, peace; the game's
-   own art with a 1 px cream outline so the black outfit reads on the dark page). ?invite=1 shows it at once and ignores the "already seen" memory. */
+   own art with a 1 px cream outline so the black outfit reads on the dark page). ?invite=1 shows it at once, ignores the "already seen" memory and never times out. */
 (() => {
 'use strict';
 const FORCE = /[?&]invite=1/.test(location.search), KEY = 'gc-invite-until', DAY = 864e5;
@@ -37,7 +37,7 @@ let el, timer, gone = false;
 const frame = n => { el.firstChild.style.backgroundPosition = (-68 * n) + 'px 0'; };
 
 const nav = document.getElementById('nav'), navUp = () => !!(nav && nav.style.transform);
-const wait = ms => { clearTimeout(timer); if (!gone) timer = setTimeout(leave, ms); };
+const wait = ms => { clearTimeout(timer); if (!gone && !FORCE) timer = setTimeout(leave, ms); };     // ?invite=1 keeps him there until dismissed
 
 function show() {
   const a = document.activeElement, busy = a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName);
@@ -57,7 +57,7 @@ function show() {
   if (nav) new MutationObserver(() => { if (gone) return; const up = navUp(); el.classList.toggle('up', up); if (up) clearTimeout(timer); else wait(8000); }).observe(nav, { attributes: true, attributeFilter: ['style'] });
   document.addEventListener('click', e => { if (!gone && e.target.closest && e.target.closest('#nt')) leave(); }, true);      // menu opening: get out of its way
   requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
-  const arrived = () => { if (gone) return; el.classList.remove('run'); frame(8); setTimeout(() => { if (!gone) { frame(9); el.classList.add('ask'); } }, 160); wait(15000); };
+  const arrived = () => { if (gone) return; el.classList.remove('run'); frame(8); setTimeout(() => { if (!gone) { frame(9); el.classList.add('ask'); } }, 160); wait(20000); };
   if (still) setTimeout(arrived, 200); else el.firstChild.addEventListener('transitionend', e => { if (e.propertyName === 'transform') arrived(); });
 }
 

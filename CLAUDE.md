@@ -333,8 +333,8 @@ photos. Three levels, one clock (`CLOCK`), a fit per level (`FITS`), the booth e
 - Invite (Luke's idea, 2026-11-24): `play/invite.js` + `play/invite.png`, loaded by `index.html`. About 4 s in, the game's
   pixel GRLS CRY runs along the header, stops beside the logo with his feet on the ticker line, and asks "Want to play a
   game?". It lives in the header because a bottom corner covered the hero's Book a Set button at both widths. It rides
-  away with the header on scroll-down, leaves when the menu opens or after 15 s, shows once per session, and a tap on
-  Play or the X keeps it away for 30 days. `/?invite=1` forces it. Sprite sheet = the game's own frames
+  away with the header on scroll-down, leaves when the menu opens or after 20 s, shows once per session, and a tap on
+  Play or the X keeps it away for 30 days. `/?invite=1` forces it and keeps him there until dismissed (Luke missed the first preview because he had already left). Sprite sheet = the game's own frames
   (`window.__gc.DUDE[FINAL]`) with a 1 px cream outline.
 - Open: the run kit is a guess (no photo of it on the site). The page is indexable and has a link-preview card
   (`play/card.png`, the title art from `/play?card=1`).
