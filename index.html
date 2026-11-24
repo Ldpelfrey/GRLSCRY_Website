@@ -1480,8 +1480,9 @@
     .reel.static .reel-frame { position: relative; inset: auto; height: auto; margin: 0 3vw 16px; top: 0; }
     .reel.static .rp { position: relative; inset: auto; height: 80vh; transform: none; }
     .reel.static .rp + .rp { margin-top: 3px; }
-    /* ── PHOTOS (#asm): a wall of 14 (Luke picked option C, 2026-11-23). Every photo is 4:5, so a tile that spans n
-       columns also spans n rows and nothing gets cropped; the two leads (Callan Ottum, Nov 22) span 2x2. The photos fly
+    /* ── PHOTOS (#asm): a wall of 18 (Luke picked option C, 2026-11-23). Every photo is 4:5, so a tile that spans n
+       columns also spans n rows and nothing gets cropped; the two leads (Callan Ottum, Nov 22) span 2x2. The last row
+       is Almost Famous, Aug 29 (s26-s29, Luke's phone footage, added 2026-11-23). The photos fly
        in from depth and land in the wall (JS); a tap opens the full-screen viewer, swipe for the next. ── */
     .asm { position: relative; z-index: 2; background: var(--black); padding: clamp(80px,11vw,130px) var(--gutter); }
     .asm-head { margin-bottom: clamp(24px,3vw,40px); }  /* no max-width: --gutter caps content at 1440, one left edge */
@@ -1498,7 +1499,7 @@
     @media (max-width: 768px) {
       .asm-wall { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
       .asm-tile.lead-a, .asm-tile.lead-b { grid-column: 1 / -1; grid-row: auto / span 2; }
-      .asm-tile.desk { display: none; }  /* phones show 8 in the wall; the viewer holds all 14 */
+      .asm-tile.desk { display: none; }  /* phones show 10 in the wall; the viewer holds all 18 */
     }
     /* the viewer: one photo at a time, with a counter and the photographer where known */
     .asm-view { position: fixed; inset: 0; z-index: 10000; display: flex; flex-direction: column; align-items: center;
@@ -2357,23 +2358,27 @@
   <section class="asm" id="asm" aria-labelledby="asm-h">
     <div class="asm-head">
       <h2 class="t-sec" id="asm-h">Photos</h2>
-      <p class="asm-line">Tap a photo to see all 14.</p>
+      <p class="asm-line">Tap a photo to see all 18.</p>
     </div>
     <div class="asm-wall" id="asm-wall">
-      <a class="asm-tile lead lead-a" href="images/assembly/s24.webp" data-by="Callan Ottum" aria-label="Open photo 1 of 14, by Callan Ottum"><span class="asm-in"><img src="images/assembly/s24.webp" width="1200" height="1500" alt="" loading="lazy" decoding="async"></span></a>
-      <a class="asm-tile" href="images/assembly/s20.webp?v=2" aria-label="Open photo 2 of 14"><span class="asm-in"><img src="images/assembly/s20.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
-      <a class="asm-tile" href="images/assembly/s16.webp?v=2" aria-label="Open photo 3 of 14"><span class="asm-in"><img src="images/assembly/s16.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
-      <a class="asm-tile" href="images/assembly/s12.webp?v=2" aria-label="Open photo 4 of 14"><span class="asm-in"><img src="images/assembly/s12.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
-      <a class="asm-tile" href="images/assembly/s21.webp?v=2" aria-label="Open photo 5 of 14"><span class="asm-in"><img src="images/assembly/s21.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
-      <a class="asm-tile" href="images/assembly/s23.webp?v=2" aria-label="Open photo 6 of 14"><span class="asm-in"><img src="images/assembly/s23.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
-      <a class="asm-tile" href="images/assembly/s02.webp?v=2" aria-label="Open photo 7 of 14"><span class="asm-in"><img src="images/assembly/s02.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
-      <a class="asm-tile desk" href="images/assembly/s19.webp?v=2" aria-label="Open photo 8 of 14"><span class="asm-in"><img src="images/assembly/s19.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
-      <a class="asm-tile desk" href="images/assembly/s22.webp?v=2" aria-label="Open photo 9 of 14"><span class="asm-in"><img src="images/assembly/s22.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
-      <a class="asm-tile desk" href="images/assembly/s10.webp?v=2" aria-label="Open photo 10 of 14"><span class="asm-in"><img src="images/assembly/s10.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
-      <a class="asm-tile desk" href="images/assembly/s11.webp?v=2" aria-label="Open photo 11 of 14"><span class="asm-in"><img src="images/assembly/s11.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
-      <a class="asm-tile lead lead-b" href="images/assembly/s25.webp" data-by="Callan Ottum" aria-label="Open photo 12 of 14, by Callan Ottum"><span class="asm-in"><img src="images/assembly/s25.webp" width="1200" height="1500" alt="" loading="lazy" decoding="async"></span></a>
-      <a class="asm-tile desk" href="images/assembly/s15.webp?v=2" aria-label="Open photo 13 of 14"><span class="asm-in"><img src="images/assembly/s15.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
-      <a class="asm-tile desk" href="images/assembly/s04.webp?v=2" aria-label="Open photo 14 of 14"><span class="asm-in"><img src="images/assembly/s04.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile lead lead-a" href="images/assembly/s24.webp" data-by="Callan Ottum" aria-label="Open photo 1 of 18, by Callan Ottum"><span class="asm-in"><img src="images/assembly/s24.webp" width="1200" height="1500" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile" href="images/assembly/s20.webp?v=2" aria-label="Open photo 2 of 18"><span class="asm-in"><img src="images/assembly/s20.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile" href="images/assembly/s16.webp?v=2" aria-label="Open photo 3 of 18"><span class="asm-in"><img src="images/assembly/s16.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile" href="images/assembly/s12.webp?v=2" aria-label="Open photo 4 of 18"><span class="asm-in"><img src="images/assembly/s12.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile" href="images/assembly/s21.webp?v=2" aria-label="Open photo 5 of 18"><span class="asm-in"><img src="images/assembly/s21.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile" href="images/assembly/s23.webp?v=2" aria-label="Open photo 6 of 18"><span class="asm-in"><img src="images/assembly/s23.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile" href="images/assembly/s02.webp?v=2" aria-label="Open photo 7 of 18"><span class="asm-in"><img src="images/assembly/s02.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile desk" href="images/assembly/s19.webp?v=2" aria-label="Open photo 8 of 18"><span class="asm-in"><img src="images/assembly/s19.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile desk" href="images/assembly/s22.webp?v=2" aria-label="Open photo 9 of 18"><span class="asm-in"><img src="images/assembly/s22.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile desk" href="images/assembly/s10.webp?v=2" aria-label="Open photo 10 of 18"><span class="asm-in"><img src="images/assembly/s10.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile desk" href="images/assembly/s11.webp?v=2" aria-label="Open photo 11 of 18"><span class="asm-in"><img src="images/assembly/s11.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile lead lead-b" href="images/assembly/s25.webp" data-by="Callan Ottum" aria-label="Open photo 12 of 18, by Callan Ottum"><span class="asm-in"><img src="images/assembly/s25.webp" width="1200" height="1500" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile desk" href="images/assembly/s15.webp?v=2" aria-label="Open photo 13 of 18"><span class="asm-in"><img src="images/assembly/s15.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile desk" href="images/assembly/s04.webp?v=2" aria-label="Open photo 14 of 18"><span class="asm-in"><img src="images/assembly/s04.webp?v=2" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile" href="images/assembly/s26.webp" aria-label="Open photo 15 of 18"><span class="asm-in"><img src="images/assembly/s26.webp" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile" href="images/assembly/s27.webp" aria-label="Open photo 16 of 18"><span class="asm-in"><img src="images/assembly/s27.webp" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile desk" href="images/assembly/s28.webp" aria-label="Open photo 17 of 18"><span class="asm-in"><img src="images/assembly/s28.webp" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
+      <a class="asm-tile desk" href="images/assembly/s29.webp" aria-label="Open photo 18 of 18"><span class="asm-in"><img src="images/assembly/s29.webp" width="800" height="1000" alt="" loading="lazy" decoding="async"></span></a>
     </div>
   </section>
 
