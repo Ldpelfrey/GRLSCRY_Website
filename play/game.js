@@ -413,7 +413,8 @@ function drawFore(i, cam) {
 }
 
 /* ---------- sound ---------- */
-const AU = { ctx: null, on: true, master: null, timer: 0, step: 0, next: 0, music: false };
+const AU = { ctx: null, on: true, master: null, sfx: null, buf: null, src: null, pos: 0, t0: 0, music: false };
+const LOOP = 48 * 4 * 60 / 140, PAD = 0.25, BLOCK = LOOP / 3;     // run-loop.mp3: 48 bars at 140 BPM, 0.25 s of wrap each side
 try { AU.on = localStorage.getItem('gc-snd') !== '0'; } catch (e) {}
 function audioInit() {
   if (AU.ctx) { if (AU.ctx.state === 'suspended') AU.ctx.resume(); return; }
@@ -422,19 +423,32 @@ function audioInit() {
   const n = AU.ctx.sampleRate * 0.2, b = AU.ctx.createBuffer(1, n, AU.ctx.sampleRate), d = b.getChannelData(0);
   for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
   AU.noise = b;
-  AU.timer = setInterval(sched, 40);
+  AU.sfx = AU.ctx.createGain(); AU.sfx.gain.value = 4.5; AU.sfx.connect(AU.master);
+  AU.mus = AU.ctx.createGain(); AU.mus.gain.value = 0.5; AU.mus.connect(AU.master);      // levels measured in the browser: effects sit a few dB over the music
+  fetch('run-loop.mp3').then(r => r.ok ? r.arrayBuffer() : Promise.reject()).then(a => AU.ctx.decodeAudioData(a, buf => { AU.buf = buf; }, () => {})).catch(() => {});
+}
+/* music follows AU.music: called every frame, starts the loop at AU.pos and keeps the place across a pause */
+function musicSync() {
+  if (!AU.ctx || !AU.buf) return;
+  if (AU.music && !AU.src) {
+    const s = AU.ctx.createBufferSource(); s.buffer = AU.buf; s.loop = true; s.loopStart = PAD; s.loopEnd = PAD + LOOP;
+    s.connect(AU.mus); s.start(0, PAD + AU.pos % LOOP); AU.src = s; AU.t0 = AU.ctx.currentTime;
+  } else if (!AU.music && AU.src) {
+    AU.pos = (AU.pos + AU.ctx.currentTime - AU.t0) % LOOP;
+    try { AU.src.stop(); } catch (e) {} AU.src.disconnect(); AU.src = null;
+  }
 }
 function setSound(on) { AU.on = on; if (AU.master) AU.master.gain.value = on ? 0.5 : 0; try { localStorage.setItem('gc-snd', on ? '1' : '0'); } catch (e) {} }
 function tone(f, d, type = 'square', v = 0.12, f2, when) {
   if (!AU.ctx) return; const t = when || AU.ctx.currentTime, o = AU.ctx.createOscillator(), g = AU.ctx.createGain();
   o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d);
   g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(0.001, t + d);
-  o.connect(g); g.connect(AU.master); o.start(t); o.stop(t + d + 0.02);
+  o.connect(g); g.connect(AU.sfx); o.start(t); o.stop(t + d + 0.02);
 }
 function hiss(d, v = 0.1, when, hp = 6000) {
   if (!AU.ctx) return; const t = when || AU.ctx.currentTime, s = AU.ctx.createBufferSource(), g = AU.ctx.createGain(), f = AU.ctx.createBiquadFilter();
   s.buffer = AU.noise; f.type = 'highpass'; f.frequency.value = hp; g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(0.001, t + d);
-  s.connect(f); f.connect(g); g.connect(AU.master); s.start(t); s.stop(t + d + 0.02);
+  s.connect(f); f.connect(g); g.connect(AU.sfx); s.start(t); s.stop(t + d + 0.02);
 }
 const SFX = {
   jump: () => tone(300, 0.13, 'square', 0.07, 620),
@@ -446,21 +460,6 @@ const SFX = {
   lose: () => [392, 330, 262, 196].forEach((f, i) => tone(f, 0.25, 'triangle', 0.12, null, AU.ctx && AU.ctx.currentTime + i * 0.2)),
   tick: () => tone(1500, 0.03, 'square', 0.04),
 };
-/* placeholder beat: four on the floor, 145 BPM, A# minor. Not a GRLS CRY track. */
-const BASS = [58.27, 0, 58.27, 58.27, 0, 58.27, 0, 69.3, 58.27, 0, 58.27, 58.27, 0, 51.91, 0, 51.91];
-function sched() {
-  if (!AU.ctx || !AU.music) return;
-  const spb = 60 / 145 / 4;
-  if (AU.next < AU.ctx.currentTime) AU.next = AU.ctx.currentTime + 0.05;
-  while (AU.next < AU.ctx.currentTime + 0.15) {
-    const s = AU.step % 16, t = AU.next;
-    if (s % 4 === 0) tone(130, 0.14, 'sine', 0.5, 42, t);
-    if (s % 4 === 2) hiss(0.04, 0.07, t, 7000);
-    if (BASS[s]) tone(BASS[s] * 2, spb * 0.9, 'square', 0.05, null, t);
-    AU.step++; AU.next += spb;
-  }
-}
-
 /* ---------- game state ---------- */
 let state = 'title', G = null, T = 0, cardT = 0, prevFit = 0, flash = 0, shake = 0, btns = [], best = null, endT = 0, paused = false;
 try { best = JSON.parse(localStorage.getItem('gc-best') || 'null'); } catch (e) {}
@@ -722,7 +721,7 @@ function drawPause() {
 }
 
 /* ---------- loop ---------- */
-function start() { newRun(Math.min(2, Math.max(0, (+Q.get('lvl') || 1) - 1))); state = 'play'; paused = false; AU.music = true; AU.step = 0; }
+function start() { newRun(Math.min(2, Math.max(0, (+Q.get('lvl') || 1) - 1))); state = 'play'; paused = false; AU.music = false; musicSync(); AU.pos = G.lvl * BLOCK; AU.music = true; }
 let lastT = 0, acc = 0;
 function frame(now) {
   requestAnimationFrame(frame);
@@ -731,9 +730,10 @@ function frame(now) {
   if (!paused) {
     T += dt; flash = Math.max(0, flash - dt); shake = Math.max(0, shake - dt);
     if (state === 'play') { acc += dt * TS; while (acc >= 1 / 120 && state === 'play') { step(1 / 120); acc -= 1 / 120; } }
-    else if (state === 'card') { cardT += dt * TS; if (BOT && cardT > 1.3) { state = 'play'; AU.music = true; } }
+    else if (state === 'card') { cardT += dt * TS; if (BOT && cardT > 1.3) { state = 'play'; AU.pos = G.lvl * BLOCK; AU.music = true; } }
     else endT += dt;
   }
+  musicSync();
   cx.imageSmoothingEnabled = false;
   if (state === 'title') drawTitle();
   else if (state === 'play') drawPlay();
@@ -749,7 +749,7 @@ function press(x, y) {
   if (paused) return;
   if (state === 'title') start();
   else if (state === 'play') { input.held = true; input.buf = 0.12; }
-  else if (state === 'card') { if (cardT > 1.1) { state = 'play'; AU.music = true; } }
+  else if (state === 'card') { if (cardT > 1.1) { state = 'play'; AU.pos = G.lvl * BLOCK; AU.music = true; } }
   else if (x == null && endT > 0.7) start();
 }
 cv.addEventListener('pointerdown', e => { e.preventDefault(); const r = cv.getBoundingClientRect(); press((e.clientX - r.left) / S, (e.clientY - r.top) / S); });
@@ -762,8 +762,8 @@ addEventListener('keydown', e => {
 });
 addEventListener('keyup', e => { if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') input.held = false; });
 addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('visibilitychange', () => { if (document.hidden && state === 'play') { paused = true; AU.music = false; } });
-addEventListener('blur', () => { if (state === 'play' && !BOT) { paused = true; AU.music = false; } });
+document.addEventListener('visibilitychange', () => { if (document.hidden) { if (state === 'play') paused = true; AU.music = false; musicSync(); } });
+addEventListener('blur', () => { if (state === 'play' && !BOT) { paused = true; AU.music = false; musicSync(); } });
 
 function resize() {
   if (Q.has('sheet')) return;
@@ -796,7 +796,7 @@ else {
   if (BOT) { start(); }
   const end = Q.get('end');
   if (end) { newRun(); G.lvl = 2; G.usb = end === 'nousb' ? 0 : 31; G.usbAll = 58; G.clock = end === 'lose' ? 0 : 11.4; G.selfies = 2; G.donuts = 9; G.p.x = 1400; BG[2] = buildBG(2); state = end; endT = 1; }
-  window.__gc = { get state() { return state; }, get G() { return G; }, get paused() { return paused; } };
+  window.__gc = { get state() { return state; }, get G() { return G; }, get paused() { return paused; }, get au() { return { buf: AU.buf && AU.buf.duration, playing: !!AU.src, pos: AU.src ? (AU.pos + AU.ctx.currentTime - AU.t0) % LOOP : AU.pos, ctx: AU.ctx && AU.ctx.state }; } };
   requestAnimationFrame(frame);
 }
 })();

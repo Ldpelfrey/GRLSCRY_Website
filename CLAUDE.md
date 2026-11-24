@@ -317,7 +317,13 @@ photos. Three levels, one clock (`CLOCK`), a fit per level (`FITS`), the booth e
 - The page loads `game.js` as a file, so the site CSP (`script-src 'self'`) needs no new hash. Keep it free of inline script.
 - Checks: `?sheet=1` draws every sprite and the font; `?bot=1&ts=4` plays itself fast; `?lvl=3` starts at a level;
   `?end=win|nousb|lose` jumps to an ending. `proto/game-lineup.png` is the outfit line-up next to its source photos.
-- Open: the run kit is a guess (no photo of it on the site); the beat is a placeholder, not a GRLS CRY track; nothing on
-  the main page links to /play yet; `noindex` is set until Luke signs off.
+- Music (Luke, 2026-11-24: "make a 16-bit version of EcstacyV8 ... and use it as the game's audio"): `play/run-loop.mp3`,
+  a 48-bar chiptune loop made from the V8 set's own MIDI by `~/Track-Formula/chip16.py` (no vocal in it). One 16-bar
+  block per level: `AU.pos = level * BLOCK`. The file has 0.25 s of wrap-around on each side and the loop points sit
+  inside it, so the MP3 decoder's padding cannot open a gap. **`run-loop.mp3` is not committed, is listed in `.vercelignore`, and must not be pushed
+  until Luke says so:** Ecstacy is unreleased and being shopped to labels (`~/Track-Formula/CLAUDE.md`).
+  Without the file the game runs with sound effects only.
+- Open: the run kit is a guess (no photo of it on the site); nothing on the main page links to /play yet; `noindex`
+  is set until Luke signs off.
 
 ## Do not push without asking.
