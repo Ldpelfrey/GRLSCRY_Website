@@ -1,4 +1,4 @@
-/* Live Sets clip band: three muted loops; tap a clip to hear its longer cut with sound, tap it again to stop (Luke 2026-11-23: no buttons).
+/* Live Sets clip band: muted loops in one or more groups (every .a12-clip inside [data-clips]); tap a clip to hear its longer cut with sound, tap it again to stop (Luke 2026-11-23: no buttons).
    Markup is in index.html (#after12, [data-clips]); styling in clips.css. Loaded with defer, script-src 'self'.
    - Each clip has one transparent button over the whole tile (.a12-hit); nothing is drawn on the video except a thin progress line
      while sound plays. The hint line (.a12-hint) tells people to tap, and says what is happening.
