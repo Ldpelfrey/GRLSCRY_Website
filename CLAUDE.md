@@ -326,7 +326,9 @@ photos. Three levels, one clock (`CLOCK`), a fit per level (`FITS`), the booth e
   Without the file the game runs with sound effects only.
 - The site serves `/play` with no trailing slash (`cleanUrls`, `trailingSlash: false`), so the page's script and the
   loop are fetched by absolute path (`/play/game.js`, `/play/run-loop.mp3`). A relative path 404s on live.
-- Open: the run kit is a guess (no photo of it on the site); nothing on the main page links to /play yet; `noindex`
-  is set until Luke signs off.
+- Live at grlscry.com/play since 2026-11-24 (main 83e55c4). Luke signed off the phone test the same day ("it worked on
+  phone from the browser").
+- Open: the run kit is a guess (no photo of it on the site); nothing on the main page links to /play; the page is
+  `noindex` and has no link-preview tags. Linking it and the preview card are new looks: show Luke first.
 
 ## Do not push without asking.
