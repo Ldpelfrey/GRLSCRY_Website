@@ -141,7 +141,7 @@ v2 flow, live since 2026-11-12 (Luke picked prototype B):
   The logo takes a soft room tint from the hero video (`--amb` on `#hero`, `.lp-tint`); the nav uses the flat cream mark.
 - **Shows reel** = upcoming shows only. The upcoming table is `hidden` (shown again only for the TBA row).
   `#events` holds `min-height: 200vh` until `renderReel` adds `.reel-set`, so the page below does not jump.
-- **Played** (`#played`): photo row from `REEL_IMG` ("date|venue" → `images/reel/<key>-{w,t}.webp`, newest three),
+- **Played** (`#played`): photo row from `REEL_IMG` ("date|venue" → `images/reel/<key>-{w,t}.webp`; the four newest played sets with a photo, one per room, since 2026-11-23),
   then 6 rows + "Show all N" (`clipPlayed`), then the booking strip. Add a played show's photo by adding its key to `REEL_IMG`.
 - **About** has no section of its own: quote, bio 1–2 and the proof row sit in `#artist`; an empty `#about` span
   catches old links. Bio 3–4, stats, chips and the three `//` cards are `hidden` (the admin still edits them; they do not show).
@@ -172,8 +172,10 @@ Added 2026-10-28/29 (all live):
 - **Artist loop** (`.art-bg` video): rendered by `~/Movies/GRLSCRY-Brand-Frames/montage.py` (+ `mobile`
   for the 9:16 phone cut). 1.4x, no pixel holds.
 - **Photos wall** (`#asm`; replaced the 19-card Assembly 2026-11-23, Luke picked option C from the design deck):
-  14 photos (`images/assembly/`) in a 4-column wall with two 2x2 leads, s24 and s25 (Callan Ottum's Nov 22 portraits,
-  credited in the viewer through `data-by`). Phones (≤768 px) get 2 columns and only the 8 tiles without `.desk`.
+  18 photos (`images/assembly/`) in a 4-column wall with two 2x2 leads, s24 and s25 (Callan Ottum's Nov 22 portraits,
+  credited in the viewer through `data-by`). The last row, s26-s29, is Almost Famous Aug 29 2026 (Luke's own phone
+  stills, all from behind; 2026-11-23). Phones (≤768 px) get 2 columns and only the 10 tiles without `.desk`; the
+  viewer holds all 18. The DJ before Luke that night (black shirt, blond) stays off the site.
   The photos fly in from depth once (`ScrollTrigger.batch`) and land with no transform left; a tap opens the swipe
   viewer (arrows, Esc, focus trap, Lenis stopped while open). Markup order = reading order = viewer order. Keep a
   colour photo, not black-and-white, beside each lead. Add new photos as new file numbers, never by overwriting
