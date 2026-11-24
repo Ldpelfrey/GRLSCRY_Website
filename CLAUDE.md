@@ -308,4 +308,16 @@ the booking form and admin publishing will fail locally, which is expected.
   `prefers-reduced-motion` that JS is skipped, so a CSS rule forces them visible.
   Don't remove it — without it, reduced-motion users see empty sections.
 
+## /play: "Run to Sunbar" game (MVP, branch `game`, 2026-11-24, NOT live)
+
+`play/index.html` + `play/game.js`: a one-thumb auto-runner on a canvas. No assets and no dependencies: every sprite,
+backdrop, the 5x7 font and the sounds are made in `game.js`. Luke's picks (2026-11-24): auto-run with tap to jump, a
+fangirl stops you for a selfie and costs clock time (no lives), full-colour 16-bit look, outfits taken from the site's
+photos. Three levels, one clock (`CLOCK`), a fit per level (`FITS`), the booth ending in the black tank + shades.
+- The page loads `game.js` as a file, so the site CSP (`script-src 'self'`) needs no new hash. Keep it free of inline script.
+- Checks: `?sheet=1` draws every sprite and the font; `?bot=1&ts=4` plays itself fast; `?lvl=3` starts at a level;
+  `?end=win|nousb|lose` jumps to an ending. `proto/game-lineup.png` is the outfit line-up next to its source photos.
+- Open: the run kit is a guess (no photo of it on the site); the beat is a placeholder, not a GRLS CRY track; nothing on
+  the main page links to /play yet; `noindex` is set until Luke signs off.
+
 ## Do not push without asking.

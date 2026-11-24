@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>GRLS CRY · Run to Sunbar</title>
+<meta name="description" content="Run to Sunbar before set time. Grab the USBs, refuel on donuts, dodge the selfies.">
+<meta name="theme-color" content="#0b0820">
+<meta name="robots" content="noindex">
+<style>
+  html, body { margin: 0; height: 100%; background: #0b0820; overflow: hidden; overscroll-behavior: none; }
+  body { position: fixed; inset: 0; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  canvas { display: block; position: absolute; left: 0; top: 0; image-rendering: pixelated; image-rendering: crisp-edges; touch-action: none; outline: none; }
+  #safe { position: fixed; left: 0; top: 0; width: 0; height: 0; visibility: hidden;
+          padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+  noscript { color: #fff; font: 16px/1.4 system-ui, sans-serif; padding: 24px; display: block; }
+</style>
+</head>
+<body>
+<canvas id="g" tabindex="0" role="img" aria-label="GRLS CRY: Run to Sunbar. A side-scrolling game. Tap or press space to jump."></canvas>
+<div id="safe"></div>
+<noscript>This game needs JavaScript. <a href="/">Back to grlscry.com</a></noscript>
+<script src="game.js"></script>
+</body>
+</html>
