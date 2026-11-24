@@ -425,7 +425,7 @@ function audioInit() {
   AU.noise = b;
   AU.sfx = AU.ctx.createGain(); AU.sfx.gain.value = 4.5; AU.sfx.connect(AU.master);
   AU.mus = AU.ctx.createGain(); AU.mus.gain.value = 0.5; AU.mus.connect(AU.master);      // levels measured in the browser: effects sit a few dB over the music
-  fetch('run-loop.mp3').then(r => r.ok ? r.arrayBuffer() : Promise.reject()).then(a => AU.ctx.decodeAudioData(a, buf => { AU.buf = buf; }, () => {})).catch(() => {});
+  fetch('/play/run-loop.mp3').then(r => r.ok ? r.arrayBuffer() : Promise.reject()).then(a => AU.ctx.decodeAudioData(a, buf => { AU.buf = buf; }, () => {})).catch(() => {});
 }
 /* music follows AU.music: called every frame, starts the loop at AU.pos and keeps the place across a pause */
 function musicSync() {

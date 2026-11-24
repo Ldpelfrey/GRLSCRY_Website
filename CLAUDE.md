@@ -308,7 +308,7 @@ the booking form and admin publishing will fail locally, which is expected.
   `prefers-reduced-motion` that JS is skipped, so a CSS rule forces them visible.
   Don't remove it — without it, reduced-motion users see empty sections.
 
-## /play: "Run to Sunbar" game (MVP, branch `game`, 2026-11-24, NOT live)
+## /play: "Run to Sunbar" game (MVP, 2026-11-24)
 
 `play/index.html` + `play/game.js`: a one-thumb auto-runner on a canvas. No assets and no dependencies: every sprite,
 backdrop, the 5x7 font and the sounds are made in `game.js`. Luke's picks (2026-11-24): auto-run with tap to jump, a
@@ -320,9 +320,12 @@ photos. Three levels, one clock (`CLOCK`), a fit per level (`FITS`), the booth e
 - Music (Luke, 2026-11-24: "make a 16-bit version of EcstacyV8 ... and use it as the game's audio"): `play/run-loop.mp3`,
   a 48-bar chiptune loop made from the V8 set's own MIDI by `~/Track-Formula/chip16.py` (no vocal in it). One 16-bar
   block per level: `AU.pos = level * BLOCK`. The file has 0.25 s of wrap-around on each side and the loop points sit
-  inside it, so the MP3 decoder's padding cannot open a gap. **`run-loop.mp3` is not committed, is listed in `.vercelignore`, and must not be pushed
-  until Luke says so:** Ecstacy is unreleased and being shopped to labels (`~/Track-Formula/CLAUDE.md`).
+  inside it, so the MP3 decoder's padding cannot open a gap. Luke cleared the loop to go public with the game on 2026-11-24
+  ("ship it", after being told Ecstacy is unreleased and the parts are the TPS pack's MIDI), so `run-loop.mp3` is in git.
+  That covers this loop only: the full track, its analysis and graphic stay local (`~/Track-Formula/CLAUDE.md`).
   Without the file the game runs with sound effects only.
+- The site serves `/play` with no trailing slash (`cleanUrls`, `trailingSlash: false`), so the page's script and the
+  loop are fetched by absolute path (`/play/game.js`, `/play/run-loop.mp3`). A relative path 404s on live.
 - Open: the run kit is a guess (no photo of it on the site); nothing on the main page links to /play yet; `noindex`
   is set until Luke signs off.
 
