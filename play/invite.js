@@ -1,13 +1,14 @@
 /* Home page: 3 s in, the game's pixel GRLS CRY runs along the header (feet on the ticker line), stops by the logo and
    a speech bubble asks if you want to play. No answer in 8 s and he runs back off. It sits in the header so it never covers page content or a button.
    One file, loaded by index.html. Sprite sheet = play/invite.png (10 frames of 34x42: 8 run, stand, peace; the game's
-   own art with a 1 px cream outline so the black outfit reads on the dark page). He runs in on every load of the home page (Luke, 2026-11-25: "Every page open"); only the X sends him away, for 30 days. ?invite=1 ignores that memory; ?invite=stay also keeps him there until dismissed. */
+   own art with a 1 px cream outline so the black outfit reads on the dark page). He runs in on every load of the home page (Luke, 2026-11-25: "Every page open"); only the X sends him away, for 24 hours (Luke, same day: "make the rule 24 hours"). ?invite=1 ignores that memory; ?invite=stay also keeps him there until dismissed. */
 (() => {
 'use strict';
 const FORCE = /[?&]invite=(1|stay)/.test(location.search), KEY = 'gc-invite-x', DAY = 864e5;      // new key 2026-11-25: the old one also remembered a tap on Play
 const get = (s, k) => { try { return s.getItem(k); } catch (e) { return null; } };
 const set = (s, k, v) => { try { s.setItem(k, v); } catch (e) {} };
-if (!FORCE && +get(localStorage, KEY) > Date.now()) return;
+const until = +get(localStorage, KEY);
+if (!FORCE && until > Date.now() && until <= Date.now() + DAY) return;      // a longer value is from the old 30-day rule: ignore it
 const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const css = `
@@ -55,7 +56,7 @@ function show() {
   document.body.appendChild(el);
   const sb = el.firstChild.getBoundingClientRect(), bb = el.lastChild.getBoundingClientRect();      // phone: put the tail under him
   el.style.setProperty('--gi-t', Math.round(Math.min(bb.width - 24, Math.max(12, (r ? r.right + 14 : sb.left) + 34 - bb.left - 5))) + 'px');
-  el.querySelector('.gi-x').addEventListener('click', () => { set(localStorage, KEY, Date.now() + 30 * DAY); leave(); });
+  el.querySelector('.gi-x').addEventListener('click', () => { set(localStorage, KEY, Date.now() + DAY); leave(); });
   el.addEventListener('pointerenter', () => clearTimeout(timer)); el.addEventListener('focusin', () => clearTimeout(timer));
   el.addEventListener('pointerleave', () => wait(4000));
   if (nav) new MutationObserver(() => { if (gone) return; const up = navUp(); el.classList.toggle('up', up); if (up) clearTimeout(timer); else wait(ASK); }).observe(nav, { attributes: true, attributeFilter: ['style'] });
