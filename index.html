@@ -82,6 +82,24 @@
         "name": "GRLS CRY",
         "alternateName": "GRLSCRY",
         "publisher": { "@id": "https://grlscry.com/#artist" }
+      },
+      {
+        "@type": "MusicEvent",
+        "name": "GRLS CRY at Almost Famous",
+        "startDate": "2026-11-28",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "performer": { "@id": "https://grlscry.com/#artist" },
+        "location": {
+          "@type": "Place",
+          "name": "Almost Famous",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Scottsdale",
+            "addressRegion": "AZ",
+            "addressCountry": "US"
+          }
+        }
       }
     ]
   }
@@ -1992,6 +2010,7 @@
           </tr>
         </thead>
         <tbody id="c-events-tbody">
+          <tr><td class="e-dot"><span class="e-status live" title="Confirmed"></span></td><td class="ed">Nov 28</td><td class="en">Almost Famous</td><td>Scottsdale, AZ</td><td>Opening Set</td><td><span class="tba">Booking Open</span></td></tr>
         </tbody>
       </table>
 
@@ -2022,6 +2041,7 @@
           <a class="lk-row" href="https://soundcloud.com/grlscry" target="_blank" rel="noopener noreferrer"><span><span class="lk-row-title">Mixes</span><span class="lk-sub">SoundCloud</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
           <a class="lk-row" href="https://www.youtube.com/watch?v=33oo3iiBxF8" target="_blank" rel="noopener noreferrer"><span><span class="lk-row-title">Electric Sanctuary — Full Set</span><span class="lk-sub">Live in Scottsdale · 09.19.26 · Watch on YouTube</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
           <a class="lk-row" href="https://voyagephoenix.com/interview/check-out-lucas-pelfreys-story/" target="_blank" rel="noopener noreferrer"><span><span class="lk-row-title">Voyage Phoenix Interview</span><span class="lk-sub">Read the story</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
+          <a class="lk-row" href="https://sunbar-run.vercel.app/" target="_blank" rel="noopener noreferrer"><span><span class="lk-row-title">Sun Run Club</span><span class="lk-sub">Daily 5K · Clark Park to Sunbar and back</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
           <a class="lk-row" href="#shop"><span><span class="lk-row-title">GRLS CRY Merch</span><span class="lk-sub">Shop</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
           <a class="lk-row" href="#contact"><span><span class="lk-row-title">Book a Set</span><span class="lk-sub">Clubs, events, corporate</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
           <a class="lk-row" href="https://instagram.com/grlscryofficial" target="_blank" rel="noopener noreferrer"><span><span class="lk-row-title">Instagram</span><span class="lk-sub">@grlscryofficial</span></span><span class="lk-go" aria-hidden="true">↗</span></a>
@@ -2163,7 +2183,7 @@
   </section>
 
   <!-- ══════════════════════════════════════════════════════════════ -->
-  <!-- LIVE SETS CLIPS (clips.css, clips.js): muted loops from two nights, the After12 House Stage set (16:9 + 9:16)   -->
+  <!-- LIVE SETS CLIPS (clips.css, clips.js): muted loops from three nights (the third: Market Price bus, Nov 22), the After12 House Stage set (16:9 + 9:16)   -->
   <!-- and Almost Famous Aug 29 (9:16 only). Tapping a clip plays its longer cut with sound (no visible buttons).       -->
   <!-- Posters show without script. Add a clip: a figure here + its files under media/<night>/ (CLAUDE.md § Sections). -->
   <!-- ══════════════════════════════════════════════════════════════ -->
@@ -2226,6 +2246,20 @@
               data-w-snd="media/almost-famous/af-6307-t720-snd-v1.mp4" data-t-snd="media/almost-famous/af-6307-t720-snd-v1.mp4">
         <img src="media/almost-famous/af-6307-t720-v1.webp" width="720" height="1280" loading="lazy" decoding="async"
              alt="GRLS CRY at the decks under looping blue neon tubes at Almost Famous">
+        <button class="a12-hit" type="button" hidden></button>
+      </figure>
+    </div>
+    <!-- Market Price bus, Nov 22 2026 (2026-11-25): one clip, the drop Luke posted that day. 16:9 cut from the YouTube film, 9:16 from the Set Clipper clip; one wide band (.a12-solo). -->
+    <p class="a12-line a12-sub">Nov 22 2026 · Market Price bus · Phoenix</p>
+    <div class="a12-grid a12-solo" tabindex="0" role="group" aria-label="Market Price bus clip">
+      <figure class="a12-clip" data-name="Market Price bus" data-secs="29"
+              data-w="media/market-price/mp-5700-w1280-v1.mp4" data-t="media/market-price/mp-5700-t720-v1.mp4"
+              data-w-snd="media/market-price/mp-5700-w1280-snd-v1.mp4" data-t-snd="media/market-price/mp-5700-t720-snd-v1.mp4">
+        <picture>
+          <source media="(max-width: 768px)" srcset="media/market-price/mp-5700-t720-v1.webp" width="720" height="1280">
+          <img src="media/market-price/mp-5700-w1280-v1.webp" width="1280" height="720" loading="lazy" decoding="async"
+               alt="Behind the decks on the Market Price bus: two DJs from behind, the crowd packed down the aisle with glowing balloons">
+        </picture>
         <button class="a12-hit" type="button" hidden></button>
       </figure>
     </div>

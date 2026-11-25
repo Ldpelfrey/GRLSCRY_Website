@@ -81,11 +81,14 @@ on 2026-09-25.
 
 Hero → Shows reel (`#events`, upcoming only) → Links → Sound (`#music`) → Artist with About folded in
 (`#artist`) → Live Sets clips (`#after12`, `[data-clips]`; heading "Live Sets", no visible buttons: each clip is one
-transparent tap target that plays its longer cut with sound, tap again to stop; Luke 2026-11-23. Two groups in the one
+transparent tap target that plays its longer cut with sound, tap again to stop; Luke 2026-11-23. Three groups in the one
 section, so clips.js and the one hint line cover both: After12 Nov 14, filmed by Nomad Media Works, 16:9 + 9:16 files in
 `media/after12/`; and Almost Famous Aug 29 2026, Luke's own phone footage, 9:16 only in `media/almost-famous/` (one
 720x1280 file serves `data-w` and `data-t`), caption "Aug 29 2026 · Almost Famous · Scottsdale": no hours, no credit, as
-neither is known. The DJ before Luke that night (black shirt, blond) stays off the site) → Played (`#played`) → Photos (`#asm`) → Book (`#contact`) → **Shop** → Footer.
+neither is known; and Market Price bus Nov 22 2026 (added 11-25), one clip in `media/market-price/`: the 29 s drop clip
+Luke posted that day, 9:16 from the post clip and 16:9 cut from the film export at 3380 s with the same audio, laid out
+by `.a12-solo` in clips.css (one 21:9 band on desktop, a 9:16 tile on phones). Each `media/<night>/` folder needs its
+own immutable cache rule in vercel.json. The DJ before Luke at Almost Famous Aug 29 (black shirt, blond) stays off the site) → Played (`#played`) → Photos (`#asm`) → Book (`#contact`) → **Shop** → Footer.
 
 v3 "B photo-led" (2026-11-20, branch `redesign-b`; Luke picked it from the design-audit deck). Its CSS is the
 "v3 B" block at the end of the main stylesheet; it overrides the older rules above it:
@@ -264,6 +267,10 @@ the booking form and admin publishing will fail locally, which is expected.
 
 - Large image pushes need `git config http.postBuffer 524288000` (already set).
 - Stale `.git/index.lock` is common: `rm -f .git/index.lock` and retry.
+- **Upcoming now (2026-11-25): Almost Famous, Sat Nov 28, Scottsdale, opening set.** No set time, ticket link or street
+  address is on the site because none was confirmed; its JSON-LD `startDate` is the date only. When it is played: set
+  `past`, empty `c-events-tbody`, drop the MusicEvent.
+- **Links** also carries "Sun Run Club" (sunbar-run.vercel.app) after the Voyage Phoenix row, added 2026-11-25.
 - Event data is duplicated in three places: the JSON-LD block in `<head>`, the
   hardcoded Shows table, and `content.json`. Keep all three in sync. Never emit a
   past event as upcoming: the JSON-LD block holds upcoming shows only (drop a show from it once it is played).

@@ -82,6 +82,11 @@
       "url": "https://voyagephoenix.com/interview/check-out-lucas-pelfreys-story/"
     },
     {
+      "title": "Sun Run Club",
+      "subtitle": "Daily 5K · Clark Park to Sunbar and back",
+      "url": "https://sunbar-run.vercel.app/"
+    },
+    {
       "title": "GRLS CRY Merch",
       "subtitle": "Shop",
       "url": "#shop"
@@ -345,6 +350,14 @@
     }
   ],
   "events": [
+    {
+      "date": "Nov 28",
+      "venue": "Almost Famous",
+      "location": "Scottsdale, AZ",
+      "type": "Opening Set",
+      "status": "live",
+      "full_venue": "Old Town Scottsdale"
+    },
     {
       "date": "Nov 21",
       "venue": "Nightshift",

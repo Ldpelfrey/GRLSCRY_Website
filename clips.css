@@ -35,12 +35,15 @@
 .a12-sub { margin-top: clamp(48px, 6vw, 80px); }
 .a12-tall { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .a12-tall .a12-clip { aspect-ratio: 9 / 16; }
+/* A one-clip group (Market Price bus, 2026-11-25): one tile the full width, 21:9 like the Links band. Phones keep the 9:16 tile below. */
+.a12-solo { grid-template-columns: minmax(0, 1fr); }
+.a12-solo .a12-clip { aspect-ratio: 21 / 9; }
 
 @media (max-width: 768px) {
   .a12-grid { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
     margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); }
   .a12-grid::-webkit-scrollbar { display: none; }
-  .a12-clip, .a12-lead { flex: 0 0 78vw; aspect-ratio: 9 / 16; scroll-snap-align: start; }
+  .a12-clip, .a12-lead, .a12-solo .a12-clip { flex: 0 0 78vw; aspect-ratio: 9 / 16; scroll-snap-align: start; }
 }
 
 /* ── The tap target: the whole clip. Default: nothing drawn. ───────── */
