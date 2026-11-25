@@ -348,9 +348,10 @@ photos. Three levels, one clock (`CLOCK`), a fit per level (`FITS`), the booth e
   on 3 s in, a speech bubble asks to play, and he runs off again if there is no answer ("after 5 seconds ... or whatever
   a proper timer would be": set to 8 s, paused while the pointer is on him). He runs along the header and stops beside
   the logo with his feet on the ticker line; a bottom corner covered the hero's Book a Set button at both widths. He
-  rides away with the header on scroll-down, leaves when the menu opens, shows once per session, and a tap on Play or
-  the X keeps him away for 30 days. `/?invite=1` ignores that memory (reload to replay); `/?invite=stay` also holds him
-  on screen. Sprite sheet = the game's own frames (`window.__gc.DUDE[FINAL]`) with a 1 px cream outline.
+  rides away with the header on scroll-down and leaves when the menu opens. He shows on every load of the home page
+  (Luke, 2026-11-25: "Every page open"; the once-per-session and 30-days-after-Play memory was mine and hid him on
+  Luke's own phone). Only the X keeps him away, for 30 days (localStorage `gc-invite-x`). `/?invite=1` ignores that
+  memory; `/?invite=stay` also holds him on screen. Sprite sheet = the game's own frames (`window.__gc.DUDE[FINAL]`) with a 1 px cream outline.
 - Open: the run kit is a guess (no photo of it on the site). The page is indexable and has a link-preview card
   (`play/card.png`, the title art from `/play?card=1`).
 

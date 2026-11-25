@@ -1,13 +1,13 @@
 /* Home page: 3 s in, the game's pixel GRLS CRY runs along the header (feet on the ticker line), stops by the logo and
    a speech bubble asks if you want to play. No answer in 8 s and he runs back off. It sits in the header so it never covers page content or a button.
    One file, loaded by index.html. Sprite sheet = play/invite.png (10 frames of 34x42: 8 run, stand, peace; the game's
-   own art with a 1 px cream outline so the black outfit reads on the dark page). ?invite=1 ignores the "already seen" memory (reload to replay); ?invite=stay also keeps him there until dismissed. */
+   own art with a 1 px cream outline so the black outfit reads on the dark page). He runs in on every load of the home page (Luke, 2026-11-25: "Every page open"); only the X sends him away, for 30 days. ?invite=1 ignores that memory; ?invite=stay also keeps him there until dismissed. */
 (() => {
 'use strict';
-const FORCE = /[?&]invite=(1|stay)/.test(location.search), KEY = 'gc-invite-until', DAY = 864e5;
+const FORCE = /[?&]invite=(1|stay)/.test(location.search), KEY = 'gc-invite-x', DAY = 864e5;      // new key 2026-11-25: the old one also remembered a tap on Play
 const get = (s, k) => { try { return s.getItem(k); } catch (e) { return null; } };
 const set = (s, k, v) => { try { s.setItem(k, v); } catch (e) {} };
-if (!FORCE && (+get(localStorage, KEY) > Date.now() || get(sessionStorage, KEY))) return;
+if (!FORCE && +get(localStorage, KEY) > Date.now()) return;
 const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const css = `
@@ -46,7 +46,6 @@ const wait = ms => { clearTimeout(timer); if (!gone && !STAY) timer = setTimeout
 function show() {
   const a = document.activeElement, busy = a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName);
   if (document.hidden || busy || navUp() || document.querySelector('#nt[aria-expanded="true"]')) { setTimeout(show, 1500); return; }   // header away, menu open or someone typing: later
-  set(sessionStorage, KEY, '1');
   document.head.appendChild(document.createElement('style')).textContent = css;
   el = document.createElement('aside'); el.className = 'gi' + (still ? ' still' : ' run'); el.setAttribute('aria-label', 'Game');
   el.innerHTML = '<a class="gi-s" href="/play" tabindex="-1" aria-hidden="true"></a>' +
@@ -57,7 +56,6 @@ function show() {
   const sb = el.firstChild.getBoundingClientRect(), bb = el.lastChild.getBoundingClientRect();      // phone: put the tail under him
   el.style.setProperty('--gi-t', Math.round(Math.min(bb.width - 24, Math.max(12, (r ? r.right + 14 : sb.left) + 34 - bb.left - 5))) + 'px');
   el.querySelector('.gi-x').addEventListener('click', () => { set(localStorage, KEY, Date.now() + 30 * DAY); leave(); });
-  el.querySelectorAll('a').forEach(l => l.addEventListener('click', () => set(localStorage, KEY, Date.now() + 30 * DAY)));
   el.addEventListener('pointerenter', () => clearTimeout(timer)); el.addEventListener('focusin', () => clearTimeout(timer));
   el.addEventListener('pointerleave', () => wait(4000));
   if (nav) new MutationObserver(() => { if (gone) return; const up = navUp(); el.classList.toggle('up', up); if (up) clearTimeout(timer); else wait(ASK); }).observe(nav, { attributes: true, attributeFilter: ['style'] });
