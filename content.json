@@ -50,10 +50,10 @@
   },
   "links": [
     {
-      "title": "Electric Sanctuary — Full Set",
-      "subtitle": "Live in Scottsdale · 09.19.26 · Watch on YouTube",
-      "url": "https://www.youtube.com/watch?v=33oo3iiBxF8",
-      "image": "images/links/electric-sanctuary-0919.webp"
+      "title": "Market Price b3b — Full Set",
+      "subtitle": "Live on a bus in Phoenix · 11.22.26 · Watch on YouTube",
+      "url": "https://www.youtube.com/watch?v=dTWdJ-4s51A",
+      "image": "images/links/market-price-1122.webp"
     },
     {
       "title": "In My Soul",
@@ -69,6 +69,17 @@
       "title": "Mixes",
       "subtitle": "SoundCloud",
       "url": "https://soundcloud.com/grlscry"
+    },
+    {
+      "title": "Electric Sanctuary — Full Set",
+      "subtitle": "Live in Scottsdale · 09.19.26 · Watch on YouTube",
+      "url": "https://www.youtube.com/watch?v=33oo3iiBxF8",
+      "image": "images/links/electric-sanctuary-0919.webp"
+    },
+    {
+      "title": "Voyage Phoenix Interview",
+      "subtitle": "Read the story",
+      "url": "https://voyagephoenix.com/interview/check-out-lucas-pelfreys-story/"
     },
     {
       "title": "GRLS CRY Merch",
@@ -102,6 +113,30 @@
     },
     {
       "number": "02",
+      "title": "Edd - Break it Baby (GRLS CRY REMIX)",
+      "meta": "Remix · 2026",
+      "dur": "10:08",
+      "artwork": "https://i1.sndcdn.com/artworks-0P9fUxrtDz4KyzDV-4xzZ6A-t500x500.jpg",
+      "soundcloud_url": "https://soundcloud.com/grlscry/break-it-baby-grls-cry-remix"
+    },
+    {
+      "number": "03",
+      "title": "LP's Up All Night Radio #1",
+      "meta": "Mix · 2026",
+      "dur": "1:01:02",
+      "artwork": "https://i1.sndcdn.com/artworks-yuEiDkw2NScd0yxZ-B8UlrA-t500x500.jpg",
+      "soundcloud_url": "https://soundcloud.com/grlscry/lps-up-all-night-radio-1"
+    },
+    {
+      "number": "04",
+      "title": "KUSS - Light In Sight x Ely Oak - Ever Been Punched (GRLS CRY MASHUP)",
+      "meta": "Mashup · 2026",
+      "dur": "6:10",
+      "artwork": "https://i1.sndcdn.com/artworks-8gObI5TNhYi0yV4d-darIhw-t500x500.jpg",
+      "soundcloud_url": "https://soundcloud.com/grlscry/kuss-light-in-sight-x-ely-oak"
+    },
+    {
+      "number": "05",
       "title": "GOLDRUSH DJ COMPETITION 2026",
       "meta": "Competition Set · 2026",
       "dur": "38:05",
@@ -109,7 +144,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/goldrushcomp"
     },
     {
-      "number": "03",
+      "number": "06",
       "title": "Marsolo - Spaceship (GRLS CRY FLIP)",
       "meta": "Flip · 2026",
       "dur": "6:08",
@@ -117,7 +152,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/marsolo-spaceship-grls-cry-flip"
     },
     {
-      "number": "04",
+      "number": "07",
       "title": "Perc Popper vs Say My Name",
       "meta": "Edit · 2026",
       "dur": "4:38",
@@ -125,7 +160,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/saymynamevspercpopper"
     },
     {
-      "number": "05",
+      "number": "08",
       "title": "HOUSE PARTY (REMIX)",
       "meta": "Remix · 2026",
       "dur": "2:56",
@@ -133,7 +168,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/house-prty-remix"
     },
     {
-      "number": "06",
+      "number": "09",
       "title": "Room Shake vs Space Jam (GRLS CRY Edit)",
       "meta": "Edit · 2026",
       "dur": "1:53",
@@ -141,7 +176,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/rooomshakevsspacejam"
     },
     {
-      "number": "07",
+      "number": "10",
       "title": "StaySolidRocky - Party Girl (GRLS CRY Remix)",
       "meta": "Remix · 2026",
       "dur": "5:28",
@@ -149,7 +184,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/party-girl-remix-grls-cry"
     },
     {
-      "number": "08",
+      "number": "11",
       "title": "Max Vol x GRLS CRY - Rebirth?",
       "meta": "Collab · 2026",
       "dur": "3:15",
@@ -157,7 +192,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/max-vol-x-grls-cry-rebirth-wav"
     },
     {
-      "number": "09",
+      "number": "12",
       "title": "Partiboi69, Kettama - Pumpin (GRLS CRY REMIX)",
       "meta": "Remix · 2026",
       "dur": "5:46",
@@ -165,7 +200,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/pumpin"
     },
     {
-      "number": "10",
+      "number": "13",
       "title": "GRLS CRY — After12 (Full Set)",
       "meta": "Full Set · 2026",
       "dur": "1:00:30",
@@ -173,7 +208,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/after12test"
     },
     {
-      "number": "11",
+      "number": "14",
       "title": "SYSTEM OVERLOAD SUBMISSION",
       "meta": "Submission Mix · 2025",
       "dur": "31:55",
@@ -181,7 +216,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/system-overload-submission"
     },
     {
-      "number": "12",
+      "number": "15",
       "title": "GRLS CRY - Tech House Mix Vol. 1 | DJ PROMO",
       "meta": "Promo Mix · 2026",
       "dur": "56:42",
@@ -189,7 +224,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/grlscry-techhousemixvol1-djpromo"
     },
     {
-      "number": "13",
+      "number": "16",
       "title": "I THINK - GRLS CRY",
       "meta": "Original · 2025",
       "dur": "2:57",
@@ -197,7 +232,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/i-think"
     },
     {
-      "number": "14",
+      "number": "17",
       "title": "Ball Knowledge Vol. 2",
       "meta": "Mix · 2026",
       "dur": "1:00:39",
@@ -205,7 +240,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/ball-knowledge-vol-2"
     },
     {
-      "number": "15",
+      "number": "18",
       "title": "Ball Knowledge - Vol 1",
       "meta": "Mix · 2026",
       "dur": "1:26:46",
@@ -213,7 +248,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/ballknowledgevol1"
     },
     {
-      "number": "16",
+      "number": "19",
       "title": "thirds. Live Set",
       "meta": "Live Set · 2026",
       "dur": "57:15",
@@ -221,7 +256,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/thirds-live-set"
     },
     {
-      "number": "17",
+      "number": "20",
       "title": "BADMON RUDE BOY SOUND BOY SELECTA - VOL1",
       "meta": "Mix · 2026",
       "dur": "47:53",
@@ -229,7 +264,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/badmon-rude-boy-sound-boy"
     },
     {
-      "number": "18",
+      "number": "21",
       "title": "thirds. test",
       "meta": "Live Mix · 2026",
       "dur": "1:00:11",
@@ -237,7 +272,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/thirdstest"
     },
     {
-      "number": "19",
+      "number": "22",
       "title": "Mess (Dub)",
       "meta": "Dub · 2026",
       "dur": "4:55",
@@ -245,7 +280,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/mess"
     },
     {
-      "number": "20",
+      "number": "23",
       "title": "Bass is Pumpin",
       "meta": "Track · 2026",
       "dur": "5:18",
@@ -253,7 +288,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/bass-is-pumpin"
     },
     {
-      "number": "21",
+      "number": "24",
       "title": "UP&UP DJ COMPETITION MIX | GRLS CRY",
       "meta": "Competition Set · 2026",
       "dur": "30:21",
@@ -261,7 +296,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/upupcompgrlscry"
     },
     {
-      "number": "22",
+      "number": "25",
       "title": "Forgiveness (Dub)",
       "meta": "Dub · 2026",
       "dur": "4:55",
@@ -269,7 +304,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/forgiveness"
     },
     {
-      "number": "23",
+      "number": "26",
       "title": "WIDE AWAKE (GRLS CRY SUNSET MIX) - PITCHED - DL FOR OG",
       "meta": "Remix · 2026",
       "dur": "9:59",
@@ -277,7 +312,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/wide-awake-grls-cry-sunset-1"
     },
     {
-      "number": "24",
+      "number": "27",
       "title": "IDK Afters Set - 07.24.2026",
       "meta": "Live Set · 2026",
       "dur": "21:52",
@@ -285,7 +320,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/idk-afters-set"
     },
     {
-      "number": "25",
+      "number": "28",
       "title": "RIOT HOUSE — TEST",
       "meta": "Live Mix · 2026",
       "dur": "48:23",
@@ -293,7 +328,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/riothousetest"
     },
     {
-      "number": "26",
+      "number": "29",
       "title": "not for human consumption",
       "meta": "Mix · 2026",
       "dur": "50:00",
@@ -301,7 +336,7 @@
       "soundcloud_url": "https://soundcloud.com/grlscry/not-for-human-consumption"
     },
     {
-      "number": "27",
+      "number": "30",
       "title": "Ball Knowledge Vol 3",
       "meta": "Mix · 2026",
       "dur": "36:49",
@@ -317,7 +352,9 @@
       "type": "market price. (b3b w/ 300nightclub + DrawFour)",
       "status": "past",
       "full_venue": "The Fillmore, 2130 W Fillmore St",
-      "flyer": "images/flyers/nightshift-nov21.jpg"
+      "flyer": "images/flyers/nightshift-nov21.jpg",
+      "link": "https://www.youtube.com/watch?v=dTWdJ-4s51A",
+      "link_text": "Watch Set"
     },
     {
       "date": "Nov 21",

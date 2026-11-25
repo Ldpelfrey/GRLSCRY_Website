@@ -279,8 +279,15 @@ the booking form and admin publishing will fail locally, which is expected.
   with metrics; `python3 tools/audit_static.py` checks the static files (JSON-LD, robots, links) and exits 0 when clean.
 - Crate player tracks live in two places: `content.json` `tracks` (what the admin panel edits; the page applies it
   through `window.crateSetTracks`) and the built-in `TRACKS` array in the player script (fallback until the fetch
-  lands). Keep them identical. Order = the new single "In My Soul" pinned at 01 (2026-11-20), then SoundCloud plays,
-  most first, as of 2026-11-10 (27 public uploads; the list scrolls inside the player, `data-lenis-prevent`).
+  lands). Keep them identical. Order = the new single "In My Soul" pinned at 01 (2026-11-20), then the three
+  uploads from Nov 2026 pinned at 02-04 (Break it Baby remix, LP's Up All Night Radio #1, the KUSS x Ely Oak mashup;
+  added 2026-11-25, pinned so phones show them: the phone list shows only the first five), then SoundCloud plays,
+  most first, as of 2026-11-10 (30 public uploads; the list scrolls inside the player, `data-lenis-prevent`).
+  The static `#cs-n` label ("TRACK 01 / 30") holds the count by hand: change it with the list.
+- Links (2026-11-25): the band is the newest YouTube film, "Market Price b3b" (`images/links/market-price-1122.webp`,
+  a frame at 57:12 of the film). `renderLinks` makes `links[0]` the band and the rest rows, so a new film goes
+  first and the old one drops to a row. The static `#c-links` block in `index.html` must match `content.json`.
+  The Nightshift Nov 21 show row links the same film ("Watch Set").
 - Under the crate, `.sp-now` holds a Spotify track embed for In My Soul (compact 152 px, `frame-src https://open.spotify.com`
   set in `tools/csp_hashes.py`). `/inmysoul` still redirects to DistroKid HyperFollow (`vercel.json`).
 - **Hero names up to two upcoming shows** (2026-11-20, Luke: two sets on Nov 21), one `.hn-l` line each:
